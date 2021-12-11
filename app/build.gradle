@@ -65,6 +65,9 @@ dependencies {
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
 
+    // Compose Navigation
+    implementation "androidx.navigation:navigation-compose:2.4.0-beta02"
+
     // Room components
     implementation("androidx.room:room-runtime:$rootProject.roomVersion")
     kapt("androidx.room:room-compiler:$rootProject.roomVersion")
