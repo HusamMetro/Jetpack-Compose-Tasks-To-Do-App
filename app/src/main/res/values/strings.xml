@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">Tasks To Do App</string>
+    <string name="add_button">Add Button</string>
+    <string name="list_screen_title">Tasks</string>
+    <string name="search_action">Search Tasks</string>
+    <string name="sort_action">Sort Tasks</string>
+    <string name="delete_all_action">Delete All</string>
+    <string name="search_placeholder">Search</string>
+    <string name="search_icon">Search Icon</string>
+    <string name="close_icon">Close Icon</string>
+    <string name="sad_face_icon">Sad Face Icon</string>
+    <string name="empty_content">No Tasks Found.</string>
 </resources>

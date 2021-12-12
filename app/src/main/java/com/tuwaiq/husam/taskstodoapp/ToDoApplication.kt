@@ -1,8 +1,10 @@
 package com.tuwaiq.husam.taskstodoapp
 
 import android.app.Application
-import dagger.hilt.android.HiltAndroidApp
+import android.util.Log
 
-@HiltAndroidApp
 class ToDoApplication : Application() {
+    init {
+        Log.e("app", "Application Works before ")
+    }
 }
