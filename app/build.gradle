@@ -2,7 +2,7 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
-    id 'dagger.hilt.android.plugin'
+//    id 'dagger.hilt.android.plugin'
 }
 
 android {
@@ -77,7 +77,8 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
     // Dagger - Hilt
-    implementation("com.google.dagger:hilt-android:$rootProject.daggerHilt")
+   /* implementation("com.google.dagger:hilt-android:$rootProject.daggerHilt")
     kapt"com.google.dagger:hilt-android-compiler:$rootProject.daggerHilt"
+    kapt 'androidx.hilt:hilt-compiler:1.0.0'*/
 
 }
