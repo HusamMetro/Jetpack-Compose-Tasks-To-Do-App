@@ -19,19 +19,42 @@ import com.tuwaiq.husam.taskstodoapp.data.models.Priority
 import com.tuwaiq.husam.taskstodoapp.data.models.ToDoTask
 import com.tuwaiq.husam.taskstodoapp.ui.theme.*
 import com.tuwaiq.husam.taskstodoapp.util.RequestState
+import com.tuwaiq.husam.taskstodoapp.util.SearchAppBarState
 
 @ExperimentalMaterialApi
 @Composable
 fun ListContent(
-    tasks: RequestState<List<ToDoTask>>,
+    allTasks: RequestState<List<ToDoTask>>,
+    searchedTasks: RequestState<List<ToDoTask>>,
+    searchAppBarState: SearchAppBarState,
     navigateToTaskScreens: (taskId: Int) -> Unit
 ) {
-    if (tasks is RequestState.Success) {
-        if (tasks.data.isEmpty()) {
-            EmptyContent()
-        } else {
-            DisplayTask(tasks = tasks.data, navigateToTaskScreens = navigateToTaskScreens)
+    if (searchAppBarState == SearchAppBarState.TRIGGERED) {
+        if (searchedTasks is RequestState.Success) {
+            HandleListContent(
+                tasks = searchedTasks.data,
+                navigateToTaskScreens = navigateToTaskScreens
+            )
         }
+    } else {
+        if (allTasks is RequestState.Success)
+            HandleListContent(
+                tasks = allTasks.data,
+                navigateToTaskScreens = navigateToTaskScreens
+            )
+    }
+}
+
+@ExperimentalMaterialApi
+@Composable
+fun HandleListContent(
+    tasks: List<ToDoTask>,
+    navigateToTaskScreens: (taskId: Int) -> Unit
+) {
+    if (tasks.isEmpty()) {
+        EmptyContent()
+    } else {
+        DisplayTask(tasks = tasks, navigateToTaskScreens = navigateToTaskScreens)
     }
 }
 
