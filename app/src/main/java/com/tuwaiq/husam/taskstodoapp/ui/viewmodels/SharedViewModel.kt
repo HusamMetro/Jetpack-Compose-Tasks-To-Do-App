@@ -7,6 +7,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.tuwaiq.husam.taskstodoapp.data.models.Priority
 import com.tuwaiq.husam.taskstodoapp.data.models.ToDoTask
+import com.tuwaiq.husam.taskstodoapp.data.repositories.DataStoreRepository
 import com.tuwaiq.husam.taskstodoapp.data.repositories.ToDoRepository
 import com.tuwaiq.husam.taskstodoapp.util.Action
 import com.tuwaiq.husam.taskstodoapp.util.Constants.MAX_TITLE_LENGTH
@@ -19,14 +20,15 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class SharedViewModel(context: Application) : AndroidViewModel(context) {
-    val action: MutableState<Action> = mutableStateOf(Action.NO_ACTION)
+    private val repository: ToDoRepository = ToDoRepository(context)
+    private val dataStoreRepository:DataStoreRepository = DataStoreRepository(context = context)
 
+    val action: MutableState<Action> = mutableStateOf(Action.NO_ACTION)
     val id: MutableState<Int> = mutableStateOf(0)
     val title: MutableState<String> = mutableStateOf("")
     val description: MutableState<String> = mutableStateOf("")
-    val priority: MutableState<Priority> = mutableStateOf(Priority.LOW)
 
-    private val repository: ToDoRepository = ToDoRepository(context)
+    val priority: MutableState<Priority> = mutableStateOf(Priority.LOW)
     val searchAppBarState: MutableState<SearchAppBarState> =
         mutableStateOf(SearchAppBarState.CLOSED)
     val searchTextState: MutableState<String> = mutableStateOf("")
