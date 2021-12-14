@@ -21,8 +21,8 @@ class MainActivity : ComponentActivity() {
     @ExperimentalMaterialApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        sharedViewModel = ViewModelProvider(this)[SharedViewModel::class.java]
         Log.e("start","Main Activity ")
+        sharedViewModel = ViewModelProvider(this)[SharedViewModel::class.java]
         setContent {
             TasksToDoAppTheme {
                 navController = rememberNavController()
