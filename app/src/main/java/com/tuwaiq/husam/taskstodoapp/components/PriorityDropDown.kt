@@ -22,7 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.tuwaiq.husam.taskstodoapp.R
 import com.tuwaiq.husam.taskstodoapp.data.models.Priority
-import com.tuwaiq.husam.taskstodoapp.ui.theme.PRIORITY_DROP_DOWN_HIEGHT
+import com.tuwaiq.husam.taskstodoapp.ui.theme.PRIORITY_DROP_DOWN_HEIGHT
 import com.tuwaiq.husam.taskstodoapp.ui.theme.PRIORITY_INDICATOR_SIZE
 
 @Composable
@@ -39,7 +39,7 @@ fun PriorityDropDown(
         modifier = modifier
             .fillMaxWidth()
             .background(MaterialTheme.colors.background)
-            .height(PRIORITY_DROP_DOWN_HIEGHT)
+            .height(PRIORITY_DROP_DOWN_HEIGHT)
             .clickable { expanded = true }
             .border(
                 width = 1.dp,

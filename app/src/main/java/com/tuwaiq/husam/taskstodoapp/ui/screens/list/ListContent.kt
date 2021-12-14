@@ -138,8 +138,8 @@ fun DisplayTask(
                     -45f
             )
 
-            var itemAppeared by remember{ mutableStateOf(false)}
-            LaunchedEffect(key1 = true ){
+            var itemAppeared by remember { mutableStateOf(false) }
+            LaunchedEffect(key1 = true) {
                 itemAppeared = true
             }
 
