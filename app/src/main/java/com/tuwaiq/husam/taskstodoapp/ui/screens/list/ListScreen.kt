@@ -23,11 +23,16 @@ fun ListScreen(
 ) {
     LaunchedEffect(key1 = true) {
         sharedViewModel.getAllTasks()
+        sharedViewModel.readSortState()
     }
 
     val action by sharedViewModel.action
     val allTasks by sharedViewModel.allTasks.collectAsState()
     val searchedTasks by sharedViewModel.searchedTasks.collectAsState()
+    val sortState by sharedViewModel.sortState.collectAsState()
+    val lowPriorityTasks by sharedViewModel.lowPriorityTasks.collectAsState()
+    val highPriorityTasks by sharedViewModel.highPriorityTasks.collectAsState()
+
     val searchAppBarState: SearchAppBarState by sharedViewModel.searchAppBarState
     val searchTextState: String by sharedViewModel.searchTextState
     val scaffoldState = rememberScaffoldState()
@@ -56,6 +61,9 @@ fun ListScreen(
         content = {
             ListContent(
                 allTasks = allTasks,
+                lowPriorityTasks = lowPriorityTasks,
+                highPriorityTasks = highPriorityTasks,
+                sortState = sortState,
                 searchedTasks = searchedTasks,
                 searchAppBarState = searchAppBarState,
                 navigateToTaskScreens = navigateToTaskScreen
@@ -100,7 +108,7 @@ fun DisplaySnackBar(
         if (action != Action.NO_ACTION) {
             scope.launch {
                 val snackBarResult = scaffoldState.snackbarHostState.showSnackbar(
-                    message = setMessage(action,taskTitle, context),
+                    message = setMessage(action, taskTitle, context),
                     actionLabel = setActionLabel(action, context)
                 )
                 undoDeletedTask(
@@ -121,8 +129,8 @@ private fun setActionLabel(action: Action, context: Context): String {
     }
 }
 
-private fun setMessage(action: Action, taskTitle: String,context: Context) :String{
-    return when(action) {
+private fun setMessage(action: Action, taskTitle: String, context: Context): String {
+    return when (action) {
         Action.DELETE_ALL -> context.getString(R.string.all_tasks_deleted)
         else -> "${action.name}: $taskTitle"
     }

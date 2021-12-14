@@ -25,7 +25,7 @@ class DataStoreRepository(private val context: Context) {
 
     private val dataStore = context.dataStore
 
-    suspend fun presistSortState(priority: Priority) {
+    suspend fun persistSortState(priority: Priority) {
         dataStore.edit { preferences ->
             preferences[PreferencesKey.sortKey] = priority.name
         }

@@ -14,14 +14,12 @@ import com.tuwaiq.husam.taskstodoapp.util.Constants.MAX_TITLE_LENGTH
 import com.tuwaiq.husam.taskstodoapp.util.RequestState
 import com.tuwaiq.husam.taskstodoapp.util.SearchAppBarState
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class SharedViewModel(context: Application) : AndroidViewModel(context) {
     private val repository: ToDoRepository = ToDoRepository(context)
-    private val dataStoreRepository:DataStoreRepository = DataStoreRepository(context = context)
+    private val dataStoreRepository: DataStoreRepository = DataStoreRepository(context = context)
 
     val action: MutableState<Action> = mutableStateOf(Action.NO_ACTION)
     val id: MutableState<Int> = mutableStateOf(0)
@@ -42,7 +40,7 @@ class SharedViewModel(context: Application) : AndroidViewModel(context) {
         _searchedTasks.value = RequestState.Loading
         try {
             viewModelScope.launch {
-                repository.searchDatabase("%$searchQuery%").collect{ searchedTasks ->
+                repository.searchDatabase("%$searchQuery%").collect { searchedTasks ->
                     _searchedTasks.value = RequestState.Success(searchedTasks)
                 }
             }
@@ -50,6 +48,44 @@ class SharedViewModel(context: Application) : AndroidViewModel(context) {
             _searchedTasks.value = RequestState.Error(e)
         }
         searchAppBarState.value = SearchAppBarState.TRIGGERED
+    }
+
+    val lowPriorityTasks: StateFlow<List<ToDoTask>> =
+        repository.sortByLowPriority.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = emptyList()
+        )
+
+    val highPriorityTasks: StateFlow<List<ToDoTask>> =
+        repository.sortByHighPriority.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = emptyList()
+        )
+
+    private val _sortState = MutableStateFlow<RequestState<Priority>>(RequestState.Idle)
+     val sortState : StateFlow<RequestState<Priority>> =_sortState
+
+    fun readSortState() {
+        _sortState.value = RequestState.Loading
+        try {
+            viewModelScope.launch {
+                dataStoreRepository.readSortState
+                    .map { Priority.valueOf(it) }
+                    .collect {
+                    _sortState.value = RequestState.Success(it)
+                }
+            }
+        } catch (e: Throwable) {
+            _sortState.value = RequestState.Error(e)
+        }
+    }
+
+    fun persistSortState(priority: Priority) {
+        viewModelScope.launch(Dispatchers.IO) {
+            dataStoreRepository.persistSortState(priority = priority)
+        }
     }
 
     private val _allTasks =
@@ -135,7 +171,7 @@ class SharedViewModel(context: Application) : AndroidViewModel(context) {
                 deleteTask()
             }
             Action.DELETE_ALL -> {
-            deleteAllTasks()
+                deleteAllTasks()
             }
             Action.UNDO -> {
                 addTask()
