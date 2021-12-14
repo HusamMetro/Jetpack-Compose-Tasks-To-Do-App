@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavHostController
@@ -18,6 +19,7 @@ class MainActivity : ComponentActivity() {
     //    private val sharedViewModel: SharedViewModel by viewModels()
     private lateinit var sharedViewModel: SharedViewModel
 
+    @ExperimentalAnimationApi
     @ExperimentalMaterialApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

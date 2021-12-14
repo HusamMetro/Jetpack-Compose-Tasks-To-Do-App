@@ -1,6 +1,7 @@
 package com.tuwaiq.husam.taskstodoapp.ui.screens.list
 
 import android.content.Context
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -15,6 +16,7 @@ import com.tuwaiq.husam.taskstodoapp.util.Action
 import com.tuwaiq.husam.taskstodoapp.util.SearchAppBarState
 import kotlinx.coroutines.launch
 
+@ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @Composable
 fun ListScreen(
@@ -66,6 +68,10 @@ fun ListScreen(
                 sortState = sortState,
                 searchedTasks = searchedTasks,
                 searchAppBarState = searchAppBarState,
+                onSwipeToDelete = { action, task ->
+                    sharedViewModel.action.value = action
+                    sharedViewModel.updateTaskFields(task)
+                },
                 navigateToTaskScreens = navigateToTaskScreen
             )
         },
