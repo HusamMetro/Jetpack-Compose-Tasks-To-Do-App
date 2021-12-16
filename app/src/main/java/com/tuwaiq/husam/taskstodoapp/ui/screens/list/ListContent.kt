@@ -137,7 +137,7 @@ fun DisplayTask(
                 else
                     -45f
             )
-
+            // move it to Above the LazyColumn to fix bug animation
             var itemAppeared by remember { mutableStateOf(false) }
             LaunchedEffect(key1 = true) {
                 itemAppeared = true

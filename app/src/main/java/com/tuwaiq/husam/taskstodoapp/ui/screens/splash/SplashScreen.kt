@@ -12,20 +12,24 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.tuwaiq.husam.taskstodoapp.R
 import com.tuwaiq.husam.taskstodoapp.ui.theme.DarkGray
 import com.tuwaiq.husam.taskstodoapp.ui.theme.Purple700
 import com.tuwaiq.husam.taskstodoapp.ui.theme.TasksToDoAppTheme
+import com.tuwaiq.husam.taskstodoapp.ui.theme.splashScreenBackground
 import com.tuwaiq.husam.taskstodoapp.util.Constants.SPLASH_SCREEN_DELAY
 import kotlinx.coroutines.delay
 
@@ -43,7 +47,7 @@ fun SplashScreen(
     val colorState by animateColorAsState(
         targetValue = if (startAnimation) Purple700 else DarkGray,
         animationSpec = tween(
-            durationMillis = 2000,1000
+            durationMillis = 2000, delayMillis = 1000
         )
     )
     val sizeState by animateSizeAsState(
@@ -51,7 +55,7 @@ fun SplashScreen(
             Size(100f, 100f)
         else Size(0f, 0f),
         animationSpec = tween(
-            durationMillis = 1500
+            durationMillis = 1000
         )
     )
     val alphaState by animateFloatAsState(
@@ -63,7 +67,7 @@ fun SplashScreen(
     val rotateState by animateFloatAsState(
         targetValue = if (startAnimation) 0f else 360f,
         animationSpec = tween(
-            durationMillis = 2000,1000
+            durationMillis = 2000, delayMillis = 1000
         )
     )
     LaunchedEffect(key1 = true) {
@@ -71,6 +75,23 @@ fun SplashScreen(
         delay(SPLASH_SCREEN_DELAY)
         navigateToListScreen()
     }
+    Splash(
+        offSetState = offSetState,
+        alphaState = alphaState,
+        rotateState = rotateState,
+        colorState = colorState,
+        sizeState = sizeState
+    )
+}
+
+@Composable
+fun Splash(
+    offSetState: Dp,
+    alphaState: Float,
+    rotateState: Float,
+    colorState: Color,
+    sizeState: Size,
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -103,13 +124,25 @@ fun getLogo(): Int {
 @Composable
 @Preview
 private fun SplashScreenPreview() {
-    SplashScreen(navigateToListScreen = {})
+    Splash(
+        sizeState = Size(100f, 100f),
+        rotateState = 0f,
+        alphaState = 1f,
+        colorState = MaterialTheme.colors.splashScreenBackground,
+        offSetState = 0.dp
+    )
 }
 
 @Composable
 @Preview
 private fun SplashScreenPreviewDark() {
     TasksToDoAppTheme(darkTheme = true) {
-        SplashScreen(navigateToListScreen = {})
+        Splash(
+            sizeState = Size(100f, 100f),
+            rotateState = 0f,
+            alphaState = 1f,
+            colorState = MaterialTheme.colors.splashScreenBackground,
+            offSetState = 0.dp
+        )
     }
 }

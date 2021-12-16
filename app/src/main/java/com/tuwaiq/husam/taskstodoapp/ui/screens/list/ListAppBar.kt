@@ -26,7 +26,6 @@ import com.tuwaiq.husam.taskstodoapp.ui.theme.*
 import com.tuwaiq.husam.taskstodoapp.ui.viewmodels.SharedViewModel
 import com.tuwaiq.husam.taskstodoapp.util.Action
 import com.tuwaiq.husam.taskstodoapp.util.SearchAppBarState
-import com.tuwaiq.husam.taskstodoapp.util.TrailingIconState
 
 @Composable
 fun ListAppBar(
@@ -142,29 +141,15 @@ fun SortAction(
             expanded = expanded,
             onDismissRequest = { expanded = false }
         ) {
-            DropdownMenuItem(
-                onClick = {
-                    expanded = false
-                    onSortClicked(Priority.LOW)
+            Priority.values().slice(setOf(0, 2, 3)).forEach { priority ->
+                DropdownMenuItem(
+                    onClick = {
+                        expanded = false
+                        onSortClicked(priority)
+                    }
+                ) {
+                    PriorityItem(priority = priority)
                 }
-            ) {
-                PriorityItem(priority = Priority.LOW)
-            }
-            DropdownMenuItem(
-                onClick = {
-                    expanded = false
-                    onSortClicked(Priority.HIGH)
-                }
-            ) {
-                PriorityItem(priority = Priority.HIGH)
-            }
-            DropdownMenuItem(
-                onClick = {
-                    expanded = false
-                    onSortClicked(Priority.NONE)
-                }
-            ) {
-                PriorityItem(priority = Priority.NONE)
             }
         }
     }
@@ -208,7 +193,6 @@ fun SearchAppBar(
     onCloseClicked: () -> Unit,
     onSearchClicked: (String) -> Unit
 ) {
-    var trailingIconState by remember { mutableStateOf(TrailingIconState.READY_TO_DELETE) }
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -254,20 +238,6 @@ fun SearchAppBar(
                         } else {
                             onCloseClicked()
                         }
-                        /*when (trailingIconState) {
-                            TrailingIconState.READY_TO_DELETE -> {
-                                onTextChange("")
-                                trailingIconState = TrailingIconState.READY_TO_CLOSE
-                            }
-                            TrailingIconState.READY_TO_CLOSE -> {
-                                if (text.isNotEmpty()) {
-                                    onTextChange("")
-                                } else {
-                                    onCloseClicked()
-                                    trailingIconState = TrailingIconState.READY_TO_DELETE
-                                }
-                            }
-                        }*/
                     }
                 ) {
                     Icon(

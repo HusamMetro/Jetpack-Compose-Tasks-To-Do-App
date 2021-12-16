@@ -5,10 +5,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -17,8 +14,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.tuwaiq.husam.taskstodoapp.R
 import com.tuwaiq.husam.taskstodoapp.data.models.Priority
@@ -35,9 +35,13 @@ fun PriorityDropDown(
     val angle: Float by animateFloatAsState(
         targetValue = if (expanded) 180f else 0f
     )
+    var parentSize by remember { mutableStateOf(IntSize.Zero) }
     Row(
         modifier = modifier
             .fillMaxWidth()
+            .onGloballyPositioned {
+                parentSize = it.size
+            }
             .background(MaterialTheme.colors.background)
             .height(PRIORITY_DROP_DOWN_HEIGHT)
             .clickable { expanded = true }
@@ -73,34 +77,20 @@ fun PriorityDropDown(
             )
         }
         DropdownMenu(
-            modifier = Modifier.fillMaxWidth(fraction = 0.94f),
+            modifier = Modifier.width(with(LocalDensity.current) {
+                parentSize.width.toDp()
+            }),
             expanded = expanded,
             onDismissRequest = { expanded = false }
         ) {
-            DropdownMenuItem(onClick = {
-                expanded = false
-                onPrioritySelected(Priority.LOW)
-            }) {
-                PriorityItem(priority = Priority.LOW)
+            Priority.values().slice(0..2).forEach { priority ->
+                DropdownMenuItem(onClick = {
+                    expanded = false
+                    onPrioritySelected(priority)
+                }) {
+                    PriorityItem(priority = priority)
+                }
             }
-            DropdownMenuItem(onClick = {
-                expanded = false
-                onPrioritySelected(Priority.MEDIUM)
-            }) {
-                PriorityItem(priority = Priority.MEDIUM)
-            }
-            DropdownMenuItem(onClick = {
-                expanded = false
-                onPrioritySelected(Priority.HIGH)
-            }) {
-                PriorityItem(priority = Priority.HIGH)
-            }
-            /*DropdownMenuItem(onClick = {
-                expanded = false
-                onPrioritySelected(Priority.NONE)
-            }) {
-                PriorityItem(priority = Priority.NONE)
-            }*/
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.tuwaiq.husam.taskstodoapp.ui.viewmodels
 
 import android.app.Application
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
@@ -36,6 +37,18 @@ class SharedViewModel(context: Application) : AndroidViewModel(context) {
         MutableStateFlow<RequestState<List<ToDoTask>>>(RequestState.Idle)
     val searchedTasks: StateFlow<RequestState<List<ToDoTask>>> = _searchedTasks
 
+    private val _sortState = MutableStateFlow<RequestState<Priority>>(RequestState.Idle)
+    val sortState: StateFlow<RequestState<Priority>> = _sortState
+
+    private val _allTasks =
+        MutableStateFlow<RequestState<List<ToDoTask>>>(RequestState.Idle)
+    val allTasks: StateFlow<RequestState<List<ToDoTask>>> = _allTasks
+
+    init {
+        getAllTasks()
+        readSortState()
+    }
+
     fun searchDatabase(searchQuery: String) {
         _searchedTasks.value = RequestState.Loading
         try {
@@ -64,18 +77,15 @@ class SharedViewModel(context: Application) : AndroidViewModel(context) {
             initialValue = emptyList()
         )
 
-    private val _sortState = MutableStateFlow<RequestState<Priority>>(RequestState.Idle)
-     val sortState : StateFlow<RequestState<Priority>> =_sortState
-
-    fun readSortState() {
+    private fun readSortState() {
         _sortState.value = RequestState.Loading
         try {
             viewModelScope.launch {
                 dataStoreRepository.readSortState
                     .map { Priority.valueOf(it) }
                     .collect {
-                    _sortState.value = RequestState.Success(it)
-                }
+                        _sortState.value = RequestState.Success(it)
+                    }
             }
         } catch (e: Throwable) {
             _sortState.value = RequestState.Error(e)
@@ -88,11 +98,7 @@ class SharedViewModel(context: Application) : AndroidViewModel(context) {
         }
     }
 
-    private val _allTasks =
-        MutableStateFlow<RequestState<List<ToDoTask>>>(RequestState.Idle)
-    val allTasks: StateFlow<RequestState<List<ToDoTask>>> = _allTasks
-
-    fun getAllTasks() {
+    private fun getAllTasks() {
         _allTasks.value = RequestState.Loading
         try {
             viewModelScope.launch {
@@ -180,7 +186,6 @@ class SharedViewModel(context: Application) : AndroidViewModel(context) {
 
             }
         }
-        this.action.value = Action.NO_ACTION
     }
 
     fun updateTaskFields(selectedTask: ToDoTask?) {

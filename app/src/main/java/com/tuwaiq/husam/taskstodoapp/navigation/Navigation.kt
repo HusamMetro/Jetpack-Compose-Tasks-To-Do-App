@@ -5,12 +5,11 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
+import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.tuwaiq.husam.taskstodoapp.navigation.destinations.listComposable
 import com.tuwaiq.husam.taskstodoapp.navigation.destinations.splashComposable
 import com.tuwaiq.husam.taskstodoapp.navigation.destinations.taskComposable
 import com.tuwaiq.husam.taskstodoapp.ui.viewmodels.SharedViewModel
-import com.tuwaiq.husam.taskstodoapp.util.Constants.LIST_SCREEN
 import com.tuwaiq.husam.taskstodoapp.util.Constants.SPLASH_SCREEN
 
 @ExperimentalAnimationApi
@@ -24,7 +23,7 @@ fun SetupNavigation(
         Screens(navController)
     }
 
-    NavHost(
+    AnimatedNavHost(
         navController = navController,
         startDestination = SPLASH_SCREEN
     ) {
