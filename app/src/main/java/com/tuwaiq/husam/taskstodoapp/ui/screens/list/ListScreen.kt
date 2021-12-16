@@ -9,7 +9,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavHostController
 import com.tuwaiq.husam.taskstodoapp.R
+import com.tuwaiq.husam.taskstodoapp.navigation.BottomBar
 import com.tuwaiq.husam.taskstodoapp.ui.theme.fabBackgroundColor
 import com.tuwaiq.husam.taskstodoapp.ui.viewmodels.SharedViewModel
 import com.tuwaiq.husam.taskstodoapp.util.Action
@@ -22,6 +24,7 @@ import kotlinx.coroutines.launch
 fun ListScreen(
     action: Action,
     navigateToTaskScreen: (taskId: Int) -> Unit,
+    navController: NavHostController,
     sharedViewModel: SharedViewModel
 ) {
 
@@ -76,6 +79,8 @@ fun ListScreen(
                 },
                 navigateToTaskScreens = navigateToTaskScreen
             )
+        }, bottomBar = {
+            BottomBar(navController = navController)
         },
         floatingActionButton = {
             ListFab(onFabClicked = navigateToTaskScreen)
