@@ -11,15 +11,16 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -112,7 +113,10 @@ fun DisplayTask(
     onSwipeToDelete: (Action, ToDoTask) -> Unit,
     navigateToTaskScreens: (taskId: Int) -> Unit
 ) {
-    LazyColumn {
+    LazyColumn(
+        contentPadding = PaddingValues(MEDIUM_PADDING),
+        verticalArrangement = Arrangement.spacedBy(MEDIUM_PADDING)
+    ) {
         items(
             items = tasks,
             key = { task ->
@@ -147,7 +151,7 @@ fun DisplayTask(
                 visible = itemAppeared && !isDismissed,
                 enter = expandVertically(
                     animationSpec = tween(
-                        durationMillis = 300
+                        durationMillis = 200
                     )
                 ),
                 exit = shrinkVertically(
@@ -195,6 +199,7 @@ fun RedBackground(degrees: Float) {
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .clip(RoundedCornerShape(10.dp))
             .background(HighPriorityColor)
             .padding(LARGEST_PADDING),
         contentAlignment = Alignment.CenterEnd
@@ -217,49 +222,61 @@ fun TaskItem(
     Surface(
         modifier = Modifier.fillMaxWidth(),
         color = MaterialTheme.colors.taskItemBackgroundColor,
-        shape = RectangleShape,
+        shape = RoundedCornerShape(10.dp),
         elevation = TASK_ITEM_ELEVATION,
         onClick = {
             navigateToTaskScreens(toDoTask.id)
         }
     ) {
-        Column(
+        Card(
             modifier = Modifier
-                .padding(all = LARGE_PADDING)
-                .fillMaxWidth()
+                .clip(shape = RoundedCornerShape(10.dp))
+                .background(
+                    MaterialTheme.colors.cardColor
+                ),
+            backgroundColor = Color.Transparent,
+            elevation = 0.dp
+
         ) {
-            Row {
-                Text(
-                    modifier = Modifier.weight(8f),
-                    text = toDoTask.title,
-                    color = MaterialTheme.colors.taskItemTextColor,
-                    style = MaterialTheme.typography.h5,
-                    fontWeight = FontWeight.Bold,
-                    maxLines = 1
-                )
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f),
-                    contentAlignment = Alignment.TopEnd
-                ) {
-                    Canvas(
-                        modifier = Modifier.size(PRIORITY_INDICATOR_SIZE),
+            Column(
+                modifier = Modifier
+                    .padding(all = LARGE_PADDING)
+                    .fillMaxWidth()
+            ) {
+                Row() {
+                    Text(
+                        modifier = Modifier.weight(8f),
+                        text = toDoTask.title,
+                        color = MaterialTheme.colors.taskItemTextColor,
+                        style = MaterialTheme.typography.h5,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f),
+                        contentAlignment = Alignment.TopEnd
                     ) {
-                        drawCircle(
-                            toDoTask.priority.color
-                        )
+                        Canvas(
+                            modifier = Modifier.size(PRIORITY_INDICATOR_SIZE),
+                        ) {
+                            drawCircle(
+                                toDoTask.priority.color
+                            )
+                        }
                     }
                 }
+                Text(
+                    text = toDoTask.description,
+                    modifier = Modifier.fillMaxWidth(),
+                    color = MaterialTheme.colors.taskItemTextColor,
+                    style = MaterialTheme.typography.subtitle1,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
             }
-            Text(
-                text = toDoTask.description,
-                modifier = Modifier.fillMaxWidth(),
-                color = MaterialTheme.colors.taskItemTextColor,
-                style = MaterialTheme.typography.subtitle1,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis
-            )
         }
     }
 }

@@ -1,32 +1,31 @@
-package com.tuwaiq.husam.taskstodoapp.ui.screens.suggested
+package com.tuwaiq.husam.taskstodoapp.ui.screens.challenges
 
-import android.app.Application
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
-import com.tuwaiq.husam.taskstodoapp.navigation.BottomBar
+import com.tuwaiq.husam.taskstodoapp.components.BottomBar
 import com.tuwaiq.husam.taskstodoapp.ui.viewmodels.SharedViewModel
 
 @Composable
-fun SuggestedScreen(
+fun ChallengesScreen(
     sharedViewModel: SharedViewModel,
     navController: NavHostController
 ) {
     Scaffold(
         topBar = {
-            SuggestedAppBar()
+            ChallengesAppBar()
         },
         bottomBar = {
             BottomBar(navController = navController)
         },
         content = {
-            SuggestedContent()
+            ChallengesContent()
         }
     )
 }
 
 /*
 @Composable
-private fun SuggestedScreenPreview() {
+private fun ChallengesScreenPreview() {
     SuggestedScreen(sharedViewModel = SharedViewModel(Application()))
 }*/

@@ -11,7 +11,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import com.tuwaiq.husam.taskstodoapp.R
-import com.tuwaiq.husam.taskstodoapp.navigation.BottomBar
+import com.tuwaiq.husam.taskstodoapp.components.BottomBar
 import com.tuwaiq.husam.taskstodoapp.ui.theme.fabBackgroundColor
 import com.tuwaiq.husam.taskstodoapp.ui.viewmodels.SharedViewModel
 import com.tuwaiq.husam.taskstodoapp.util.Action

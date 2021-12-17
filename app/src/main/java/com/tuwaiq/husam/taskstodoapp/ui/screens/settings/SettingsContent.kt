@@ -22,7 +22,7 @@ fun SettingsContent() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.background),
+            .background(HighPriorityColor),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -30,33 +30,6 @@ fun SettingsContent() {
             text = "Settings Screen",
             fontSize = MaterialTheme.typography.h4.fontSize
         )
-        Box(
-            modifier = Modifier
-                .background(Color.Gray)
-        ) {
-            Text(
-                text = "Settings Screen",
-                fontSize = MaterialTheme.typography.h4.fontSize
-            )
-        }
-        Box(
-            modifier = Modifier
-                .background(Color.Green)
-        ) {
-            Text(
-                text = "Settings Screen",
-                fontSize = MaterialTheme.typography.h4.fontSize
-            )
-        }
-        Box(
-            modifier = Modifier
-                .background(Color.Blue)
-        ) {
-            Text(
-                text = "Settings Screen",
-                fontSize = MaterialTheme.typography.h4.fontSize
-            )
-        }
     }
 }
 

@@ -1,13 +1,16 @@
-package com.tuwaiq.husam.taskstodoapp.navigation
+package com.tuwaiq.husam.taskstodoapp.components
 
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.tuwaiq.husam.taskstodoapp.navigation.BottomBarScreen
+import com.tuwaiq.husam.taskstodoapp.ui.theme.topAppBarBackgroundColor
 
 @Composable
 fun BottomBar(
@@ -15,13 +18,13 @@ fun BottomBar(
 ) {
     val screens = listOf(
         BottomBarScreen.Home,
-        BottomBarScreen.Suggested,
+        BottomBarScreen.Challenges,
         BottomBarScreen.Settings,
     )
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    BottomNavigation() {
+    BottomNavigation(backgroundColor = MaterialTheme.colors.topAppBarBackgroundColor) {
         screens.forEach { screen ->
             AddItem(
                 screen = screen,
@@ -57,6 +60,8 @@ fun RowScope.AddItem(
                 launchSingleTop = true
             }
         },
-        unselectedContentColor = LocalContentColor.current.copy(alpha = ContentAlpha.disabled)
+        selectedContentColor = Color.Black,
+        unselectedContentColor = Color.White.copy(alpha = ContentAlpha.disabled)
+//      unselectedContentColor = LocalContentColor.current.copy(alpha = ContentAlpha.disabled)
     )
 }

@@ -45,7 +45,8 @@ fun SplashScreen(
         )
     )
     val colorState by animateColorAsState(
-        targetValue = if (startAnimation) Purple700 else DarkGray,
+        targetValue = if (startAnimation) MaterialTheme.colors.primary else DarkGray,
+//        targetValue = if (startAnimation) Purple700 else DarkGray,
         animationSpec = tween(
             durationMillis = 2000, delayMillis = 1000
         )

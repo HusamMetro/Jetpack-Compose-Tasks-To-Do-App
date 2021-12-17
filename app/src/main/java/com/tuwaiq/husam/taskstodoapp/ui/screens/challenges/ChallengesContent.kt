@@ -1,4 +1,4 @@
-package com.tuwaiq.husam.taskstodoapp.ui.screens.suggested
+package com.tuwaiq.husam.taskstodoapp.ui.screens.challenges
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -16,46 +16,23 @@ import com.tuwaiq.husam.taskstodoapp.ui.theme.LowPriorityColor
 import com.tuwaiq.husam.taskstodoapp.ui.theme.MediumPriorityColor
 
 @Composable
-fun SuggestedContent() {
+fun ChallengesContent() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.background),
+            .background(MediumPriorityColor),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Box(
-            modifier = Modifier
-                .background(LowPriorityColor)
-        ) {
             Text(
-                text = "Suggested Screen",
+                text = "Challenges Screen",
                 fontSize = MaterialTheme.typography.h4.fontSize
             )
-        }
-        Box(
-            modifier = Modifier
-                .background(HighPriorityColor)
-        ) {
-            Text(
-                text = "Suggested Screen",
-                fontSize = MaterialTheme.typography.h4.fontSize
-            )
-        }
-        Box(
-            modifier = Modifier
-                .background(MediumPriorityColor)
-        ) {
-            Text(
-                text = "Suggested Screen",
-                fontSize = MaterialTheme.typography.h4.fontSize
-            )
-        }
     }
 }
 
 @Composable
 @Preview
-private fun SuggestedContentPreview() {
-    SuggestedContent()
+private fun ChallengesContentPreview() {
+    ChallengesContent()
 }

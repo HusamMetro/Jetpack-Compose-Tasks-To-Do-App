@@ -1,4 +1,4 @@
-package com.tuwaiq.husam.taskstodoapp.ui.screens.suggested
+package com.tuwaiq.husam.taskstodoapp.ui.screens.challenges
 
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -11,12 +11,12 @@ import com.tuwaiq.husam.taskstodoapp.ui.theme.topAppBarBackgroundColor
 import com.tuwaiq.husam.taskstodoapp.ui.theme.topAppBarContentColor
 
 @Composable
-fun SuggestedAppBar() {
+fun ChallengesAppBar() {
     TopAppBar(
         title = {
             Text(
                 // name might change later
-                text = stringResource(R.string.suggested),
+                text = stringResource(R.string.challenges),
                 color = MaterialTheme.colors.topAppBarContentColor
             )
         },
@@ -26,6 +26,6 @@ fun SuggestedAppBar() {
 
 @Composable
 @Preview
-private fun SuggestedAppBarPreview() {
-    SuggestedAppBar()
+private fun ChallengesAppBarPreview() {
+    ChallengesAppBar()
 }

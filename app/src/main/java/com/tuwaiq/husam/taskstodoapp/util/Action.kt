@@ -10,5 +10,9 @@ enum class Action {
 }
 
 fun String?.toAction(): Action {
-    return if (this.isNullOrEmpty()) Action.NO_ACTION else Action.valueOf(this)
+    return try {
+        if (this.isNullOrEmpty()) Action.NO_ACTION else Action.valueOf(this)
+    }catch (e:Exception){
+        Action.NO_ACTION
+    }
 }

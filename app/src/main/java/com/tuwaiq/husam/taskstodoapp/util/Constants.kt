@@ -7,7 +7,7 @@ object Constants {
     const val SPLASH_SCREEN = "splash"
     const val LIST_SCREEN = "list/{action}"
     const val TASK_SCREEN = "task/{taskId}"
-    const val SUGGESTED_SCREEN = "suggested"
+    const val CHALLENGES_SCREEN = "challenges"
     const val SETTINGS_SCREEN = "settings"
 
     const val LIST_ARGUMENT_KEY = "action"
@@ -16,6 +16,6 @@ object Constants {
     const val PREFERENCE_NAME = "todo_preferences"
     const val PREFERENCE_KEY = "sort_state"
 
-    const val MAX_TITLE_LENGTH = 30
+    const val MAX_TITLE_LENGTH = 50
     const val SPLASH_SCREEN_DELAY = 3000L
 }

@@ -1,7 +1,9 @@
 package com.tuwaiq.husam.taskstodoapp.ui.theme
 
 import androidx.compose.material.Colors
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
 val Purple200 = Color(0xFFBB86FC)
@@ -19,9 +21,17 @@ val HighPriorityColor = Color(0xFFFF4646)
 val NonePriorityColor = MediumGray
 //val NonePriorityColor = Color(0xFFFFFFFF)
 
+val LightPurple = Color(0xFF787FF6)
+val LightBlue1 = Color(0xFF78D5F5)
+val LightBlue2 = Color(0xFF4ADEDE)
+val MediumBlue = Color(0xFF1CA7EC)
+val DarkBlue = Color(0xFF1F2F98)
+val DarkerBlue = Color(0xFF0F1649)
+
 val Colors.splashScreenBackground: Color
     @Composable
-    get() = if (isLight) Purple700 else Color.Black
+    get() = MaterialTheme.colors.primary
+//    get() = if (isLight) Purple700 else Color.Black
 
 val Colors.taskItemTextColor: Color
     @Composable
@@ -43,4 +53,11 @@ val Colors.topAppBarContentColor: Color
 
 val Colors.topAppBarBackgroundColor: Color
     @Composable
-    get() = if (isLight) Purple500 else Color.Black
+    get() = MaterialTheme.colors.primary
+//    get() = if (isLight) Purple500 else Color.Black
+
+val Colors.cardColor: Brush
+    @Composable
+    get() = if (isLight)
+        Brush.horizontalGradient(listOf(LightBlue2, MediumBlue))
+    else Brush.horizontalGradient(listOf(DarkerBlue, DarkBlue))

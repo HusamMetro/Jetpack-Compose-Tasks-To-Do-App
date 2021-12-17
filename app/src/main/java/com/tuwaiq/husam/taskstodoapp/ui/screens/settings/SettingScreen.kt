@@ -3,7 +3,7 @@ package com.tuwaiq.husam.taskstodoapp.ui.screens.settings
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
-import com.tuwaiq.husam.taskstodoapp.navigation.BottomBar
+import com.tuwaiq.husam.taskstodoapp.components.BottomBar
 import com.tuwaiq.husam.taskstodoapp.ui.viewmodels.SharedViewModel
 
 @Composable

@@ -10,11 +10,9 @@ import com.google.accompanist.navigation.animation.composable
 import com.tuwaiq.husam.taskstodoapp.navigation.destinations.listComposable
 import com.tuwaiq.husam.taskstodoapp.navigation.destinations.splashComposable
 import com.tuwaiq.husam.taskstodoapp.navigation.destinations.taskComposable
-import com.tuwaiq.husam.taskstodoapp.ui.screens.list.ListScreen
 import com.tuwaiq.husam.taskstodoapp.ui.screens.settings.SettingsScreen
-import com.tuwaiq.husam.taskstodoapp.ui.screens.suggested.SuggestedScreen
+import com.tuwaiq.husam.taskstodoapp.ui.screens.challenges.ChallengesScreen
 import com.tuwaiq.husam.taskstodoapp.ui.viewmodels.SharedViewModel
-import com.tuwaiq.husam.taskstodoapp.util.Action
 import com.tuwaiq.husam.taskstodoapp.util.Constants.SPLASH_SCREEN
 
 @ExperimentalAnimationApi
@@ -51,7 +49,7 @@ fun SetupNavigation(
          suggestedComposable(
              sharedViewModel = sharedViewModel
          )*/
-        composable(route = BottomBarScreen.Home.route) {
+        /*composable(route = BottomBarScreen.Home.route) {
             ListScreen(
                 action = Action.NO_ACTION,
                 navigateToTaskScreen = { taskId ->
@@ -60,9 +58,9 @@ fun SetupNavigation(
                 navController = navController,
                 sharedViewModel = sharedViewModel
             )
-        }
-        composable(route = BottomBarScreen.Suggested.route) {
-            SuggestedScreen(
+        }*/
+        composable(route = BottomBarScreen.Challenges.route) {
+            ChallengesScreen(
                 sharedViewModel = sharedViewModel,
                 navController = navController
             )
