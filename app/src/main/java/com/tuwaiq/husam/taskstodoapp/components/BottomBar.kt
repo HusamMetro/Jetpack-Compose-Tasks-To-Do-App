@@ -60,7 +60,7 @@ fun RowScope.AddItem(
                 launchSingleTop = true
             }
         },
-        selectedContentColor = Color.Black,
+        selectedContentColor = Color.White,
         unselectedContentColor = Color.White.copy(alpha = ContentAlpha.disabled)
 //      unselectedContentColor = LocalContentColor.current.copy(alpha = ContentAlpha.disabled)
     )

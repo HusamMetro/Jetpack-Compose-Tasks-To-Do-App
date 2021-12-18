@@ -28,6 +28,21 @@ val MediumBlue = Color(0xFF1CA7EC)
 val DarkBlue = Color(0xFF1F2F98)
 val DarkerBlue = Color(0xFF0F1649)
 
+val PastelStrawberry = Color(0xFFE44F5C)
+
+val LightBeige = Color(0xFFF5F5DC)
+val PeachBeige = Color(0xFFFFE5B4)
+val PeachBeige2 = Color(0xFFF6E3BA)
+val PeachBeige3 = Color(0xFFF1E9D9)
+val MediumBeige = Color(0xFFDFCAA0)
+val DarkBeige = Color(0xFFDECFAC)
+
+val LightGreen = Color(0xFF92FE9D)
+val LightBlue = Color(0xFF00C9FF)
+
+val MediumGreen = Color(0xFF02C39A)
+val MediumYellow = Color(0xFFF0F3BD)
+
 val Colors.splashScreenBackground: Color
     @Composable
     get() = MaterialTheme.colors.primary

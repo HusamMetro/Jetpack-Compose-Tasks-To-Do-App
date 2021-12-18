@@ -5,15 +5,17 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private val DarkColorPalette = darkColors(
-    primary = DarkBlue,
+    primary = DarkBeige,
     primaryVariant = MediumBlue,
     secondary = Teal200
 )
 
 private val LightColorPalette = lightColors(
-    primary = MediumBlue,
+    primary = MediumBeige,
     primaryVariant = LightBlue2,
     secondary = Teal200
 
@@ -26,6 +28,7 @@ private val LightColorPalette = lightColors(
     onSurface = Color.Black,
     */
 )
+
 
 @Composable
 fun TasksToDoAppTheme(
@@ -44,4 +47,15 @@ fun TasksToDoAppTheme(
         shapes = Shapes,
         content = content
     )
+
+    val systemUiController = rememberSystemUiController()
+    if (darkTheme) {
+        systemUiController.setSystemBarsColor(
+            color = Color.Transparent
+        )
+    } else {
+        systemUiController.setSystemBarsColor(
+            color = LightColorPalette.primary
+        )
+    }
 }
