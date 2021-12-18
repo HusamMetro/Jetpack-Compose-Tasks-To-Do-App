@@ -50,7 +50,7 @@ val Colors.splashScreenBackground: Color
 
 val Colors.taskItemTextColor: Color
     @Composable
-    get() = if (isLight) DarkGray else Color.LightGray
+    get() = if (isLight) DarkGray else Color.White
 
 val Colors.taskItemBackgroundColor: Color
     @Composable
@@ -58,12 +58,12 @@ val Colors.taskItemBackgroundColor: Color
 
 val Colors.fabBackgroundColor: Color
     @Composable
-    get() = if (isLight) Teal200 else Purple700
+    get() = if (isLight) primary else primary
 
 
 val Colors.topAppBarContentColor: Color
     @Composable
-    get() = if (isLight) Color.White else LightGray
+    get() = if (isLight) Color.Black else LightGray
 
 
 val Colors.topAppBarBackgroundColor: Color
@@ -74,5 +74,28 @@ val Colors.topAppBarBackgroundColor: Color
 val Colors.cardColor: Brush
     @Composable
     get() = if (isLight)
-        Brush.horizontalGradient(listOf(LightBlue2, MediumBlue))
+        Brush.horizontalGradient(listOf(MediumGreen,LightGreen))
     else Brush.horizontalGradient(listOf(DarkerBlue, DarkBlue))
+
+val Colors.cardBorderColor: Color
+    @Composable
+    get() = if (isLight) Color.Transparent else Color.Transparent
+
+val Colors.foregroundIndicatorColor: Color
+    @Composable
+    get() = if (isLight) Color.DarkGray else LightBlue2
+
+val Colors.backgroundIndicatorColor: Color
+    @Composable
+    get() = if (isLight) Color.White else MediumGray
+
+val Colors.bottomBarSelectedContentColor: Color
+    @Composable
+    get() = topAppBarContentColor
+
+
+val Colors.bottomBarUnselectedContentColor: Color
+    @Composable
+    get() = if (isLight) Color.White else MediumGray
+
+

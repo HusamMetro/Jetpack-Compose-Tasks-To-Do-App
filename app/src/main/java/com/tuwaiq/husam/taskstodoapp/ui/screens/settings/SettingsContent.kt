@@ -12,22 +12,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import com.tuwaiq.husam.taskstodoapp.ui.theme.HighPriorityColor
-import com.tuwaiq.husam.taskstodoapp.ui.theme.LowPriorityColor
-import com.tuwaiq.husam.taskstodoapp.ui.theme.MediumGray
-import com.tuwaiq.husam.taskstodoapp.ui.theme.MediumPriorityColor
+import com.tuwaiq.husam.taskstodoapp.ui.theme.*
 
 @Composable
 fun SettingsContent() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(HighPriorityColor),
+            .background(MaterialTheme.colors.surface),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         Text(
             text = "Settings Screen",
+            color = MaterialTheme.colors.taskItemTextColor,
             fontSize = MaterialTheme.typography.h4.fontSize
         )
     }

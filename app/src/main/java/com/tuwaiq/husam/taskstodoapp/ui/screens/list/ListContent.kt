@@ -1,5 +1,6 @@
 package com.tuwaiq.husam.taskstodoapp.ui.screens.list
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.*
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
@@ -38,6 +39,7 @@ import com.tuwaiq.husam.taskstodoapp.util.RequestState
 import com.tuwaiq.husam.taskstodoapp.util.SearchAppBarState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.random.Random
 
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
@@ -108,6 +110,7 @@ fun HandleListContent(
     }
 }
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @Composable
@@ -240,7 +243,7 @@ fun TaskItem(
             modifier = Modifier
 //                .clip(shape = RoundedCornerShape(10.dp))
                 .background(
-                    Brush.horizontalGradient(listOf(PeachBeige2, LightBeige))
+                    MaterialTheme.colors.cardColor
                 )
                 .animateContentSize(
                     animationSpec = tween(
@@ -250,7 +253,7 @@ fun TaskItem(
                 ),
             backgroundColor = Color.Transparent,
             elevation = 0.dp,
-            border = BorderStroke(2.dp, DarkBeige)
+            border = BorderStroke(2.dp, MaterialTheme.colors.cardBorderColor)
         ) {
             Column(
                 modifier = Modifier
@@ -263,12 +266,12 @@ fun TaskItem(
             ) {
                 Row {
                     CustomComponent(
-                        indicatorValue = 3,
+                        indicatorValue = Random.nextInt(6),
                         canvasSize = if (expandState) 60.dp else 32.dp,
                         backgroundIndicatorStrokeWidth = 10f,
                         foregroundIndicatorStrokeWidth = 10f,
-                        foregroundIndicatorColor = LightBlue1,
-                        backgroundIndicatorColor = MediumGray,
+                        foregroundIndicatorColor = MaterialTheme.colors.foregroundIndicatorColor,
+                        backgroundIndicatorColor =  MaterialTheme.colors.backgroundIndicatorColor,
                         bigTextFontSize = 10.sp,
                         smallTextFontSize = 0.sp,
                         maxIndicatorValue = 5,

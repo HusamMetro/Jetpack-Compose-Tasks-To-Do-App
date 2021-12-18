@@ -27,7 +27,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.tuwaiq.husam.taskstodoapp.R
 import com.tuwaiq.husam.taskstodoapp.ui.theme.DarkGray
-import com.tuwaiq.husam.taskstodoapp.ui.theme.Purple700
 import com.tuwaiq.husam.taskstodoapp.ui.theme.TasksToDoAppTheme
 import com.tuwaiq.husam.taskstodoapp.ui.theme.splashScreenBackground
 import com.tuwaiq.husam.taskstodoapp.util.Constants.SPLASH_SCREEN_DELAY
@@ -117,7 +116,8 @@ fun getLogo(): Int {
     return if (isSystemInDarkTheme()) {
         R.drawable.ic_logo_dark
     } else {
-        R.drawable.ic_logo_light
+//        R.drawable.ic_logo_light
+        R.drawable.ic_logo_dark
     }
 
 }

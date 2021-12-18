@@ -9,14 +9,14 @@ import androidx.compose.ui.graphics.Color
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private val DarkColorPalette = darkColors(
-    primary = DarkBeige,
+    primary = DarkerBlue,
     primaryVariant = MediumBlue,
     secondary = Teal200
 )
 
 private val LightColorPalette = lightColors(
-    primary = MediumBeige,
-    primaryVariant = LightBlue2,
+    primary = MediumGreen,
+    primaryVariant = MediumBlue,
     secondary = Teal200
 
     /* Other default colors to override
@@ -51,7 +51,7 @@ fun TasksToDoAppTheme(
     val systemUiController = rememberSystemUiController()
     if (darkTheme) {
         systemUiController.setSystemBarsColor(
-            color = Color.Transparent
+            color = DarkColorPalette.primary
         )
     } else {
         systemUiController.setSystemBarsColor(

@@ -4,12 +4,13 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.tuwaiq.husam.taskstodoapp.navigation.BottomBarScreen
+import com.tuwaiq.husam.taskstodoapp.ui.theme.bottomBarSelectedContentColor
+import com.tuwaiq.husam.taskstodoapp.ui.theme.bottomBarUnselectedContentColor
 import com.tuwaiq.husam.taskstodoapp.ui.theme.topAppBarBackgroundColor
 
 @Composable
@@ -60,8 +61,9 @@ fun RowScope.AddItem(
                 launchSingleTop = true
             }
         },
-        selectedContentColor = Color.White,
-        unselectedContentColor = Color.White.copy(alpha = ContentAlpha.disabled)
+        selectedContentColor = MaterialTheme.colors.bottomBarSelectedContentColor,
+        unselectedContentColor = MaterialTheme.colors.bottomBarUnselectedContentColor.copy(alpha = ContentAlpha.disabled)
+//        unselectedContentColor = Color.White.copy(alpha = ContentAlpha.disabled)
 //      unselectedContentColor = LocalContentColor.current.copy(alpha = ContentAlpha.disabled)
     )
 }
