@@ -7,10 +7,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavType
+import androidx.navigation.*
 import com.google.accompanist.navigation.animation.composable
-import androidx.navigation.navArgument
 import com.tuwaiq.husam.taskstodoapp.ui.screens.list.ListScreen
 import com.tuwaiq.husam.taskstodoapp.ui.viewmodels.SharedViewModel
 import com.tuwaiq.husam.taskstodoapp.util.Action
@@ -22,7 +20,8 @@ import com.tuwaiq.husam.taskstodoapp.util.toAction
 @ExperimentalMaterialApi
 fun NavGraphBuilder.listComposable(
     navigateToTaskScreen: (taskId: Int) -> Unit,
-    sharedViewModel: SharedViewModel
+    sharedViewModel: SharedViewModel,
+    navController: NavHostController
 ) {
     composable(
         route = LIST_SCREEN,
@@ -46,7 +45,8 @@ fun NavGraphBuilder.listComposable(
         ListScreen(
             action = dataBaseAction,
             navigateToTaskScreen = navigateToTaskScreen,
-            sharedViewModel = sharedViewModel
+            sharedViewModel = sharedViewModel,
+            navController = navController
         )
     }
 }
