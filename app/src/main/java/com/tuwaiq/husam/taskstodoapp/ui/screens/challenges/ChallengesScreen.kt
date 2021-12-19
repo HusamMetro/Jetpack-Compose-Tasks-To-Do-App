@@ -1,16 +1,28 @@
 package com.tuwaiq.husam.taskstodoapp.ui.screens.challenges
 
 import android.util.Log
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
+import com.tuwaiq.husam.taskstodoapp.R
 import com.tuwaiq.husam.taskstodoapp.components.BottomBar
+import com.tuwaiq.husam.taskstodoapp.ui.theme.EMPTY_ICON_SIZE
+import com.tuwaiq.husam.taskstodoapp.ui.theme.MediumGray
 import com.tuwaiq.husam.taskstodoapp.ui.viewmodels.SharedViewModel
 
 @ExperimentalMaterialApi
@@ -48,13 +60,45 @@ fun ChallengesScreen(
             if (sharedViewModel.errorMessage.isEmpty()) {
                 ChallengesContent(sharedViewModel.mockTasks, sharedViewModel)
             } else {
-                Text(text = sharedViewModel.errorMessage)
+                EmptyContentNoConnection()
             }
             /*mockTasks?.let {
                 ChallengesContent(it, sharedViewModel)
             }*/
         }
     )
+}
+
+@Composable
+fun EmptyContentNoConnection() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colors.background),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Icon(
+            modifier = Modifier.size(EMPTY_ICON_SIZE),
+            painter = painterResource(id = R.drawable.ic_baseline_wifi_off_24),
+            contentDescription = stringResource(
+                R.string.sad_face_icon
+            ),
+            tint = MediumGray
+        )
+        Text(
+            text = "No Network Please Reconnect",
+            color = MediumGray,
+            fontWeight = FontWeight.Bold,
+            fontSize = MaterialTheme.typography.h6.fontSize
+        )
+    }
+}
+
+@Composable
+@Preview
+fun Preview() {
+    EmptyContentNoConnection()
 }
 
 /*
