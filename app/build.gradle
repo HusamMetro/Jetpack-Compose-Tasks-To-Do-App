@@ -81,6 +81,18 @@ dependencies {
     // DataStore Preferences
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
+    // Retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-scalars:2.9.0'
+
+    // jason
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+
+
+    implementation "androidx.compose.runtime:runtime-livedata:1.0.5"
+
+
+
     // Dagger - Hilt
    /* implementation("com.google.dagger:hilt-android:$rootProject.daggerHilt")
     kapt"com.google.dagger:hilt-android-compiler:$rootProject.daggerHilt"

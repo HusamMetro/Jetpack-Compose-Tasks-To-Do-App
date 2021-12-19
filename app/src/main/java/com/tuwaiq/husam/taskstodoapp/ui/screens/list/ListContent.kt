@@ -16,12 +16,12 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -271,7 +271,7 @@ fun TaskItem(
                         backgroundIndicatorStrokeWidth = 10f,
                         foregroundIndicatorStrokeWidth = 10f,
                         foregroundIndicatorColor = MaterialTheme.colors.foregroundIndicatorColor,
-                        backgroundIndicatorColor =  MaterialTheme.colors.backgroundIndicatorColor,
+                        backgroundIndicatorColor = MaterialTheme.colors.backgroundIndicatorColor,
                         bigTextFontSize = 10.sp,
                         smallTextFontSize = 0.sp,
                         maxIndicatorValue = 5,
@@ -284,7 +284,7 @@ fun TaskItem(
                             .padding(start = 10.dp),
                         text = toDoTask.title,
                         color = MaterialTheme.colors.taskItemTextColor,
-                        style = MaterialTheme.typography.h5,
+                        style = if (!expandState) MaterialTheme.typography.h5 else MaterialTheme.typography.h4,
                         fontWeight = FontWeight.Bold,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
@@ -314,30 +314,35 @@ fun TaskItem(
                 )
                 if (expandState) {
                     Text(
-                        text = "medication.description!!",
+                        text = "Start Date : 8/10/2021",
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         color = MaterialTheme.colors.taskItemTextColor
                     )
                     Text(
-                        text = "medication.form!!",
+                        text = "End Date : 20/12/2021",
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         color = MaterialTheme.colors.taskItemTextColor
                     )
-                    Text(
-                        text = "medication.dosage.toString()",
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        color = MaterialTheme.colors.taskItemTextColor
-                    )
+                    Row {
+                        Icon(imageVector = Icons.Filled.Person, contentDescription = "n")
+                        Spacer(modifier = Modifier.padding(horizontal = 5.dp))
+                        Text(
+                            text = "Anything ... just to fill the column",
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            color = MaterialTheme.colors.taskItemTextColor
+                        )
+                    }
                 }
                 Row(
                     Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
+                    horizontalArrangement = Arrangement.End
                 ) {
                     IconButton(modifier = Modifier
+                        .offset(15.dp)
 //                        .alpha(ContentAlpha.medium)
                         .rotate(rotationState),
                         onClick = {
@@ -362,8 +367,7 @@ private fun TaskItemPreview() {
     Box(
         Modifier
             .padding(20.dp)
-            .fillMaxWidth()
-            ,
+            .fillMaxWidth(),
         contentAlignment = Alignment.Center
     ) {
         TaskItem(
@@ -372,9 +376,8 @@ private fun TaskItemPreview() {
                 "Finish Project",
                 "Before the End of 30 December",
                 Priority.HIGH
-            ),
-            navigateToTaskScreens = {}
-        )
+            )
+        ) {}
     }
 
 }
