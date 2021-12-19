@@ -1,14 +1,14 @@
 package com.tuwaiq.husam.taskstodoapp.ui.viewmodels
 
 import android.app.Application
-import android.util.Log
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.tuwaiq.husam.taskstodoapp.data.models.MockToDoTask
 import com.tuwaiq.husam.taskstodoapp.data.models.Priority
 import com.tuwaiq.husam.taskstodoapp.data.models.ToDoTask
 import com.tuwaiq.husam.taskstodoapp.data.repositories.DataStoreRepository
+import com.tuwaiq.husam.taskstodoapp.data.repositories.MockRepo
 import com.tuwaiq.husam.taskstodoapp.data.repositories.ToDoRepository
 import com.tuwaiq.husam.taskstodoapp.util.Action
 import com.tuwaiq.husam.taskstodoapp.util.Constants.MAX_TITLE_LENGTH
@@ -21,6 +21,61 @@ import kotlinx.coroutines.launch
 class SharedViewModel(context: Application) : AndroidViewModel(context) {
     private val repository: ToDoRepository = ToDoRepository(context)
     private val dataStoreRepository: DataStoreRepository = DataStoreRepository(context = context)
+
+
+    private val mockRepo: MockRepo = MockRepo()
+
+    /*fun getMockTasks(): MutableLiveData<List<MockToDoTask>> {
+        val tasks = MutableLiveData<List<MockToDoTask>>()
+        viewModelScope.launch(Dispatchers.IO) {
+            val list = mockRepo.fetchTasks()
+            Log.e("mockTasks", "Called")
+            tasks.postValue(list)
+        }
+        return tasks
+    }*/
+
+    private val _mockTasks = mutableStateListOf<MockToDoTask>()
+    var errorMessage: String by mutableStateOf("")
+    val mockTasks: List<MockToDoTask>
+        get() = _mockTasks
+
+    fun getMockTasks() {
+        errorMessage = ""
+        viewModelScope.launch {
+            try {
+                _mockTasks.clear()
+                _mockTasks.addAll(mockRepo.fetchTasks())
+            } catch (e: Throwable) {
+                errorMessage = e.message.toString()
+            }
+        }
+    }
+
+    /* private fun getMockTasks() {
+         _mockTasks.value = RequestState.Loading
+         try {
+             viewModelScope.launch {
+                 mockRepo.getMockTasks.collect {
+                     _mockTasks.value = RequestState.Success(it)
+                 }
+             }
+         } catch (e: Throwable) {
+             _mockTasks.value = RequestState.Error(e)
+         }
+     }*/
+
+
+    /*  fun getMockTasks() : MutableLiveData<RequestState<List<MockToDoTask>>> {
+          val tasks = MutableLiveData<RequestState<List<MockToDoTask>>>()
+          viewModelScope.launch(Dispatchers.IO) {
+              val list = mockRepo.fetchTasks()
+              Log.e("mockTasks","Called")
+              tasks.postValue(RequestState.Success(list))
+          }
+          return tasks
+     }
+ */
 
     val action: MutableState<Action> = mutableStateOf(Action.NO_ACTION)
     val id: MutableState<Int> = mutableStateOf(0)
