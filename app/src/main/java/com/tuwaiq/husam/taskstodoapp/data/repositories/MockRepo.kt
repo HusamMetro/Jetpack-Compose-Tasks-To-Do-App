@@ -4,15 +4,17 @@ import androidx.lifecycle.LiveData
 import com.tuwaiq.husam.taskstodoapp.data.models.MockToDoTask
 import com.tuwaiq.husam.taskstodoapp.data.models.ToDoTask
 import com.tuwaiq.husam.taskstodoapp.data.network.MockBuilder
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.withContext
 
 class MockRepo {
     private val api = MockBuilder.mockApi
 
 //    val getMockTasks: Flow<List<MockToDoTask>> = api.fetchTasks()
 
-   suspend fun fetchTasks(): List<MockToDoTask> {
-        return api.fetchTasks()
+   suspend fun fetchTasks(): List<MockToDoTask> = withContext(Dispatchers.IO){
+        api.fetchTasks()
     }
 }
 /*

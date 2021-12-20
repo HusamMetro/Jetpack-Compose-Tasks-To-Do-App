@@ -91,6 +91,8 @@ dependencies {
 
     implementation "androidx.compose.runtime:runtime-livedata:1.0.5"
 
+    // Extended Icons
+    implementation "androidx.compose.material:material-icons-extended:$compose_version"
 
 
     // Dagger - Hilt

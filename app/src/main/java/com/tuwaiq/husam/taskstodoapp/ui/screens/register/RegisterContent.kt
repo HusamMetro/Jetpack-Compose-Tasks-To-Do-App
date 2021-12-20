@@ -1,4 +1,4 @@
-package com.tuwaiq.husam.taskstodoapp.ui.screens.login
+package com.tuwaiq.husam.taskstodoapp.ui.screens.register
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -10,15 +10,13 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Password
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.PhoneAndroid
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,28 +33,23 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.tuwaiq.husam.taskstodoapp.R
 import com.tuwaiq.husam.taskstodoapp.components.CommonPasswordTextField
 import com.tuwaiq.husam.taskstodoapp.components.CommonTextField
 import com.tuwaiq.husam.taskstodoapp.components.GradientButton
-import com.tuwaiq.husam.taskstodoapp.navigation.BottomBarScreen
 import com.tuwaiq.husam.taskstodoapp.ui.theme.taskItemTextColor
-import com.tuwaiq.husam.taskstodoapp.util.Constants.LIST_SCREEN
-import com.tuwaiq.husam.taskstodoapp.util.Constants.LOGIN_SCREEN
-import com.tuwaiq.husam.taskstodoapp.util.Constants.REGISTER_SCREEN
-
 
 @Composable
-fun LoginContent(navController: NavHostController) {
+fun RegisterContent() {
+
     val focusManager: FocusManager = LocalFocusManager.current
-    var email by rememberSaveable { mutableStateOf("") }
-    var password by rememberSaveable { mutableStateOf("") }
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.BottomCenter
-    ) {
+    var nameValue by rememberSaveable { mutableStateOf("") }
+    var emailValue by rememberSaveable { mutableStateOf("") }
+    var phoneValue by rememberSaveable { mutableStateOf("") }
+    var passwordValue by rememberSaveable { mutableStateOf("") }
+    var confirmPasswordValue by rememberSaveable { mutableStateOf("") }
+
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -64,19 +57,19 @@ fun LoginContent(navController: NavHostController) {
             contentAlignment = Alignment.TopCenter
         ) {
             Image(
-                modifier = Modifier.padding(top = 100.dp),
+                modifier = Modifier.padding(top = 50.dp),
                 painter = painterResource(id = R.drawable.ic_logo_dark),
                 contentDescription = "TO DO ICON"
             )
         }
+
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(0.6f)
+                .fillMaxHeight(0.70f)
                 .clip(RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp))
-                .background(
-                    MaterialTheme.colors.surface
-                ),
+                .background(MaterialTheme.colors.surface)
+                .padding(top = 0.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
@@ -87,7 +80,7 @@ fun LoginContent(navController: NavHostController) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Sign In",
+                    text = "Sign Up",
                     style = TextStyle(
                         fontWeight = FontWeight.Bold,
                         letterSpacing = 2.sp
@@ -95,13 +88,25 @@ fun LoginContent(navController: NavHostController) {
                     color = MaterialTheme.colors.taskItemTextColor,
                     fontSize = 30.sp
                 )
-                Spacer(modifier = Modifier.padding(20.dp))
+                Spacer(modifier = Modifier.padding(10.dp))
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     CommonTextField(
-                        value = email,
-                        onValueChange = { newText -> email = newText },
+                        value = nameValue,
+                        onValueChange = { nameValue = it },
+                        strResId = R.string.name,
+                        icon = Icons.Filled.Person,
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Text,
+                            imeAction = ImeAction.Next
+                        ),
+                        keyboardActions = KeyboardActions(onNext = {
+                            focusManager.moveFocus(FocusDirection.Down)
+                        })
+                    )
+                    CommonTextField(
+                        value = emailValue,
+                        onValueChange = { emailValue = it },
                         strResId = R.string.email_address,
-                        singleLine = true,
                         icon = Icons.Filled.Email,
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Email,
@@ -111,11 +116,36 @@ fun LoginContent(navController: NavHostController) {
                             focusManager.moveFocus(FocusDirection.Down)
                         })
                     )
-
+                    CommonTextField(
+                        value = phoneValue,
+                        onValueChange = { phoneValue = it },
+                        strResId = R.string.phone_number,
+                        icon = Icons.Filled.PhoneAndroid,
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Phone,
+                            imeAction = ImeAction.Next
+                        ),
+                        keyboardActions = KeyboardActions(onNext = {
+                            focusManager.moveFocus(FocusDirection.Down)
+                        })
+                    )
                     CommonPasswordTextField(
-                        text = password,
-                        onValueChange = { newText -> password = newText },
+                        text = passwordValue,
+                        onValueChange = { passwordValue = it },
                         strResId = R.string.password,
+                        icon = Icons.Filled.Password,
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Password,
+                            imeAction = ImeAction.Next
+                        ),
+                        keyboardActions = KeyboardActions(onNext = {
+                            focusManager.moveFocus(FocusDirection.Down)
+                        })
+                    )
+                    CommonPasswordTextField(
+                        text = confirmPasswordValue,
+                        onValueChange = { confirmPasswordValue = it },
+                        strResId = R.string.confirm_possword,
                         icon = Icons.Filled.Password,
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Password,
@@ -123,10 +153,8 @@ fun LoginContent(navController: NavHostController) {
                         ),
                         keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
                     )
-                    Spacer(modifier = Modifier.padding(10.dp))
-                    GradientButton(
-
-                        text = "Log In",
+                    Spacer(modifier = Modifier.padding(20.dp))
+                    GradientButton(text = "Sign Up",
                         textColor = Color.White,
                         gradient = Brush.horizontalGradient(
                             colors = listOf(
@@ -134,48 +162,28 @@ fun LoginContent(navController: NavHostController) {
                                 MaterialTheme.colors.secondary
                             )
                         ),
-                        onClick = {
-                            navController.navigate(LIST_SCREEN){
-                                popUpTo(LOGIN_SCREEN){
-                                    inclusive = true
-                                }
-                            }
-                        }
+                        onClick = {}
                     )
-                    Spacer(modifier = Modifier.padding(20.dp))
-                    /* Text(
-                         text = "Create An Account",
-                         modifier = Modifier.clickable(onClick = {
-                             *//* navController.navigate("register_page"){
-                                 popUpTo = navController.graph.startDestination
-                                 launchSingleTop = true
-                             }*//*
+//                    Spacer(modifier = Modifier.padding(20.dp))
+                    /*Text(
+                        text = "Login Instead",
+                        modifier = Modifier.clickable(onClick = {
+                            navController.navigate("login_page"){
+                                popUpTo = navController.graph.startDestination
+                                launchSingleTop = true
+                            }
                         })
-                    )*/
-                    Spacer(modifier = Modifier.padding(20.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth(0.8f),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        TextButton(onClick = {
-                            navController.navigate(REGISTER_SCREEN)
-                        }) {
-                            Text(text = "Sign Up")
-                        }
-                        TextButton(onClick = { }) {
-                            Text(text = "Forgot Password?", color = Color.Gray)
-                        }
-                    }
+                    )
+                    Spacer(modifier = Modifier.padding(20.dp))*/
                 }
             }
-
         }
     }
+
 }
 
-@Composable
 @Preview
-private fun LoginContentPreview() {
-    LoginContent(rememberNavController())
+@Composable
+private fun RegisterContentPreview() {
+    RegisterContent()
 }
-

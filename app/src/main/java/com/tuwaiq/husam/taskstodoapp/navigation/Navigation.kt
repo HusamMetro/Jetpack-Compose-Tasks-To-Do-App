@@ -12,7 +12,11 @@ import com.tuwaiq.husam.taskstodoapp.navigation.destinations.splashComposable
 import com.tuwaiq.husam.taskstodoapp.navigation.destinations.taskComposable
 import com.tuwaiq.husam.taskstodoapp.ui.screens.settings.SettingsScreen
 import com.tuwaiq.husam.taskstodoapp.ui.screens.challenges.ChallengesScreen
+import com.tuwaiq.husam.taskstodoapp.ui.screens.login.LoginScreen
+import com.tuwaiq.husam.taskstodoapp.ui.screens.register.RegisterScreen
 import com.tuwaiq.husam.taskstodoapp.ui.viewmodels.SharedViewModel
+import com.tuwaiq.husam.taskstodoapp.util.Constants.LOGIN_SCREEN
+import com.tuwaiq.husam.taskstodoapp.util.Constants.REGISTER_SCREEN
 import com.tuwaiq.husam.taskstodoapp.util.Constants.SPLASH_SCREEN
 
 @ExperimentalAnimationApi
@@ -31,7 +35,8 @@ fun SetupNavigation(
         startDestination = SPLASH_SCREEN
     ) {
         splashComposable(
-            navigateToTaskScreen = screen.splash,
+//            navigateToTaskScreen = screen.splash,
+            navigateToTaskScreen = screen.login,
             sharedViewModel = sharedViewModel
         )
         listComposable(
@@ -70,6 +75,12 @@ fun SetupNavigation(
                 sharedViewModel = sharedViewModel,
                 navController = navController
             )
+        }
+        composable(route = LOGIN_SCREEN) {
+            LoginScreen(navController)
+        }
+        composable(route = REGISTER_SCREEN) {
+            RegisterScreen(navController)
         }
     }
 }
