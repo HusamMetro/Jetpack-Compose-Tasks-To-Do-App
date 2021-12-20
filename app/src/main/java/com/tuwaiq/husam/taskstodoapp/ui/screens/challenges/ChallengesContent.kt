@@ -41,6 +41,7 @@ fun ChallengesContent(mockTasks: List<MockToDoTask>, sharedViewModel: SharedView
         ){
             items(
                 items = mockTasks,
+                // There is a bug here if clicked fast the Key will repeat ... Fix Later
                 key = { task ->
                     task.id
                 }

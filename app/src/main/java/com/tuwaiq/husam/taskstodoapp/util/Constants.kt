@@ -9,6 +9,8 @@ object Constants {
     const val TASK_SCREEN = "task/{taskId}"
     const val CHALLENGES_SCREEN = "challenges"
     const val SETTINGS_SCREEN = "settings"
+    const val LOGIN_SCREEN = "login"
+    const val REGISTER_SCREEN = "register"
 
     const val LIST_ARGUMENT_KEY = "action"
     const val TASK_ARGUMENT_KEY = "taskId"

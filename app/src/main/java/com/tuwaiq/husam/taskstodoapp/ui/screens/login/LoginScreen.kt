@@ -3,18 +3,17 @@ package com.tuwaiq.husam.taskstodoapp.ui.screens.login
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 
 @Composable
-fun LoginScreen(
-    /*sharedViewModel: SharedViewModel,
-    navController: NavHostController*/
-) {
+fun LoginScreen(navController: NavHostController) {
     Scaffold(
-        topBar = {
+        /*topBar = {
             LoginAppBar()
-        },
+        },*/
         content = {
-            LoginContent()
+            LoginContent(navController)
         },
     )
 }
@@ -22,5 +21,5 @@ fun LoginScreen(
 @Preview
 @Composable
 private fun LoginScreenPreview() {
-    LoginScreen()
+    LoginScreen(rememberNavController())
 }
