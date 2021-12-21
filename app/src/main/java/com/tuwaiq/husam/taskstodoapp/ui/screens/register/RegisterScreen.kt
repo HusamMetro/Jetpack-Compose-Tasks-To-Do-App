@@ -7,7 +7,7 @@ import androidx.navigation.compose.rememberNavController
 
 @Composable
 fun RegisterScreen(navController: NavHostController) {
-    RegisterContent()
+    RegisterContent(navController)
 }
 @Preview
 @Composable

@@ -1,5 +1,7 @@
 package com.tuwaiq.husam.taskstodoapp.ui.screens.login
 
+import android.text.TextUtils
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -35,6 +37,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.tuwaiq.husam.taskstodoapp.R
 import com.tuwaiq.husam.taskstodoapp.components.CommonPasswordTextField
 import com.tuwaiq.husam.taskstodoapp.components.CommonTextField
@@ -137,7 +141,6 @@ fun LoginContent(navController: NavHostController) {
                     }
                     Spacer(modifier = Modifier.padding(10.dp))
                     GradientButton(
-
                         text = "Log In",
                         textColor = Color.White,
                         gradient = Brush.horizontalGradient(
@@ -147,9 +150,38 @@ fun LoginContent(navController: NavHostController) {
                             )
                         ),
                         onClick = {
-                            navController.navigate(LIST_SCREEN) {
-                                popUpTo(LOGIN_SCREEN) {
-                                    inclusive = true
+                            when {
+                                TextUtils.isEmpty(email.trim { it <= ' ' }) -> {
+//                                    emailTextInputSignup.helperText = "*"
+                                    Log.e("first", "email")
+                                }
+                                TextUtils.isEmpty(password.trim { it <= ' ' }) -> {
+//                                    passwordTextInputSignUp.helperText = "*"
+                                    Log.e("second", "password")
+                                }
+                                else -> {
+                                    // create an instance and create a register with email and password
+                                    FirebaseAuth.getInstance()
+                                        .signInWithEmailAndPassword(email, password)
+                                        .addOnCompleteListener { task ->
+
+                                            // if the registration is sucessfully done
+                                            if (task.isSuccessful) {
+                                                //firebase register user
+                                                val firebaseUser: FirebaseUser =
+                                                    task.result!!.user!!
+//                                                val user = User(userName, email, phoneNumber)
+//                                                saveUser(user)
+                                                navController.navigate(LIST_SCREEN) {
+                                                    popUpTo(LOGIN_SCREEN) {
+                                                        inclusive = true
+                                                    }
+                                                }
+                                            } else {
+                                                // if the registration is not successful then show error massage
+                                                Log.e("register", "${task.exception?.message}")
+                                            }
+                                        }
                                 }
                             }
                         }

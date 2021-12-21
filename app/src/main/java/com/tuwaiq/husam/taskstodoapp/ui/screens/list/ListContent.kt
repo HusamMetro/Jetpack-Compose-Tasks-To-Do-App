@@ -1,6 +1,7 @@
 package com.tuwaiq.husam.taskstodoapp.ui.screens.list
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.animation.*
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
@@ -29,6 +30,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.firebase.auth.FirebaseAuth
 import com.tuwaiq.husam.taskstodoapp.R
 import com.tuwaiq.husam.taskstodoapp.components.CustomComponent
 import com.tuwaiq.husam.taskstodoapp.data.models.Priority
@@ -54,6 +56,7 @@ fun ListContent(
     onSwipeToDelete: (Action, ToDoTask) -> Unit,
     navigateToTaskScreens: (taskId: Int) -> Unit
 ) {
+//    Log.e("listPage","${FirebaseAuth.getInstance().currentUser?.uid}")
     if (sortState is RequestState.Success) {
         when {
             searchAppBarState == SearchAppBarState.TRIGGERED -> {
