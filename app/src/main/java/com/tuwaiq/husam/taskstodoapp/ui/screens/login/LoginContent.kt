@@ -8,9 +8,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Password
@@ -41,7 +39,6 @@ import com.tuwaiq.husam.taskstodoapp.R
 import com.tuwaiq.husam.taskstodoapp.components.CommonPasswordTextField
 import com.tuwaiq.husam.taskstodoapp.components.CommonTextField
 import com.tuwaiq.husam.taskstodoapp.components.GradientButton
-import com.tuwaiq.husam.taskstodoapp.navigation.BottomBarScreen
 import com.tuwaiq.husam.taskstodoapp.ui.theme.taskItemTextColor
 import com.tuwaiq.husam.taskstodoapp.util.Constants.LIST_SCREEN
 import com.tuwaiq.husam.taskstodoapp.util.Constants.LOGIN_SCREEN
@@ -53,6 +50,8 @@ fun LoginContent(navController: NavHostController) {
     val focusManager: FocusManager = LocalFocusManager.current
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
+    var checkedRememberMe by rememberSaveable { mutableStateOf(false) }
+
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.BottomCenter
@@ -124,6 +123,19 @@ fun LoginContent(navController: NavHostController) {
                         keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
                     )
                     Spacer(modifier = Modifier.padding(10.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(0.8f),
+                        horizontalArrangement = Arrangement.Start,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Checkbox(
+                            checked = checkedRememberMe,
+                            onCheckedChange = { checkedRememberMe = it },
+                            colors = CheckboxDefaults.colors(MaterialTheme.colors.primary)
+                        )
+                        Text(modifier = Modifier.padding(horizontal = 10.dp), text = "Remember Me")
+                    }
+                    Spacer(modifier = Modifier.padding(10.dp))
                     GradientButton(
 
                         text = "Log In",
@@ -135,23 +147,13 @@ fun LoginContent(navController: NavHostController) {
                             )
                         ),
                         onClick = {
-                            navController.navigate(LIST_SCREEN){
-                                popUpTo(LOGIN_SCREEN){
+                            navController.navigate(LIST_SCREEN) {
+                                popUpTo(LOGIN_SCREEN) {
                                     inclusive = true
                                 }
                             }
                         }
                     )
-                    Spacer(modifier = Modifier.padding(20.dp))
-                    /* Text(
-                         text = "Create An Account",
-                         modifier = Modifier.clickable(onClick = {
-                             *//* navController.navigate("register_page"){
-                                 popUpTo = navController.graph.startDestination
-                                 launchSingleTop = true
-                             }*//*
-                        })
-                    )*/
                     Spacer(modifier = Modifier.padding(20.dp))
                     Row(
                         modifier = Modifier.fillMaxWidth(0.8f),
