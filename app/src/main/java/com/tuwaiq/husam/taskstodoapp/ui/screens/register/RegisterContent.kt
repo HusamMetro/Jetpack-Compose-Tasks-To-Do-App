@@ -48,6 +48,7 @@ import com.tuwaiq.husam.taskstodoapp.components.GradientButton
 import com.tuwaiq.husam.taskstodoapp.data.models.User
 import com.tuwaiq.husam.taskstodoapp.ui.theme.taskItemTextColor
 import com.tuwaiq.husam.taskstodoapp.util.Constants.LIST_SCREEN
+import com.tuwaiq.husam.taskstodoapp.util.Constants.LOGIN_SCREEN
 import com.tuwaiq.husam.taskstodoapp.util.Constants.REGISTER_SCREEN
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -210,7 +211,7 @@ fun RegisterContent(navController: NavHostController) {
                                                 val user = User(userName, email, phoneNumber)
                                                 saveUser(user)
                                                 navController.navigate(LIST_SCREEN){
-                                                    popUpTo(REGISTER_SCREEN) {
+                                                    popUpTo(LOGIN_SCREEN) {
                                                         inclusive = true
                                                     }
                                                 }
