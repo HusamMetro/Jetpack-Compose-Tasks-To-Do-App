@@ -30,6 +30,7 @@ fun SetupNavigation(
         Screens(navController)
     }
     sharedViewModel.readRememberState()
+    sharedViewModel.loadUserInformation()
 
     AnimatedNavHost(
         navController = navController,

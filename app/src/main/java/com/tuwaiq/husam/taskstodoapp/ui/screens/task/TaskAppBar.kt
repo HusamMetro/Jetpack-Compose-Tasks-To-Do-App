@@ -1,12 +1,12 @@
 package com.tuwaiq.husam.taskstodoapp.ui.screens.task
 
+import android.content.Intent
+import android.util.Log
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -99,7 +99,7 @@ fun ExistingTaskAppBar(
         },
         backgroundColor = MaterialTheme.colors.topAppBarBackgroundColor,
         actions = {
-            ExisitngTaskBarActions(
+            ExistingTaskBarActions(
                 selectedTask = selectedTask,
                 navigateToListScreen = navigateToListScreen
             )
@@ -121,7 +121,7 @@ fun CloseAction(
 }
 
 @Composable
-fun ExisitngTaskBarActions(
+fun ExistingTaskBarActions(
     selectedTask: ToDoTask,
     navigateToListScreen: (Action) -> Unit
 ) {
@@ -139,10 +139,36 @@ fun ExisitngTaskBarActions(
         closeDialog = { openDialog = false },
         onYesClicked = {navigateToListScreen(Action.DELETE)}
     )
+    val con = LocalContext.current
+    ShareAction(onShareClicked = {
+        Log.e("Shared","Shared Clicked")
+        val sendIntent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(
+                Intent.EXTRA_TEXT,
+                "Title : ${selectedTask.title}\nDescription: ${selectedTask.description}"
+            )
+            type = "text/plain"
+        }
+        con.startActivity(sendIntent)
+    } )
     DeleteAction(onDeleteClicked = {
         openDialog = true
     })
     UpdateAction(onUpdateClicked = navigateToListScreen)
+}
+
+@Composable
+fun ShareAction(
+    onShareClicked: () -> Unit
+) {
+    IconButton(onClick = { onShareClicked() }) {
+        Icon(
+            imageVector = Icons.Filled.Share,
+            contentDescription = stringResource(R.string.share_icon),
+            tint = MaterialTheme.colors.topAppBarContentColor
+        )
+    }
 }
 
 @Composable

@@ -5,6 +5,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.preferencesDataStore
 import com.tuwaiq.husam.taskstodoapp.data.models.Priority
+import com.tuwaiq.husam.taskstodoapp.util.Constants.DARK_THEME_KEY
 import com.tuwaiq.husam.taskstodoapp.util.Constants.PREFERENCE_KEY
 import com.tuwaiq.husam.taskstodoapp.util.Constants.PREFERENCE_NAME
 import com.tuwaiq.husam.taskstodoapp.util.Constants.REMEMBER_KEY
@@ -20,6 +21,7 @@ class DataStoreRepository(private val context: Context) {
     private object PreferencesKey {
         val sortKey = stringPreferencesKey(name = PREFERENCE_KEY)
         val rememberKey = booleanPreferencesKey(name = REMEMBER_KEY)
+        val darkThemeKey = booleanPreferencesKey(name = DARK_THEME_KEY)
     }
 
     private val dataStore = context.dataStore
@@ -56,5 +58,22 @@ class DataStoreRepository(private val context: Context) {
     }.map { preferences ->
         val rememberState = preferences[PreferencesKey.rememberKey] ?: false
         rememberState
+    }
+
+    suspend fun persistDarkThemeState(darkThemeState: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[PreferencesKey.darkThemeKey] = darkThemeState
+        }
+    }
+
+    val readDarkThemeState: Flow<Boolean> = dataStore.data.catch { exception ->
+        if (exception is IOException) {
+            emit(emptyPreferences())
+        } else {
+            throw exception
+        }
+    }.map { preferences ->
+        val darkTheme = preferences[PreferencesKey.darkThemeKey] ?: false
+        darkTheme
     }
 }
