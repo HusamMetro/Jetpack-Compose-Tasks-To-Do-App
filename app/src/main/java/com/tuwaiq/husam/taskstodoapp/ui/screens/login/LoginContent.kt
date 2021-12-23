@@ -1,5 +1,7 @@
 package com.tuwaiq.husam.taskstodoapp.ui.screens.login
 
+import android.text.TextUtils
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -8,17 +10,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Password
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,27 +29,30 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.tuwaiq.husam.taskstodoapp.R
 import com.tuwaiq.husam.taskstodoapp.components.CommonPasswordTextField
 import com.tuwaiq.husam.taskstodoapp.components.CommonTextField
 import com.tuwaiq.husam.taskstodoapp.components.GradientButton
-import com.tuwaiq.husam.taskstodoapp.navigation.BottomBarScreen
 import com.tuwaiq.husam.taskstodoapp.ui.theme.taskItemTextColor
+import com.tuwaiq.husam.taskstodoapp.ui.viewmodels.SharedViewModel
 import com.tuwaiq.husam.taskstodoapp.util.Constants.LIST_SCREEN
 import com.tuwaiq.husam.taskstodoapp.util.Constants.LOGIN_SCREEN
 import com.tuwaiq.husam.taskstodoapp.util.Constants.REGISTER_SCREEN
 
 
 @Composable
-fun LoginContent(navController: NavHostController) {
+fun LoginContent(navController: NavHostController, sharedViewModel: SharedViewModel) {
     val focusManager: FocusManager = LocalFocusManager.current
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
+//    val checkedRememberState by sharedViewModel.rememberState.collectAsState()
+    var checked by rememberSaveable { mutableStateOf(false) }
+
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.BottomCenter
@@ -124,8 +124,20 @@ fun LoginContent(navController: NavHostController) {
                         keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
                     )
                     Spacer(modifier = Modifier.padding(10.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(0.8f),
+                        horizontalArrangement = Arrangement.Start,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Checkbox(
+                            checked = checked,
+                            onCheckedChange = { checked = it },
+                            colors = CheckboxDefaults.colors(MaterialTheme.colors.primary)
+                        )
+                        Text(modifier = Modifier.padding(horizontal = 10.dp), text = "Remember Me")
+                    }
+                    Spacer(modifier = Modifier.padding(10.dp))
                     GradientButton(
-
                         text = "Log In",
                         textColor = Color.White,
                         gradient = Brush.horizontalGradient(
@@ -135,23 +147,44 @@ fun LoginContent(navController: NavHostController) {
                             )
                         ),
                         onClick = {
-                            navController.navigate(LIST_SCREEN){
-                                popUpTo(LOGIN_SCREEN){
-                                    inclusive = true
+                            when {
+                                TextUtils.isEmpty(email.trim { it <= ' ' }) -> {
+//                                    emailTextInputSignup.helperText = "*"
+                                    Log.e("first", "email")
+                                }
+                                TextUtils.isEmpty(password.trim { it <= ' ' }) -> {
+//                                    passwordTextInputSignUp.helperText = "*"
+                                    Log.e("second", "password")
+                                }
+                                else -> {
+                                    // create an instance and create a register with email and password
+                                    FirebaseAuth.getInstance()
+                                        .signInWithEmailAndPassword(email, password)
+                                        .addOnCompleteListener { task ->
+
+                                            // if the registration is sucessfully done
+                                            if (task.isSuccessful) {
+                                                //firebase register user
+//                                                val firebaseUser: FirebaseUser =
+//                                                    task.result!!.user!!
+//                                                val user = User(userName, email, phoneNumber)
+//                                                saveUser(user)
+                                                sharedViewModel.persistRememberState(checked)
+                                                navController.navigate(LIST_SCREEN) {
+                                                    popUpTo(LOGIN_SCREEN) {
+                                                        inclusive = true
+                                                    }
+                                                }
+                                            } else {
+                                                // if the registration is not successful then show error massage
+                                                it.value = false
+                                                Log.e("register", "${task.exception?.message}")
+                                            }
+                                        }
                                 }
                             }
                         }
                     )
-                    Spacer(modifier = Modifier.padding(20.dp))
-                    /* Text(
-                         text = "Create An Account",
-                         modifier = Modifier.clickable(onClick = {
-                             *//* navController.navigate("register_page"){
-                                 popUpTo = navController.graph.startDestination
-                                 launchSingleTop = true
-                             }*//*
-                        })
-                    )*/
                     Spacer(modifier = Modifier.padding(20.dp))
                     Row(
                         modifier = Modifier.fillMaxWidth(0.8f),
@@ -173,9 +206,11 @@ fun LoginContent(navController: NavHostController) {
     }
 }
 
+/*
 @Composable
 @Preview
 private fun LoginContentPreview() {
-    LoginContent(rememberNavController())
+    LoginContent(rememberNavController(), sharedViewModel)
 }
 
+*/

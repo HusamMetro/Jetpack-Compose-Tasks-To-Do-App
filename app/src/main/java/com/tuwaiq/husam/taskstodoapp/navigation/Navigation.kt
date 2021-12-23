@@ -29,6 +29,7 @@ fun SetupNavigation(
     val screen = remember(navController) {
         Screens(navController)
     }
+    sharedViewModel.readRememberState()
 
     AnimatedNavHost(
         navController = navController,
@@ -36,7 +37,7 @@ fun SetupNavigation(
     ) {
         splashComposable(
 //            navigateToTaskScreen = screen.splash,
-            navigateToTaskScreen = screen.login,
+            navigateToTaskScreen = if(sharedViewModel.rememberState.value) screen.splash else screen.login,
             sharedViewModel = sharedViewModel
         )
         listComposable(
@@ -77,10 +78,10 @@ fun SetupNavigation(
             )
         }
         composable(route = LOGIN_SCREEN) {
-            LoginScreen(navController)
+            LoginScreen(navController = navController, sharedViewModel = sharedViewModel)
         }
         composable(route = REGISTER_SCREEN) {
-            RegisterScreen(navController)
+            RegisterScreen(navController = navController)
         }
     }
 }

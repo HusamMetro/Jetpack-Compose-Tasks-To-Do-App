@@ -52,9 +52,9 @@ fun CommonTextField(
         keyboardActions = keyboardActions,
         colors = TextFieldDefaults.outlinedTextFieldColors(
             textColor = textColor,
-            focusedBorderColor = MaterialTheme.colors.secondary,
+            /*focusedBorderColor = MaterialTheme.colors.secondary,
             focusedLabelColor = MaterialTheme.colors.secondary,
-            cursorColor = MaterialTheme.colors.taskItemTextColor
+            cursorColor = MaterialTheme.colors.taskItemTextColor*/
         )
     )
 
@@ -124,8 +124,8 @@ fun GradientButton(
         Row(
             modifier = Modifier
                 .background(gradient)
-                .padding(horizontal = 16.dp, vertical = 10.dp)
-                .fillMaxWidth(0.78f)
+                .padding(horizontal = 50.dp, vertical = 10.dp)
+//                .fillMaxWidth(0.20f)
                 .animateContentSize(
                     animationSpec = tween(
                         durationMillis = 300,

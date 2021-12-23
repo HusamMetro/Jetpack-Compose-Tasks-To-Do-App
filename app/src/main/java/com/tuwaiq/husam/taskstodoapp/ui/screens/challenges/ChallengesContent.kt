@@ -1,5 +1,6 @@
 package com.tuwaiq.husam.taskstodoapp.ui.screens.challenges
 
+import android.util.Log
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
@@ -39,15 +40,20 @@ fun ChallengesContent(mockTasks: List<MockToDoTask>, sharedViewModel: SharedView
             contentPadding = PaddingValues(MEDIUM_PADDING),
             verticalArrangement = Arrangement.spacedBy(MEDIUM_PADDING),
         ){
-            items(
-                items = mockTasks,
-                // There is a bug here if clicked fast the Key will repeat ... Fix Later
-                key = { task ->
-                    task.id
+            try {
+                items(
+                    items = mockTasks,
+                    // There is a bug here if clicked fast the Key will repeat ... Fix Later
+                    key = { task ->
+                        task.id
+                    }
+                ) { task ->
+                    MockTaskItem(mockToDoTask = task, {})
                 }
-            ) { task ->
-                MockTaskItem(mockToDoTask = task,{})
+            } catch (e:Throwable) {
+                Log.e("lazyColumn",e.message.toString())
             }
+
         }
 
 

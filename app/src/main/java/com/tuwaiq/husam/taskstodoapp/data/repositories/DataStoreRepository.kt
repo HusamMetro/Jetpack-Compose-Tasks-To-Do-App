@@ -2,14 +2,12 @@ package com.tuwaiq.husam.taskstodoapp.data.repositories
 
 import android.content.Context
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.emptyPreferences
-import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.preferencesDataStore
 import com.tuwaiq.husam.taskstodoapp.data.models.Priority
 import com.tuwaiq.husam.taskstodoapp.util.Constants.PREFERENCE_KEY
 import com.tuwaiq.husam.taskstodoapp.util.Constants.PREFERENCE_NAME
+import com.tuwaiq.husam.taskstodoapp.util.Constants.REMEMBER_KEY
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
@@ -21,6 +19,7 @@ class DataStoreRepository(private val context: Context) {
 
     private object PreferencesKey {
         val sortKey = stringPreferencesKey(name = PREFERENCE_KEY)
+        val rememberKey = booleanPreferencesKey(name = REMEMBER_KEY)
     }
 
     private val dataStore = context.dataStore
@@ -42,4 +41,20 @@ class DataStoreRepository(private val context: Context) {
         sortState
     }
 
+    suspend fun persistRememberState(remember: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[PreferencesKey.rememberKey] = remember
+        }
+    }
+
+    val readRememberState: Flow<Boolean> = dataStore.data.catch { exception ->
+        if (exception is IOException) {
+            emit(emptyPreferences())
+        } else {
+            throw exception
+        }
+    }.map { preferences ->
+        val rememberState = preferences[PreferencesKey.rememberKey] ?: false
+        rememberState
+    }
 }

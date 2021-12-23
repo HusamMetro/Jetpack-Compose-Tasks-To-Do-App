@@ -9,7 +9,7 @@ import com.tuwaiq.husam.taskstodoapp.ui.viewmodels.SharedViewModel
 @Composable
 fun SettingsScreen(
     sharedViewModel: SharedViewModel,
-    navController : NavHostController
+    navController: NavHostController
 ) {
     Scaffold(
         topBar = {
@@ -19,7 +19,7 @@ fun SettingsScreen(
             BottomBar(navController = navController)
         },
         content = {
-            SettingsContent()
+            SettingsContent(navController = navController, sharedViewModel = sharedViewModel)
         },
     )
 }

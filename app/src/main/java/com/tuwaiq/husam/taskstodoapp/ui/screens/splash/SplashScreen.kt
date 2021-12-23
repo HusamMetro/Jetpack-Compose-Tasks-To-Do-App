@@ -98,7 +98,6 @@ fun Splash(
             .background(colorState),
         contentAlignment = Alignment.Center
     ) {
-
         Image(
             modifier = Modifier
                 .size(sizeState.width.dp, sizeState.height.dp)
