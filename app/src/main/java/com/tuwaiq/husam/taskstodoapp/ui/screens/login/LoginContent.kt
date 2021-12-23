@@ -165,8 +165,8 @@ fun LoginContent(navController: NavHostController, sharedViewModel: SharedViewMo
                                             // if the registration is sucessfully done
                                             if (task.isSuccessful) {
                                                 //firebase register user
-                                                val firebaseUser: FirebaseUser =
-                                                    task.result!!.user!!
+//                                                val firebaseUser: FirebaseUser =
+//                                                    task.result!!.user!!
 //                                                val user = User(userName, email, phoneNumber)
 //                                                saveUser(user)
                                                 sharedViewModel.persistRememberState(checked)
