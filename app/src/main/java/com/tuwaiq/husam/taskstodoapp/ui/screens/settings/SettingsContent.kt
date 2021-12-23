@@ -47,7 +47,6 @@ fun SettingsContent(navController: NavHostController, sharedViewModel: SharedVie
     var nameValue by rememberSaveable { mutableStateOf("") }
     var emailValue by rememberSaveable { mutableStateOf("") }
     var phoneValue by rememberSaveable { mutableStateOf("") }
-//    var switch =
     var switchT by remember { mutableStateOf(sharedViewModel.darkThemeState.value) }
     /* var passwordValue by rememberSaveable { mutableStateOf("") }
      var confirmPasswordValue by rememberSaveable { mutableStateOf("") }

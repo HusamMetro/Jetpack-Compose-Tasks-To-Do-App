@@ -21,21 +21,24 @@ import com.tuwaiq.husam.taskstodoapp.util.Action
 @Composable
 fun TaskAppBar(
     selectedTask: ToDoTask?,
-    navigateToListScreen: (Action) -> Unit
+    navigateToListScreen: (Action) -> Unit,
+    onShareClicked: () -> Unit
 ) {
     if (selectedTask == null) {
-        NewTaskAppBar(navigateToListScreen = navigateToListScreen)
+        NewTaskAppBar(navigateToListScreen = navigateToListScreen, onShareClicked = onShareClicked)
     } else {
         ExistingTaskAppBar(
             selectedTask = selectedTask,
-            navigateToListScreen = navigateToListScreen
+            navigateToListScreen = navigateToListScreen,
+            onShareClicked = onShareClicked
         )
     }
 }
 
 @Composable
 fun NewTaskAppBar(
-    navigateToListScreen: (Action) -> Unit
+    navigateToListScreen: (Action) -> Unit,
+    onShareClicked: () -> Unit
 ) {
     TopAppBar(
         navigationIcon = {
@@ -49,6 +52,7 @@ fun NewTaskAppBar(
         },
         backgroundColor = MaterialTheme.colors.topAppBarBackgroundColor,
         actions = {
+            ShareAction(onShareClicked)
             AddAction(onAddClicked = navigateToListScreen)
         }
     )
@@ -83,7 +87,8 @@ fun AddAction(
 @Composable
 fun ExistingTaskAppBar(
     selectedTask: ToDoTask,
-    navigateToListScreen: (Action) -> Unit
+    navigateToListScreen: (Action) -> Unit,
+    onShareClicked: () -> Unit
 ) {
     TopAppBar(
         navigationIcon = {
@@ -101,7 +106,8 @@ fun ExistingTaskAppBar(
         actions = {
             ExistingTaskBarActions(
                 selectedTask = selectedTask,
-                navigateToListScreen = navigateToListScreen
+                navigateToListScreen = navigateToListScreen,
+                onShareClicked = onShareClicked
             )
         }
     )
@@ -123,7 +129,8 @@ fun CloseAction(
 @Composable
 fun ExistingTaskBarActions(
     selectedTask: ToDoTask,
-    navigateToListScreen: (Action) -> Unit
+    navigateToListScreen: (Action) -> Unit,
+onShareClicked: () -> Unit
 ) {
     var openDialog by remember { mutableStateOf(false) }
     DisplayAlertDialog(
@@ -139,19 +146,7 @@ fun ExistingTaskBarActions(
         closeDialog = { openDialog = false },
         onYesClicked = {navigateToListScreen(Action.DELETE)}
     )
-    val con = LocalContext.current
-    ShareAction(onShareClicked = {
-        Log.e("Shared","Shared Clicked")
-        val sendIntent = Intent().apply {
-            action = Intent.ACTION_SEND
-            putExtra(
-                Intent.EXTRA_TEXT,
-                "Title : ${selectedTask.title}\nDescription: ${selectedTask.description}"
-            )
-            type = "text/plain"
-        }
-        con.startActivity(sendIntent)
-    } )
+    ShareAction(onShareClicked )
     DeleteAction(onDeleteClicked = {
         openDialog = true
     })
@@ -200,7 +195,7 @@ fun UpdateAction(
 @Composable
 @Preview
 private fun NewTaskAppBarPreview() {
-    NewTaskAppBar(navigateToListScreen = {})
+    NewTaskAppBar(navigateToListScreen = {}, onShareClicked = {})
 }
 
 @Composable
@@ -213,5 +208,5 @@ private fun ExistingTaskAppBarPreview() {
             " Before 3 am",
             Priority.MEDIUM
         ),
-        navigateToListScreen = {})
+        navigateToListScreen = {}, onShareClicked = {})
 }

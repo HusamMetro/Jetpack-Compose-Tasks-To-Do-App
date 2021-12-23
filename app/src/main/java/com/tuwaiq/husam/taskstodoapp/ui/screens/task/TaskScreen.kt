@@ -1,6 +1,8 @@
 package com.tuwaiq.husam.taskstodoapp.ui.screens.task
 
 import android.content.Context
+import android.content.Intent
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.OnBackPressedDispatcher
@@ -44,6 +46,18 @@ fun TaskScreen(
                             displayToast(context = context)
                         }
                     }
+                },
+                onShareClicked =  {
+                    Log.e("Shared","Shared Clicked")
+                    val sendIntent = Intent().apply {
+                        action = Intent.ACTION_SEND
+                        putExtra(
+                            Intent.EXTRA_TEXT,
+                            "Title : ${title}\nDescription: $description"
+                        )
+                        type = "text/plain"
+                    }
+                    context.startActivity(sendIntent)
                 }
             )
         },
