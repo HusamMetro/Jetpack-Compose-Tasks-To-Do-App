@@ -19,7 +19,7 @@ fun SettingsScreen(
             BottomBar(navController = navController)
         },
         content = {
-            SettingsContent(navController = navController)
+            SettingsContent(navController = navController, sharedViewModel = sharedViewModel)
         },
     )
 }

@@ -38,12 +38,13 @@ import com.tuwaiq.husam.taskstodoapp.R
 import com.tuwaiq.husam.taskstodoapp.components.CommonTextField
 import com.tuwaiq.husam.taskstodoapp.components.GradientButton
 import com.tuwaiq.husam.taskstodoapp.data.models.User
+import com.tuwaiq.husam.taskstodoapp.ui.viewmodels.SharedViewModel
 import com.tuwaiq.husam.taskstodoapp.util.Constants.LIST_SCREEN
 import com.tuwaiq.husam.taskstodoapp.util.Constants.LOGIN_SCREEN
 import com.tuwaiq.husam.taskstodoapp.util.Constants.SETTINGS_SCREEN
 
 @Composable
-fun SettingsContent(navController: NavHostController) {
+fun SettingsContent(navController: NavHostController, sharedViewModel: SharedViewModel) {
 
     val focusManager: FocusManager = LocalFocusManager.current
     var nameValue by rememberSaveable { mutableStateOf("") }
@@ -158,6 +159,7 @@ fun SettingsContent(navController: NavHostController) {
                     ),
                     onClick = {
                         FirebaseAuth.getInstance().signOut()
+                        sharedViewModel.persistRememberState(false)
                         navController.navigate(LOGIN_SCREEN){
                             /*popUpTo(SETTINGS_SCREEN){
                                 inclusive = true
@@ -212,8 +214,9 @@ private fun updateInFirestore(
         }
 }
 
+/*
 @Composable
 @Preview
 private fun SettingsContentPreview() {
     SettingsContent(rememberNavController())
-}
+}*/

@@ -43,6 +43,41 @@ val LightBlue = Color(0xFF00C9FF)
 val MediumGreen = Color(0xFF02C39A)
 val MediumYellow = Color(0xFFF0F3BD)
 
+val Green1 = Color(0xFF9be2d4)
+val Green2 = Color(0xFFb8f0e3)
+val Green3 = Color(0xFFcbf1e4)
+val Gray1 = Color(0xFFc2c2c2)
+val Gray2 = Color(0xFF797687)
+
+val colorPrimary = Color(0xFF1BA57B)
+val gray = Color(0xFF4B4F5A)
+val dark_gray = Color(0xFF54555A)
+val light_gray = Color(0xFF696969)
+val ghost_white = Color(0xFFF8F8F8)
+val text_hint_color = Color(0xFFA7A7A7)
+
+// color from First Link
+val greenPrimary1 = Color(0xFF4d8d6e)
+val greenMid1 = Color(0xFF94BAA8)
+val greenMid2 = Color(0xFF8BC0A7)
+val greenLight1 = Color(0xFFCDE3D8)
+val secondaryGreenMid3 = Color(0xFFA1C254)
+val secondaryGreenLight2 = Color(0xFFD9E6BA)
+
+val secondaryBlue =  Color(0xFF83ABD6)
+
+val greenPrimary3 = Color(0xFF244234)
+val greenPrimary5 = Color(0xFFc4cbbf)
+val greenPrimary6 = Color(0xFF3c4236)
+
+
+
+val Colors.cardColor: Brush
+    @Composable
+    get() = if (isLight)
+        Brush.horizontalGradient(listOf(greenLight1, greenLight1))
+    else Brush.horizontalGradient(listOf(DarkerBlue, DarkBlue))
+
 val Colors.splashScreenBackground: Color
     @Composable
     get() = MaterialTheme.colors.primary
@@ -71,11 +106,11 @@ val Colors.topAppBarBackgroundColor: Color
     get() = MaterialTheme.colors.primary
 //    get() = if (isLight) Purple500 else Color.Black
 
-val Colors.cardColor: Brush
+/*val Colors.cardColor: Brush
     @Composable
     get() = if (isLight)
         Brush.horizontalGradient(listOf(MediumGreen,LightGreen))
-    else Brush.horizontalGradient(listOf(DarkerBlue, DarkBlue))
+    else Brush.horizontalGradient(listOf(DarkerBlue, DarkBlue))*/
 
 val Colors.cardBorderColor: Color
     @Composable

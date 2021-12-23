@@ -1,6 +1,7 @@
 package com.tuwaiq.husam.taskstodoapp.ui.viewmodels
 
 import android.app.Application
+import android.util.Log
 import androidx.compose.runtime.*
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
@@ -99,9 +100,13 @@ class SharedViewModel(context: Application) : AndroidViewModel(context) {
         MutableStateFlow<RequestState<List<ToDoTask>>>(RequestState.Idle)
     val allTasks: StateFlow<RequestState<List<ToDoTask>>> = _allTasks
 
+    private val _rememberState = MutableStateFlow(false)
+    val rememberState: StateFlow<Boolean> = _rememberState
+
     init {
         getAllTasks()
         readSortState()
+        readRememberState()
     }
 
     fun searchDatabase(searchQuery: String) {
@@ -152,6 +157,25 @@ class SharedViewModel(context: Application) : AndroidViewModel(context) {
             dataStoreRepository.persistSortState(priority = priority)
         }
     }
+
+     fun readRememberState() {
+        try {
+            viewModelScope.launch {
+                dataStoreRepository.readRememberState.collect {
+                    _rememberState.value = it
+                }
+            }
+        } catch (e: Throwable) {
+            Log.e("readRememberState", "${e.message}")
+        }
+    }
+
+    fun persistRememberState(remember: Boolean) {
+        viewModelScope.launch(Dispatchers.IO) {
+            dataStoreRepository.persistRememberState(remember = remember)
+        }
+    }
+
 
     private fun getAllTasks() {
         _allTasks.value = RequestState.Loading
