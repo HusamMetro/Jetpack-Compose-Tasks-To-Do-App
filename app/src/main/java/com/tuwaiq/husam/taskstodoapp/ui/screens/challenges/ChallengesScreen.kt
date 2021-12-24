@@ -2,16 +2,10 @@ package com.tuwaiq.husam.taskstodoapp.ui.screens.challenges
 
 import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -20,8 +14,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import com.tuwaiq.husam.taskstodoapp.R
+import com.tuwaiq.husam.taskstodoapp.components.AnimatedShimmerEffect
 import com.tuwaiq.husam.taskstodoapp.components.BottomBar
 import com.tuwaiq.husam.taskstodoapp.ui.theme.EMPTY_ICON_SIZE
+import com.tuwaiq.husam.taskstodoapp.ui.theme.MEDIUM_PADDING
 import com.tuwaiq.husam.taskstodoapp.ui.theme.MediumGray
 import com.tuwaiq.husam.taskstodoapp.ui.viewmodels.SharedViewModel
 
@@ -32,7 +28,7 @@ fun ChallengesScreen(
     navController: NavHostController
 ) {
 
-    LaunchedEffect(key1 = Unit ){
+    LaunchedEffect(key1 = Unit) {
         sharedViewModel.getMockTasks()
         Log.e("at Launched Effect", "After")
     }
@@ -58,7 +54,18 @@ fun ChallengesScreen(
         },
         content = {
             if (sharedViewModel.errorMessage.isEmpty()) {
-                ChallengesContent(sharedViewModel.mockTasks, sharedViewModel)
+                if (sharedViewModel.mockTasks.isEmpty()) {
+                    Column(
+                        modifier = Modifier.padding(MEDIUM_PADDING),
+                        verticalArrangement = Arrangement.spacedBy(MEDIUM_PADDING)
+                    ) {
+                        repeat(8) {
+                            AnimatedShimmerEffect()
+                        }
+                    }
+                } else {
+                    ChallengesContent(sharedViewModel.mockTasks, sharedViewModel)
+                }
             } else {
                 EmptyContentNoConnection()
             }
@@ -95,14 +102,21 @@ fun EmptyContentNoConnection() {
     }
 }
 
-@Composable
+/*@Composable
 @Preview
 fun Preview() {
     EmptyContentNoConnection()
-}
+}*/
 
-/*
+/*@Preview
 @Composable
 private fun ChallengesScreenPreview() {
-    SuggestedScreen(sharedViewModel = SharedViewModel(Application()))
+    Column(
+        modifier = Modifier.padding(MEDIUM_PADDING),
+        verticalArrangement = Arrangement.spacedBy(MEDIUM_PADDING)
+    ) {
+        repeat(8) {
+            AnimatedShimmerEffect()
+        }
+    }
 }*/

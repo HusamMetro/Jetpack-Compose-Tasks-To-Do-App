@@ -2,6 +2,7 @@ package com.tuwaiq.husam.taskstodoapp.ui.screens.login
 
 import android.text.TextUtils
 import android.util.Log
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -21,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusManager
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
@@ -37,6 +39,7 @@ import com.tuwaiq.husam.taskstodoapp.R
 import com.tuwaiq.husam.taskstodoapp.components.CommonPasswordTextField
 import com.tuwaiq.husam.taskstodoapp.components.CommonTextField
 import com.tuwaiq.husam.taskstodoapp.components.GradientButton
+import com.tuwaiq.husam.taskstodoapp.ui.theme.cardSecondColor
 import com.tuwaiq.husam.taskstodoapp.ui.theme.taskItemTextColor
 import com.tuwaiq.husam.taskstodoapp.ui.viewmodels.SharedViewModel
 import com.tuwaiq.husam.taskstodoapp.util.Constants.LIST_SCREEN
@@ -52,6 +55,20 @@ fun LoginContent(navController: NavHostController, sharedViewModel: SharedViewMo
 //    val checkedRememberState by sharedViewModel.rememberState.collectAsState()
     var checked by rememberSaveable { mutableStateOf(false) }
 
+    val transition = rememberInfiniteTransition()
+    val translateAnimation = transition.animateFloat(
+        initialValue = 80f,
+        targetValue = 150f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(
+                durationMillis = 3000,
+                easing = FastOutSlowInEasing
+            ),
+            repeatMode = RepeatMode.Reverse
+        )
+    )
+
+
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.BottomCenter
@@ -63,7 +80,7 @@ fun LoginContent(navController: NavHostController, sharedViewModel: SharedViewMo
             contentAlignment = Alignment.TopCenter
         ) {
             Image(
-                modifier = Modifier.padding(top = 100.dp),
+                modifier = Modifier.offset( y = translateAnimation.value.dp),
                 painter = painterResource(id = R.drawable.ic_logo_dark),
                 contentDescription = "TO DO ICON"
             )

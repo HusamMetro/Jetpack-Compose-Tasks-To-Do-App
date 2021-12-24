@@ -2,6 +2,7 @@ package com.tuwaiq.husam.taskstodoapp.ui.screens.register
 
 import android.text.TextUtils
 import android.util.Log
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -67,6 +68,19 @@ fun RegisterContent(navController: NavHostController) {
     var passwordValue by rememberSaveable { mutableStateOf("") }
     var confirmPasswordValue by rememberSaveable { mutableStateOf("") }
 
+    val transition = rememberInfiniteTransition()
+    val translateAnimation = transition.animateFloat(
+        initialValue = 30f,
+        targetValue = 80f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(
+                durationMillis = 3000,
+                easing = FastOutSlowInEasing
+            ),
+            repeatMode = RepeatMode.Reverse
+        )
+    )
+
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
         Box(
             modifier = Modifier
@@ -75,7 +89,7 @@ fun RegisterContent(navController: NavHostController) {
             contentAlignment = Alignment.TopCenter
         ) {
             Image(
-                modifier = Modifier.padding(top = 50.dp),
+                modifier = Modifier.offset( y = translateAnimation.value.dp),
                 painter = painterResource(id = R.drawable.ic_logo_dark),
                 contentDescription = "TO DO ICON"
             )
