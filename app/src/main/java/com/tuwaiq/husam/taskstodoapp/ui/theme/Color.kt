@@ -70,6 +70,9 @@ val greenPrimary3 = Color(0xFF244234)
 val greenPrimary5 = Color(0xFFc4cbbf)
 val greenPrimary6 = Color(0xFF3c4236)
 
+val Colors.signUpColor: Color
+    get() = if (isLight) primary else primaryVariant
+
 val Colors.cardFirstColor: Color
 get() = if (isLight) greenLight1 else DarkerBlue
 

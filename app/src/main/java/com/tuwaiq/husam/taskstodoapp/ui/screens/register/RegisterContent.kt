@@ -14,10 +14,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Password
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.PhoneAndroid
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -29,6 +26,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -91,7 +89,7 @@ fun RegisterContent(navController: NavHostController) {
             Image(
                 modifier = Modifier.offset( y = translateAnimation.value.dp),
                 painter = painterResource(id = R.drawable.ic_logo_dark),
-                contentDescription = "TO DO ICON"
+                contentDescription = stringResource(id = R.string.application_logo)
             )
         }
 
@@ -152,7 +150,7 @@ fun RegisterContent(navController: NavHostController) {
                         value = phoneValue,
                         onValueChange = { phoneValue = it },
                         strResId = R.string.phone_number,
-                        icon = Icons.Filled.PhoneAndroid,
+                        icon = Icons.Filled.Phone,
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Phone,
                             imeAction = ImeAction.Next
@@ -191,7 +189,7 @@ fun RegisterContent(navController: NavHostController) {
                         gradient = Brush.horizontalGradient(
                             colors = listOf(
                                 MaterialTheme.colors.primary,
-                                MaterialTheme.colors.secondary
+                                MaterialTheme.colors.primaryVariant
                             )
                         ),
                         onClick = {
