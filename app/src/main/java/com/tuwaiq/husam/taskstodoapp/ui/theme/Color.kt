@@ -70,13 +70,15 @@ val greenPrimary3 = Color(0xFF244234)
 val greenPrimary5 = Color(0xFFc4cbbf)
 val greenPrimary6 = Color(0xFF3c4236)
 
+val Colors.cardFirstColor: Color
+get() = if (isLight) greenLight1 else DarkerBlue
 
+val Colors.cardSecondColor: Color
+    get() = if (isLight) greenLight1 else DarkBlue
 
 val Colors.cardColor: Brush
     @Composable
-    get() = if (isLight)
-        Brush.horizontalGradient(listOf(greenLight1, greenLight1))
-    else Brush.horizontalGradient(listOf(DarkerBlue, DarkBlue))
+    get() = Brush.horizontalGradient(listOf(cardFirstColor, cardSecondColor))
 
 val Colors.splashScreenBackground: Color
     @Composable

@@ -52,10 +52,10 @@ fun SettingsContent(navController: NavHostController, sharedViewModel: SharedVie
      var confirmPasswordValue by rememberSaveable { mutableStateOf("") }
  */
     // Retrieve UserDate
-    val userCollectionRef = Firebase.firestore.collection("users")
+    /*val userCollectionRef = Firebase.firestore.collection("users")
     val db = FirebaseFirestore.getInstance()
     val userUID = FirebaseAuth.getInstance().currentUser?.uid
-    val docRef = db.collection("users").document("$userUID")
+    val docRef = db.collection("users").document("$userUID")*/
 
     LaunchedEffect(key1 = true) {
         nameValue = sharedViewModel.user.username
