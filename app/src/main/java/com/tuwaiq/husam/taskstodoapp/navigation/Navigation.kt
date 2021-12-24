@@ -26,11 +26,13 @@ fun SetupNavigation(
     navController: NavHostController,
     sharedViewModel: SharedViewModel
 ) {
+    sharedViewModel.readRememberState()
     val screen = remember(navController) {
         Screens(navController)
     }
-    sharedViewModel.readRememberState()
-    sharedViewModel.loadUserInformation()
+    if (sharedViewModel.rememberState.value) {
+        sharedViewModel.loadUserInformation()
+    }
 
     AnimatedNavHost(
         navController = navController,
@@ -38,7 +40,10 @@ fun SetupNavigation(
     ) {
         splashComposable(
 //            navigateToTaskScreen = screen.splash,
-            navigateToTaskScreen = if(sharedViewModel.rememberState.value) screen.splash else screen.login,
+            navigateToTaskScreen = if(sharedViewModel.rememberState.value){
+                sharedViewModel.loadUserInformation()
+                screen.splash
+            } else screen.login,
             sharedViewModel = sharedViewModel
         )
         listComposable(

@@ -57,8 +57,11 @@ fun RowScope.AddItem(
         } == true,
         onClick = {
             navController.navigate(screen.route) {
-                popUpTo(BottomBarScreen.Home.route)
+                popUpTo(BottomBarScreen.Home.route){
+                    saveState = true
+                }
                 launchSingleTop = true
+                restoreState = true
             }
         },
         selectedContentColor = MaterialTheme.colors.bottomBarSelectedContentColor,

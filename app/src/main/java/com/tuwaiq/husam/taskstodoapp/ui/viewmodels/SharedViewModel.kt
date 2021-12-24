@@ -128,7 +128,7 @@ class SharedViewModel(context: Application) : AndroidViewModel(context) {
     private val _rememberState = MutableStateFlow(false)
     val rememberState: StateFlow<Boolean> = _rememberState
 
-    lateinit var user : User
+    var user : User = User()
 
     fun loadUserInformation() {
         val db = FirebaseFirestore.getInstance()
@@ -140,9 +140,9 @@ class SharedViewModel(context: Application) : AndroidViewModel(context) {
     }
 
     init {
+//        readRememberState()
         getAllTasks()
         readSortState()
-        readRememberState()
     }
 
     fun searchDatabase(searchQuery: String) {

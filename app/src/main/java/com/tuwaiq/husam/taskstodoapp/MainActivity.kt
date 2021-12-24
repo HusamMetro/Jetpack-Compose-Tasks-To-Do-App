@@ -39,8 +39,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         Log.e("start", "Main Activity ")
         sharedViewModel = ViewModelProvider(this)[SharedViewModel::class.java]
-        sharedViewModel.readDarkThemeState()
         setContent {
+            sharedViewModel.readDarkThemeState()
+            sharedViewModel.readRememberState()
             val darkTheme by sharedViewModel.darkThemeState.collectAsState()
             TasksToDoAppTheme(darkTheme = darkTheme) {
 //                ClickButton(context = this)

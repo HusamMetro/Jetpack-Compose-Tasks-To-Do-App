@@ -1,7 +1,6 @@
 package com.tuwaiq.husam.taskstodoapp.ui.screens.list
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.animation.*
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
@@ -17,6 +16,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -30,7 +30,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.firebase.auth.FirebaseAuth
 import com.tuwaiq.husam.taskstodoapp.R
 import com.tuwaiq.husam.taskstodoapp.components.CustomComponent
 import com.tuwaiq.husam.taskstodoapp.data.models.Priority
@@ -136,13 +135,20 @@ fun DisplayTask(
         ) { task ->
             val dismissState = rememberDismissState()
             val dismissDirection = dismissState.dismissDirection
-            val isDismissed = dismissState.isDismissed(DismissDirection.EndToStart)
+            val isDismissedEndToStart = dismissState.isDismissed(DismissDirection.EndToStart)
+            val isDismissedStartToEnd = dismissState.isDismissed(DismissDirection.StartToEnd)
 
-            if (isDismissed && dismissDirection == DismissDirection.EndToStart) {
+            if (isDismissedEndToStart && dismissDirection == DismissDirection.EndToStart) {
                 val scope = rememberCoroutineScope()
                 scope.launch {
                     delay(300)
                     onSwipeToDelete(Action.DELETE, task)
+                }
+            }
+
+            if ( isDismissedStartToEnd && dismissDirection == DismissDirection.StartToEnd) {
+                LaunchedEffect(key1 = false ) {
+                    navigateToTaskScreens(task.id)
                 }
             }
 
@@ -152,6 +158,12 @@ fun DisplayTask(
                 else
                     -45f
             )
+            val degreesEdit by animateFloatAsState(
+                targetValue = if (dismissState.targetValue == DismissValue.Default)
+                    -45f
+                else
+                    0f
+            )
             // move it to Above the LazyColumn to fix bug animation
 //            var itemAppeared by remember { mutableStateOf(false) }
             LaunchedEffect(key1 = true) {
@@ -159,7 +171,7 @@ fun DisplayTask(
             }
 
             AnimatedVisibility(
-                visible = itemAppeared && !isDismissed,
+                visible = itemAppeared && !isDismissedEndToStart,
                 enter = expandVertically(
                     animationSpec = tween(
                         durationMillis = 200
@@ -173,9 +185,13 @@ fun DisplayTask(
             ) {
                 SwipeToDismiss(
                     state = dismissState,
-                    directions = setOf(DismissDirection.EndToStart),
+                    directions = setOf(DismissDirection.EndToStart, DismissDirection.StartToEnd),
                     dismissThresholds = { FractionalThreshold(fraction = 0.2f) },
-                    background = { RedBackground(degrees = degrees) },
+                    background = {
+                        if (dismissDirection == DismissDirection.EndToStart) RedBackground(degrees = degrees) else GreenBackground(
+                            degrees = degreesEdit
+                        )
+                    },
                     dismissContent = {
                         TaskItem(
                             toDoTask = task,
@@ -224,22 +240,41 @@ fun RedBackground(degrees: Float) {
     }
 }
 
+@Composable
+fun GreenBackground(degrees: Float) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .clip(RoundedCornerShape(10.dp))
+            .background(LowPriorityColor)
+            .padding(LARGEST_PADDING),
+        contentAlignment = Alignment.CenterStart
+    ) {
+        Icon(
+            modifier = Modifier.rotate(degrees = degrees),
+            imageVector = Icons.Filled.Edit,
+            contentDescription = stringResource(R.string.edit_icon),
+            tint = Color.White
+        )
+    }
+}
+
 @ExperimentalMaterialApi
 @Composable
 fun TaskItem(
     toDoTask: ToDoTask,
     navigateToTaskScreens: (taskId: Int) -> Unit
 ) {
+    var expandState by remember { mutableStateOf(false) }
     Surface(
         modifier = Modifier.fillMaxWidth(),
         color = MaterialTheme.colors.taskItemBackgroundColor,
         shape = RoundedCornerShape(10.dp),
         elevation = 5.dp,
         onClick = {
-            navigateToTaskScreens(toDoTask.id)
+            expandState = !expandState
         }
     ) {
-        var expandState by remember { mutableStateOf(false) }
         val rotationState by animateFloatAsState(targetValue = if (expandState) 180f else 0f)
         Card(
             shape = RoundedCornerShape(10.dp),
@@ -263,7 +298,8 @@ fun TaskItem(
                     .padding(
                         start = LARGE_PADDING,
                         top = LARGE_PADDING,
-                        end = LARGE_PADDING
+                        end = LARGE_PADDING,
+                        bottom = LARGE_PADDING
                     )
                     .fillMaxWidth()
             ) {
@@ -339,7 +375,7 @@ fun TaskItem(
                         )
                     }
                 }
-                Row(
+                /*Row(
                     Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.End
@@ -357,7 +393,7 @@ fun TaskItem(
                             tint = MaterialTheme.colors.taskItemTextColor
                         )
                     }
-                }
+                }*/
             }
         }
     }
