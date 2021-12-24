@@ -5,9 +5,13 @@ import android.util.Log
 import androidx.compose.runtime.*
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.toObject
 import com.tuwaiq.husam.taskstodoapp.data.models.MockToDoTask
 import com.tuwaiq.husam.taskstodoapp.data.models.Priority
 import com.tuwaiq.husam.taskstodoapp.data.models.ToDoTask
+import com.tuwaiq.husam.taskstodoapp.data.models.User
 import com.tuwaiq.husam.taskstodoapp.data.repositories.DataStoreRepository
 import com.tuwaiq.husam.taskstodoapp.data.repositories.MockRepo
 import com.tuwaiq.husam.taskstodoapp.data.repositories.ToDoRepository
@@ -25,6 +29,27 @@ class SharedViewModel(context: Application) : AndroidViewModel(context) {
 
 
     private val mockRepo: MockRepo = MockRepo()
+
+    private val _darkThemeState = MutableStateFlow(false)
+    val darkThemeState: StateFlow<Boolean> = _darkThemeState
+
+    fun readDarkThemeState() {
+        try {
+            viewModelScope.launch {
+                dataStoreRepository.readDarkThemeState.collect {
+                    _darkThemeState.value = it
+                }
+            }
+        } catch (e: Throwable) {
+            Log.e("readDarkThemeState", "${e.message}")
+        }
+    }
+
+    fun persistDarkThemeState(darkThemeState: Boolean) {
+        viewModelScope.launch(Dispatchers.IO) {
+            dataStoreRepository.persistDarkThemeState(darkThemeState = darkThemeState)
+        }
+    }
 
     /*fun getMockTasks(): MutableLiveData<List<MockToDoTask>> {
         val tasks = MutableLiveData<List<MockToDoTask>>()
@@ -103,10 +128,21 @@ class SharedViewModel(context: Application) : AndroidViewModel(context) {
     private val _rememberState = MutableStateFlow(false)
     val rememberState: StateFlow<Boolean> = _rememberState
 
+    var user : User = User()
+
+    fun loadUserInformation() {
+        val db = FirebaseFirestore.getInstance()
+        val userUID = FirebaseAuth.getInstance().currentUser?.uid
+        val docRef = db.collection("users").document("$userUID")
+        docRef.get().addOnSuccessListener { documentSnapshot ->
+            user = documentSnapshot.toObject<User>()!!
+        }
+    }
+
     init {
+//        readRememberState()
         getAllTasks()
         readSortState()
-        readRememberState()
     }
 
     fun searchDatabase(searchQuery: String) {

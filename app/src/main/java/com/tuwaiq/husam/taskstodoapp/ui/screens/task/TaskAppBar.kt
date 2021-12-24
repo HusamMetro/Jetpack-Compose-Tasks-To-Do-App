@@ -1,12 +1,12 @@
 package com.tuwaiq.husam.taskstodoapp.ui.screens.task
 
+import android.content.Intent
+import android.util.Log
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -21,21 +21,24 @@ import com.tuwaiq.husam.taskstodoapp.util.Action
 @Composable
 fun TaskAppBar(
     selectedTask: ToDoTask?,
-    navigateToListScreen: (Action) -> Unit
+    navigateToListScreen: (Action) -> Unit,
+    onShareClicked: () -> Unit
 ) {
     if (selectedTask == null) {
-        NewTaskAppBar(navigateToListScreen = navigateToListScreen)
+        NewTaskAppBar(navigateToListScreen = navigateToListScreen, onShareClicked = onShareClicked)
     } else {
         ExistingTaskAppBar(
             selectedTask = selectedTask,
-            navigateToListScreen = navigateToListScreen
+            navigateToListScreen = navigateToListScreen,
+            onShareClicked = onShareClicked
         )
     }
 }
 
 @Composable
 fun NewTaskAppBar(
-    navigateToListScreen: (Action) -> Unit
+    navigateToListScreen: (Action) -> Unit,
+    onShareClicked: () -> Unit
 ) {
     TopAppBar(
         navigationIcon = {
@@ -49,6 +52,7 @@ fun NewTaskAppBar(
         },
         backgroundColor = MaterialTheme.colors.topAppBarBackgroundColor,
         actions = {
+            ShareAction(onShareClicked)
             AddAction(onAddClicked = navigateToListScreen)
         }
     )
@@ -83,7 +87,8 @@ fun AddAction(
 @Composable
 fun ExistingTaskAppBar(
     selectedTask: ToDoTask,
-    navigateToListScreen: (Action) -> Unit
+    navigateToListScreen: (Action) -> Unit,
+    onShareClicked: () -> Unit
 ) {
     TopAppBar(
         navigationIcon = {
@@ -99,9 +104,10 @@ fun ExistingTaskAppBar(
         },
         backgroundColor = MaterialTheme.colors.topAppBarBackgroundColor,
         actions = {
-            ExisitngTaskBarActions(
+            ExistingTaskBarActions(
                 selectedTask = selectedTask,
-                navigateToListScreen = navigateToListScreen
+                navigateToListScreen = navigateToListScreen,
+                onShareClicked = onShareClicked
             )
         }
     )
@@ -121,9 +127,10 @@ fun CloseAction(
 }
 
 @Composable
-fun ExisitngTaskBarActions(
+fun ExistingTaskBarActions(
     selectedTask: ToDoTask,
-    navigateToListScreen: (Action) -> Unit
+    navigateToListScreen: (Action) -> Unit,
+onShareClicked: () -> Unit
 ) {
     var openDialog by remember { mutableStateOf(false) }
     DisplayAlertDialog(
@@ -139,10 +146,24 @@ fun ExisitngTaskBarActions(
         closeDialog = { openDialog = false },
         onYesClicked = {navigateToListScreen(Action.DELETE)}
     )
+    ShareAction(onShareClicked )
     DeleteAction(onDeleteClicked = {
         openDialog = true
     })
     UpdateAction(onUpdateClicked = navigateToListScreen)
+}
+
+@Composable
+fun ShareAction(
+    onShareClicked: () -> Unit
+) {
+    IconButton(onClick = { onShareClicked() }) {
+        Icon(
+            imageVector = Icons.Filled.Share,
+            contentDescription = stringResource(R.string.share_icon),
+            tint = MaterialTheme.colors.topAppBarContentColor
+        )
+    }
 }
 
 @Composable
@@ -174,7 +195,7 @@ fun UpdateAction(
 @Composable
 @Preview
 private fun NewTaskAppBarPreview() {
-    NewTaskAppBar(navigateToListScreen = {})
+    NewTaskAppBar(navigateToListScreen = {}, onShareClicked = {})
 }
 
 @Composable
@@ -187,5 +208,5 @@ private fun ExistingTaskAppBarPreview() {
             " Before 3 am",
             Priority.MEDIUM
         ),
-        navigateToListScreen = {})
+        navigateToListScreen = {}, onShareClicked = {})
 }

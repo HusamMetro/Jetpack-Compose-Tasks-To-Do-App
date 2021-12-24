@@ -8,6 +8,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Switch
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Person
@@ -25,23 +27,18 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import com.tuwaiq.husam.taskstodoapp.R
 import com.tuwaiq.husam.taskstodoapp.components.CommonTextField
 import com.tuwaiq.husam.taskstodoapp.components.GradientButton
-import com.tuwaiq.husam.taskstodoapp.data.models.User
 import com.tuwaiq.husam.taskstodoapp.ui.viewmodels.SharedViewModel
 import com.tuwaiq.husam.taskstodoapp.util.Constants.LIST_SCREEN
 import com.tuwaiq.husam.taskstodoapp.util.Constants.LOGIN_SCREEN
-import com.tuwaiq.husam.taskstodoapp.util.Constants.SETTINGS_SCREEN
 
 @Composable
 fun SettingsContent(navController: NavHostController, sharedViewModel: SharedViewModel) {
@@ -50,6 +47,7 @@ fun SettingsContent(navController: NavHostController, sharedViewModel: SharedVie
     var nameValue by rememberSaveable { mutableStateOf("") }
     var emailValue by rememberSaveable { mutableStateOf("") }
     var phoneValue by rememberSaveable { mutableStateOf("") }
+    var switchT by remember { mutableStateOf(sharedViewModel.darkThemeState.value) }
     /* var passwordValue by rememberSaveable { mutableStateOf("") }
      var confirmPasswordValue by rememberSaveable { mutableStateOf("") }
  */
@@ -60,12 +58,9 @@ fun SettingsContent(navController: NavHostController, sharedViewModel: SharedVie
     val docRef = db.collection("users").document("$userUID")
 
     LaunchedEffect(key1 = true) {
-        docRef.get().addOnSuccessListener { documentSnapshot ->
-            val user = documentSnapshot.toObject<User>()
-            nameValue = user!!.username
-            emailValue = user.email
-            phoneValue = user.phoneNumber
-        }
+        nameValue = sharedViewModel.user.username
+        emailValue = sharedViewModel.user.email
+        phoneValue = sharedViewModel.user.phoneNumber
     }
 
     Box(
@@ -96,6 +91,18 @@ fun SettingsContent(navController: NavHostController, sharedViewModel: SharedVie
             verticalArrangement = Arrangement.Center
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Row {
+                    Text(text = "Dark Mode")
+                    Spacer(modifier = Modifier.padding(horizontal = 10.dp))
+                    Switch(
+                        checked = switchT,
+                        onCheckedChange = {
+                            switchT = it
+                            sharedViewModel.persistDarkThemeState(it)
+//                            sharedViewModel.readDarkThemeState()
+                        },
+                    )
+                }
                 CommonTextField(
                     value = nameValue,
                     onValueChange = { nameValue = it },
@@ -145,7 +152,7 @@ fun SettingsContent(navController: NavHostController, sharedViewModel: SharedVie
                         )
                     ),
                     onClick = {
-                        updateInFirestore(nameValue, phoneValue,it)
+                        updateInFirestore(nameValue, phoneValue, it)
                     }
                 )
                 Spacer(modifier = Modifier.padding(10.dp))
@@ -160,11 +167,11 @@ fun SettingsContent(navController: NavHostController, sharedViewModel: SharedVie
                     onClick = {
                         FirebaseAuth.getInstance().signOut()
                         sharedViewModel.persistRememberState(false)
-                        navController.navigate(LOGIN_SCREEN){
+                        navController.navigate(LOGIN_SCREEN) {
                             /*popUpTo(SETTINGS_SCREEN){
                                 inclusive = true
                             }*/
-                            popUpTo(LIST_SCREEN){
+                            popUpTo(LIST_SCREEN) {
                                 inclusive = true
                             }
                         }

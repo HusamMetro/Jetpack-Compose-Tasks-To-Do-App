@@ -16,6 +16,8 @@ import androidx.compose.material.Button
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavHostController
@@ -38,7 +40,10 @@ class MainActivity : ComponentActivity() {
         Log.e("start", "Main Activity ")
         sharedViewModel = ViewModelProvider(this)[SharedViewModel::class.java]
         setContent {
-            TasksToDoAppTheme {
+            sharedViewModel.readDarkThemeState()
+            sharedViewModel.readRememberState()
+            val darkTheme by sharedViewModel.darkThemeState.collectAsState()
+            TasksToDoAppTheme(darkTheme = darkTheme) {
 //                ClickButton(context = this)
                 navController = rememberAnimatedNavController()
                 SetupNavigation(

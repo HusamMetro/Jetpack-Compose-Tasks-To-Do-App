@@ -36,4 +36,6 @@
     <string name="name">Name</string>
     <string name="phone_number">Phone Number</string>
     <string name="confirm_possword">Confirm Password</string>
+    <string name="share_icon">Share Icon</string>
+    <string name="edit_icon">Edit Icon</string>
 </resources>

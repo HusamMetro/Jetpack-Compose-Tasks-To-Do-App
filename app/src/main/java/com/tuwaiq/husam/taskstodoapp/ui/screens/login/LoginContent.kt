@@ -33,7 +33,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.tuwaiq.husam.taskstodoapp.R
 import com.tuwaiq.husam.taskstodoapp.components.CommonPasswordTextField
 import com.tuwaiq.husam.taskstodoapp.components.CommonTextField
@@ -170,6 +169,7 @@ fun LoginContent(navController: NavHostController, sharedViewModel: SharedViewMo
 //                                                val user = User(userName, email, phoneNumber)
 //                                                saveUser(user)
                                                 sharedViewModel.persistRememberState(checked)
+                                                sharedViewModel.loadUserInformation()
                                                 navController.navigate(LIST_SCREEN) {
                                                     popUpTo(LOGIN_SCREEN) {
                                                         inclusive = true
