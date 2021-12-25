@@ -64,7 +64,7 @@ fun CustomComponent(
         (animatedIndicatorValue / maxIndicatorValue) * 100
 
     val sweepAngle by animateFloatAsState(
-        targetValue = (2.4 * percentage).toFloat(),
+        targetValue = (3.6 * percentage).toFloat(),
         animationSpec = tween(1000)
     )
 
@@ -103,7 +103,7 @@ fun CustomComponent(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.padding(3.dp))
+//        Spacer(modifier = Modifier.padding(3.dp))
         EmbeddedElements(
             bigText = receivedValue,
             bigTextFontSize = bigTextFontSize,
@@ -125,8 +125,8 @@ fun DrawScope.backgroundIndicator(
     drawArc(
         size = componentSize,
         color = indicatorColor,
-        startAngle = 150f,
-        sweepAngle = 240f,
+        startAngle = 90f,
+        sweepAngle = 360f,
         useCenter = false,
         style = Stroke(
             width = indicatorStrokeWidth,
@@ -134,7 +134,7 @@ fun DrawScope.backgroundIndicator(
         ),
         topLeft = Offset(
             x = (size.width - componentSize.width) / 2f,
-            y = (size.height - componentSize.height) / 0.8f
+            y = (size.height - componentSize.height) / 2f
         )
     )
 }
@@ -149,7 +149,7 @@ fun DrawScope.foregroundIndicator(
     drawArc(
         size = componentSize,
         color = indicatorColor,
-        startAngle = 150f,
+        startAngle = 90f,
         sweepAngle = sweepAngle,
         useCenter = false,
         style = Stroke(
@@ -158,7 +158,7 @@ fun DrawScope.foregroundIndicator(
         ),
         topLeft = Offset(
             x = (size.width - componentSize.width) / 2f,
-            y = (size.height - componentSize.height) / 0.8f
+            y = (size.height - componentSize.height) / 2f
         )
     )
 }
@@ -180,7 +180,8 @@ fun EmbeddedElements(
         textAlign = TextAlign.Center
     )
     Text(
-        text = "$bigText ${bigTextSuffix.take(2)}",
+//        text = "$bigText ${bigTextSuffix.take(2)}",
+        text = "$bigText",
         color = bigTextColor,
         fontSize = bigTextFontSize,
         textAlign = TextAlign.Center,
@@ -193,7 +194,8 @@ fun EmbeddedElements(
 fun CustomComponentPreview() {
 
         CustomComponent(
-            indicatorValue = 20 ,
+            indicatorValue = 50 ,
+            maxIndicatorValue = 100,
             canvasSize = 32.dp,
             backgroundIndicatorStrokeWidth = 10f,
             foregroundIndicatorStrokeWidth = 10f,
