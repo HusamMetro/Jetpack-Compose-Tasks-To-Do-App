@@ -12,14 +12,17 @@ fun SettingsScreen(
     navController: NavHostController
 ) {
     Scaffold(
-        topBar = {
+        /*topBar = {
             SettingsAppBar()
-        },
+        },*/
         bottomBar = {
             BottomBar(navController = navController)
         },
         content = {
-            SettingsContent(navController = navController, sharedViewModel = sharedViewModel)
+            SettingsContent(
+                navController = navController,
+                sharedViewModel = sharedViewModel,
+            )
         },
     )
 }

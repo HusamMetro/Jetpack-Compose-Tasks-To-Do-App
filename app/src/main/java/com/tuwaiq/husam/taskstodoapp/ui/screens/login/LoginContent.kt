@@ -27,6 +27,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -40,6 +41,8 @@ import com.tuwaiq.husam.taskstodoapp.components.CommonPasswordTextField
 import com.tuwaiq.husam.taskstodoapp.components.CommonTextField
 import com.tuwaiq.husam.taskstodoapp.components.GradientButton
 import com.tuwaiq.husam.taskstodoapp.ui.theme.cardSecondColor
+import com.tuwaiq.husam.taskstodoapp.ui.theme.gradientButtonColors
+import com.tuwaiq.husam.taskstodoapp.ui.theme.signUpColor
 import com.tuwaiq.husam.taskstodoapp.ui.theme.taskItemTextColor
 import com.tuwaiq.husam.taskstodoapp.ui.viewmodels.SharedViewModel
 import com.tuwaiq.husam.taskstodoapp.util.Constants.LIST_SCREEN
@@ -82,7 +85,7 @@ fun LoginContent(navController: NavHostController, sharedViewModel: SharedViewMo
             Image(
                 modifier = Modifier.offset( y = translateAnimation.value.dp),
                 painter = painterResource(id = R.drawable.ic_logo_dark),
-                contentDescription = "TO DO ICON"
+                contentDescription = stringResource(id = R.string.application_logo)
             )
         }
         Column(
@@ -156,12 +159,7 @@ fun LoginContent(navController: NavHostController, sharedViewModel: SharedViewMo
                     GradientButton(
                         text = "Log In",
                         textColor = Color.White,
-                        gradient = Brush.horizontalGradient(
-                            colors = listOf(
-                                MaterialTheme.colors.primary,
-                                MaterialTheme.colors.secondary
-                            )
-                        ),
+                        gradient = MaterialTheme.colors.gradientButtonColors,
                         onClick = {
                             when {
                                 TextUtils.isEmpty(email.trim { it <= ' ' }) -> {
@@ -210,7 +208,7 @@ fun LoginContent(navController: NavHostController, sharedViewModel: SharedViewMo
                         TextButton(onClick = {
                             navController.navigate(REGISTER_SCREEN)
                         }) {
-                            Text(text = "Sign Up")
+                            Text(text = "Sign Up", color = MaterialTheme.colors.signUpColor)
                         }
                         TextButton(onClick = { }) {
                             Text(text = "Forgot Password?", color = Color.Gray)

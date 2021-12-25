@@ -5,6 +5,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.TileMode
 
 val Purple200 = Color(0xFFBB86FC)
 val Purple500 = Color(0xFF6200EE)
@@ -69,6 +70,16 @@ val secondaryBlue =  Color(0xFF83ABD6)
 val greenPrimary3 = Color(0xFF244234)
 val greenPrimary5 = Color(0xFFc4cbbf)
 val greenPrimary6 = Color(0xFF3c4236)
+
+
+val Colors.gradientButtonColors: Brush
+    @Composable
+    get() = Brush.horizontalGradient(
+        colors = listOf(primary,primaryVariant,primary),
+    )
+
+val Colors.signUpColor: Color
+    get() = if (isLight) primary else primaryVariant
 
 val Colors.cardFirstColor: Color
 get() = if (isLight) greenLight1 else DarkerBlue

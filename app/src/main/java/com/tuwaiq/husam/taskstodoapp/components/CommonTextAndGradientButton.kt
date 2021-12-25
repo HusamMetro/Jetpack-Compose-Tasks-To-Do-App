@@ -34,7 +34,11 @@ fun CommonTextField(
     icon: ImageVector,
     keyboardOptions: KeyboardOptions,
     keyboardActions: KeyboardActions,
-    textColor: Color = MaterialTheme.colors.taskItemTextColor
+    textColor: Color = MaterialTheme.colors.taskItemTextColor,
+    colors : TextFieldColors = TextFieldDefaults.outlinedTextFieldColors(
+        textColor = textColor,
+    ),
+    enabled : Boolean = true
 ) {
     OutlinedTextField(
         modifier = modifier,
@@ -50,12 +54,8 @@ fun CommonTextField(
         },
         keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,
-        colors = TextFieldDefaults.outlinedTextFieldColors(
-            textColor = textColor,
-            /*focusedBorderColor = MaterialTheme.colors.secondary,
-            focusedLabelColor = MaterialTheme.colors.secondary,
-            cursorColor = MaterialTheme.colors.taskItemTextColor*/
-        )
+        colors = colors,
+        enabled = enabled
     )
 
 }
@@ -69,7 +69,10 @@ fun CommonPasswordTextField(
     icon: ImageVector,
     keyboardOptions: KeyboardOptions,
     keyboardActions: KeyboardActions,
-    textColor: Color = MaterialTheme.colors.taskItemTextColor
+    textColor: Color = MaterialTheme.colors.taskItemTextColor,
+    colors : TextFieldColors = TextFieldDefaults.outlinedTextFieldColors(
+        textColor = textColor,
+    )
 ) {
     var passwordVisibility by remember { mutableStateOf(false) }
     val iconB = if (passwordVisibility)
@@ -90,12 +93,7 @@ fun CommonPasswordTextField(
         },
         keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,
-        colors = TextFieldDefaults.outlinedTextFieldColors(
-            textColor = textColor,
-            focusedBorderColor = MaterialTheme.colors.secondary,
-            focusedLabelColor = MaterialTheme.colors.secondary,
-            cursorColor = MaterialTheme.colors.taskItemTextColor
-        ),
+        colors = colors,
         trailingIcon = {
             IconButton(onClick = { passwordVisibility = !passwordVisibility }) {
                 Icon(iconB, contentDescription = "Visibility Icon")
