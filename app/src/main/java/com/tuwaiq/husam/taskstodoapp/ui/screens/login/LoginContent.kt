@@ -41,6 +41,7 @@ import com.tuwaiq.husam.taskstodoapp.components.CommonPasswordTextField
 import com.tuwaiq.husam.taskstodoapp.components.CommonTextField
 import com.tuwaiq.husam.taskstodoapp.components.GradientButton
 import com.tuwaiq.husam.taskstodoapp.ui.theme.cardSecondColor
+import com.tuwaiq.husam.taskstodoapp.ui.theme.gradientButtonColors
 import com.tuwaiq.husam.taskstodoapp.ui.theme.signUpColor
 import com.tuwaiq.husam.taskstodoapp.ui.theme.taskItemTextColor
 import com.tuwaiq.husam.taskstodoapp.ui.viewmodels.SharedViewModel
@@ -158,12 +159,7 @@ fun LoginContent(navController: NavHostController, sharedViewModel: SharedViewMo
                     GradientButton(
                         text = "Log In",
                         textColor = Color.White,
-                        gradient = Brush.horizontalGradient(
-                            colors = listOf(
-                                MaterialTheme.colors.primary,
-                                MaterialTheme.colors.primaryVariant
-                            )
-                        ),
+                        gradient = MaterialTheme.colors.gradientButtonColors,
                         onClick = {
                             when {
                                 TextUtils.isEmpty(email.trim { it <= ' ' }) -> {

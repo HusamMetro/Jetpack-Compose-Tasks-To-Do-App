@@ -45,6 +45,7 @@ import com.tuwaiq.husam.taskstodoapp.components.CommonPasswordTextField
 import com.tuwaiq.husam.taskstodoapp.components.CommonTextField
 import com.tuwaiq.husam.taskstodoapp.components.GradientButton
 import com.tuwaiq.husam.taskstodoapp.data.models.User
+import com.tuwaiq.husam.taskstodoapp.ui.theme.gradientButtonColors
 import com.tuwaiq.husam.taskstodoapp.ui.theme.taskItemTextColor
 import com.tuwaiq.husam.taskstodoapp.util.Constants.LIST_SCREEN
 import com.tuwaiq.husam.taskstodoapp.util.Constants.LOGIN_SCREEN
@@ -186,12 +187,7 @@ fun RegisterContent(navController: NavHostController) {
                     Spacer(modifier = Modifier.padding(20.dp))
                     GradientButton(text = "Sign Up",
                         textColor = Color.White,
-                        gradient = Brush.horizontalGradient(
-                            colors = listOf(
-                                MaterialTheme.colors.primary,
-                                MaterialTheme.colors.primaryVariant
-                            )
-                        ),
+                        gradient = MaterialTheme.colors.gradientButtonColors,
                         onClick = {
                             when {
                                 TextUtils.isEmpty(emailValue.trim { it <= ' ' }) -> {

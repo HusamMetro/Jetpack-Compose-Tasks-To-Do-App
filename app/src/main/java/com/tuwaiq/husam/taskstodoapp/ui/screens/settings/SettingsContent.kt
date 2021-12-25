@@ -2,19 +2,18 @@ package com.tuwaiq.husam.taskstodoapp.ui.screens.settings
 
 import android.util.Log
 import androidx.compose.animation.core.*
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Phone
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -22,7 +21,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusManager
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
@@ -33,6 +31,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
@@ -41,6 +40,7 @@ import com.tuwaiq.husam.taskstodoapp.R
 import com.tuwaiq.husam.taskstodoapp.components.CommonTextField
 import com.tuwaiq.husam.taskstodoapp.components.GradientButton
 import com.tuwaiq.husam.taskstodoapp.data.models.Languages
+import com.tuwaiq.husam.taskstodoapp.data.models.Mode
 import com.tuwaiq.husam.taskstodoapp.ui.theme.*
 import com.tuwaiq.husam.taskstodoapp.ui.viewmodels.SharedViewModel
 import com.tuwaiq.husam.taskstodoapp.util.Constants.LIST_SCREEN
@@ -81,10 +81,10 @@ fun SettingsContent(
     val userUID = FirebaseAuth.getInstance().currentUser?.uid
     val docRef = db.collection("users").document("$userUID")*/
 
-    LaunchedEffect(key1 = true  ){
-         nameValue = sharedViewModel.user.username
-         emailValue = sharedViewModel.user.email
-         phoneValue = sharedViewModel.user.phoneNumber
+    LaunchedEffect(key1 = true) {
+        nameValue = sharedViewModel.user.username
+        emailValue = sharedViewModel.user.email
+        phoneValue = sharedViewModel.user.phoneNumber
     }
 
 
@@ -139,7 +139,7 @@ fun SettingsContent(
                 verticalArrangement = Arrangement.spacedBy(MEDIUM_PADDING)
             ) {
                 CommonTextField(
-                    modifier = Modifier.fillMaxWidth(0.85f),
+                    modifier = Modifier.fillMaxWidth(SETTINGS_MAX_WIDTH_FRACTION),
                     value = nameValue,
                     onValueChange = { nameValue = it },
                     strResId = R.string.name,
@@ -153,7 +153,7 @@ fun SettingsContent(
                     })
                 )
                 CommonTextField(
-                    modifier = Modifier.fillMaxWidth(0.85f),
+                    modifier = Modifier.fillMaxWidth(SETTINGS_MAX_WIDTH_FRACTION),
                     value = emailValue,
                     onValueChange = { emailValue = it },
                     strResId = R.string.email_address,
@@ -168,26 +168,26 @@ fun SettingsContent(
                     enabled = false
                 )
                 CommonTextField(
-                    modifier = Modifier.fillMaxWidth(0.85f),
+                    modifier = Modifier.fillMaxWidth(SETTINGS_MAX_WIDTH_FRACTION),
                     value = phoneValue,
                     onValueChange = { phoneValue = it },
                     strResId = R.string.phone_number,
                     icon = Icons.Filled.Phone,
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Phone,
-                        imeAction = ImeAction.Next
+                        imeAction = ImeAction.Done
                     ),
-                    keyboardActions = KeyboardActions(onNext = {
-                        focusManager.moveFocus(FocusDirection.Down)
+                    keyboardActions = KeyboardActions(onDone = {
+                        focusManager.clearFocus()
                     }),
                 )
                 Spacer(modifier = Modifier.padding(SMALL_PADDING))
-                Row(
-                    modifier = Modifier.fillMaxWidth(0.85f),
+                /*Row(
+                    modifier = Modifier.fillMaxWidth(SETTINGS_MAX_WIDTH_FRACTION),
                     horizontalArrangement = Arrangement.spacedBy(MEDIUM_PADDING),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(imageVector = Icons.Filled.DarkMode, contentDescription ="Dark Mode" )
+                    Icon(imageVector = Icons.Filled.DarkMode, contentDescription = "Dark Mode")
                     Text(text = "Dark Mode")
                     Switch(
                         checked = switchT,
@@ -197,12 +197,247 @@ fun SettingsContent(
 //                            sharedViewModel.readDarkThemeState()
                         },
                     )
+                }*/
+
+                // -------------------------- Transfer to Composable fun later -----------------------------
+                val cornerRadius = SMALL_PADDING
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(SETTINGS_MAX_WIDTH_FRACTION),
+//                        .padding(8.dp)
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Spacer(modifier = Modifier.weight(1f))
+                    val items = Mode.values()
+                    var selectedIndex by remember { mutableStateOf(0) }
+                    selectedIndex = if (switchT) {
+                        1
+                    } else {
+                        0
+                    }
+                    items.forEachIndexed { index, item ->
+                        OutlinedButton(
+                            modifier = when (index) {
+                                0 -> {
+                                    if (selectedIndex == index) {
+                                        Modifier
+                                            .offset(0.dp, 0.dp)
+                                            .zIndex(1f)
+                                    } else {
+                                        Modifier
+                                            .offset(0.dp, 0.dp)
+                                            .zIndex(0f)
+                                    }
+                                }
+                                else -> {
+                                    val offset = -1 * index
+                                    if (selectedIndex == index) {
+                                        Modifier
+                                            .offset(offset.dp, 0.dp)
+                                            .zIndex(1f)
+                                    } else {
+                                        Modifier
+                                            .offset(offset.dp, 0.dp)
+                                            .zIndex(0f)
+                                    }
+                                }
+                            },
+                            onClick = {
+                                selectedIndex = index
+                                val darkThemeState = when (selectedIndex) {
+                                    0 -> false
+                                    else -> true
+                                }
+                                switchT = darkThemeState
+                                sharedViewModel.persistDarkThemeState(darkThemeState)
+                            },
+                            shape = when (index) {
+                                // left outer button
+                                0 -> RoundedCornerShape(
+                                    topStart = cornerRadius,
+                                    topEnd = 0.dp,
+                                    bottomStart = cornerRadius,
+                                    bottomEnd = 0.dp
+                                )
+                                // right outer button
+                                items.size - 1 -> RoundedCornerShape(
+                                    topStart = 0.dp,
+                                    topEnd = cornerRadius,
+                                    bottomStart = 0.dp,
+                                    bottomEnd = cornerRadius
+                                )
+                                // middle button
+                                else -> RoundedCornerShape(
+                                    topStart = 0.dp,
+                                    topEnd = 0.dp,
+                                    bottomStart = 0.dp,
+                                    bottomEnd = 0.dp
+                                )
+                            },
+                            border = BorderStroke(
+                                1.dp, if (selectedIndex == index) {
+                                    MaterialTheme.colors.signUpColor
+                                } else {
+                                    Color.DarkGray.copy(alpha = 0.75f)
+                                }
+                            ),
+                            colors = if (selectedIndex == index) {
+                                // selected colors
+                                ButtonDefaults.outlinedButtonColors(
+                                    backgroundColor = MaterialTheme.colors.signUpColor.copy(
+                                        alpha = 0.1f
+                                    ), contentColor = MaterialTheme.colors.primary
+                                )
+                            } else {
+                                // not selected colors
+                                ButtonDefaults.outlinedButtonColors(
+                                    backgroundColor = MaterialTheme.colors.surface,
+                                    contentColor = MaterialTheme.colors.primary
+                                )
+                            },
+                        ) {
+                            Row(
+                                modifier = Modifier.height(30.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+
+                                Icon(
+                                    modifier = Modifier.padding(horizontal = 2.dp),
+                                    imageVector = item.imageVector,
+                                    contentDescription = "${item.name} Icon",
+                                    tint = if (selectedIndex == index) {
+                                        MaterialTheme.colors.signUpColor
+                                    } else {
+                                        Color.DarkGray.copy(alpha = 0.9f)
+                                    }
+                                )
+                            }
+
+                            /*Text(
+                                text = item.name,
+                                color = if (selectedIndex == index) {
+                                    MaterialTheme.colors.signUpColor
+                                } else {
+                                    Color.DarkGray.copy(alpha = 0.9f)
+                                },
+                                modifier = Modifier.padding(horizontal = 8.dp)
+                            )*/
+                        }
+                    }
+                    Spacer(modifier = Modifier.weight(5f))
+
+                    Spacer(modifier = Modifier.weight(5f))
+                    val langList = Languages.values()
+                    var selectedLangIndex by remember { mutableStateOf(0) }
+                    langList.forEachIndexed { index, item ->
+                        OutlinedButton(
+                            modifier = when (index) {
+                                0 -> {
+                                    if (selectedLangIndex == index) {
+                                        Modifier
+                                            .offset(0.dp, 0.dp)
+                                            .zIndex(1f)
+                                    } else {
+                                        Modifier
+                                            .offset(0.dp, 0.dp)
+                                            .zIndex(0f)
+                                    }
+                                }
+                                else -> {
+                                    val offset = -1 * index
+                                    if (selectedLangIndex == index) {
+                                        Modifier
+                                            .offset(offset.dp, 0.dp)
+                                            .zIndex(1f)
+                                    } else {
+                                        Modifier
+                                            .offset(offset.dp, 0.dp)
+                                            .zIndex(0f)
+                                    }
+                                }
+                            },
+                            onClick = { selectedLangIndex = index },
+                            shape = when (index) {
+                                // left outer button
+                                0 -> RoundedCornerShape(
+                                    topStart = cornerRadius,
+                                    topEnd = 0.dp,
+                                    bottomStart = cornerRadius,
+                                    bottomEnd = 0.dp
+                                )
+                                // right outer button
+                                langList.size - 1 -> RoundedCornerShape(
+                                    topStart = 0.dp,
+                                    topEnd = cornerRadius,
+                                    bottomStart = 0.dp,
+                                    bottomEnd = cornerRadius
+                                )
+                                // middle button
+                                else -> RoundedCornerShape(
+                                    topStart = 0.dp,
+                                    topEnd = 0.dp,
+                                    bottomStart = 0.dp,
+                                    bottomEnd = 0.dp
+                                )
+                            },
+                            border = BorderStroke(
+                                1.dp, if (selectedLangIndex == index) {
+                                    MaterialTheme.colors.signUpColor
+                                } else {
+                                    Color.DarkGray.copy(alpha = 0.75f)
+                                }
+                            ),
+                            colors = if (selectedLangIndex == index) {
+                                // selected colors
+                                ButtonDefaults.outlinedButtonColors(
+                                    backgroundColor = MaterialTheme.colors.signUpColor.copy(
+                                        alpha = 0.1f
+                                    ), contentColor = MaterialTheme.colors.primary
+                                )
+                            } else {
+                                // not selected colors
+                                ButtonDefaults.outlinedButtonColors(
+                                    backgroundColor = MaterialTheme.colors.surface,
+                                    contentColor = MaterialTheme.colors.primary
+                                )
+                            },
+                        ) {
+                            Row(
+                                modifier = Modifier.height(30.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                Text(
+                                    text = item.name,
+                                    color = if (selectedLangIndex == index) {
+                                        MaterialTheme.colors.signUpColor
+                                    } else {
+                                        Color.DarkGray.copy(alpha = 0.9f)
+                                    },
+                                    modifier = Modifier.padding(horizontal = 2.dp, vertical = 1.dp)
+                                )
+                            }
+                        }
+                    }
+                    Spacer(modifier = Modifier.weight(1f))
                 }
-                Spacer(modifier = Modifier.padding(SMALL_PADDING))
+                // -------------------------- Transfer to Composable fun later -----------------------------
+
+                // -------------------------- Transfer to Composable fun later -----------------------------
+                /* Row(
+                     modifier = Modifier
+                         .fillMaxWidth()
+                         .padding(8.dp)
+                 ) {
+
+                 }*/
+                // -------------------------- Transfer to Composable fun later -----------------------------
+                /*Spacer(modifier = Modifier.padding(SMALL_PADDING))
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center,
-                    modifier = Modifier.fillMaxWidth(0.85f)
+                    modifier = Modifier.fillMaxWidth(SETTINGS_MAX_WIDTH_FRACTION)
                 ) {
                     LanguageDropDown(
                         language = langaguge,
@@ -210,14 +445,15 @@ fun SettingsContent(
                             langaguge = languages
                         }
                     )
-                }
+                }*/
                 Spacer(modifier = Modifier.padding(MEDIUM_PADDING))
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(SETTINGS_MAX_WIDTH_FRACTION),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceEvenly
+                    horizontalArrangement = Arrangement.Center
                 ) {
-                    GradientButton(
+
+                    /*GradientButton(
                         text = "Sign Out",
                         textColor = Color.White,
                         gradient = Brush.horizontalGradient(
@@ -226,33 +462,34 @@ fun SettingsContent(
                                 MaterialTheme.colors.primaryVariant
                             )
                         ),
-                        onClick = {
-                            FirebaseAuth.getInstance().signOut()
-                            sharedViewModel.persistRememberState(false)
-                            navController.navigate(LOGIN_SCREEN) {
-                                /*popUpTo(SETTINGS_SCREEN){
-                                inclusive = true
-                            } */
-                                popUpTo(LIST_SCREEN) {
-                                    inclusive = true
-                                }
-                            }
-                        }
-                    )
+
+                    )*/
                     GradientButton(text = "Update",
                         textColor = Color.White,
-                        gradient = Brush.horizontalGradient(
-                            colors = listOf(
-                                MaterialTheme.colors.primaryVariant,
-                                MaterialTheme.colors.primary,
-                            )
-                        ),
+                        gradient = MaterialTheme.colors.gradientButtonColors,
                         onClick = {
                             updateInFirestore(nameValue, phoneValue, it)
                             sharedViewModel.loadUserInformation()
                         }
                     )
                 }
+                Spacer(modifier = Modifier.padding(MEDIUM_PADDING))
+                OutlinedButton(
+                    onClick = {
+                        FirebaseAuth.getInstance().signOut()
+                        sharedViewModel.persistRememberState(false)
+                        navController.navigate(LOGIN_SCREEN) {
+                            /*popUpTo(SETTINGS_SCREEN){
+                            inclusive = true
+                        } */
+                            popUpTo(LIST_SCREEN) {
+                                inclusive = true
+                            }
+                        }
+                    }) {
+                    Text(text = "Sign Out", color = MaterialTheme.colors.signUpColor)
+                }
+
 //                Spacer(modifier = Modifier.padding(20.dp))
 
 //                    Spacer(modifier = Modifier.padding(20.dp))
