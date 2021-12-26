@@ -1,11 +1,15 @@
 package com.tuwaiq.husam.taskstodoapp.ui.screens.challenges
 
 import android.util.Log
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -21,6 +25,7 @@ import com.tuwaiq.husam.taskstodoapp.ui.theme.MEDIUM_PADDING
 import com.tuwaiq.husam.taskstodoapp.ui.theme.MediumGray
 import com.tuwaiq.husam.taskstodoapp.ui.viewmodels.SharedViewModel
 
+@ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @Composable
 fun ChallengesScreen(
@@ -64,7 +69,20 @@ fun ChallengesScreen(
                         }
                     }
                 } else {
-                    ChallengesContent(sharedViewModel.mockTasks, sharedViewModel)
+                    var itemAppeared by remember { mutableStateOf(false) }
+                    LaunchedEffect(key1 = true) {
+                        itemAppeared = true
+                    }
+                    AnimatedVisibility(
+                        visible = itemAppeared,
+                        enter = expandVertically(
+                            animationSpec = tween(
+                                durationMillis = 300
+                            )
+                        ),
+                    ){
+                        ChallengesContent(sharedViewModel.mockTasks, sharedViewModel)
+                    }
                 }
             } else {
                 EmptyContentNoConnection()

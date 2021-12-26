@@ -40,7 +40,7 @@ import com.tuwaiq.husam.taskstodoapp.R
 import com.tuwaiq.husam.taskstodoapp.components.CommonTextField
 import com.tuwaiq.husam.taskstodoapp.components.GradientButton
 import com.tuwaiq.husam.taskstodoapp.data.models.Languages
-import com.tuwaiq.husam.taskstodoapp.data.models.Mode
+import com.tuwaiq.husam.taskstodoapp.data.models.UiMode
 import com.tuwaiq.husam.taskstodoapp.ui.theme.*
 import com.tuwaiq.husam.taskstodoapp.ui.viewmodels.SharedViewModel
 import com.tuwaiq.husam.taskstodoapp.util.Constants.LIST_SCREEN
@@ -208,7 +208,7 @@ fun SettingsContent(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Spacer(modifier = Modifier.weight(1f))
-                    val items = Mode.values()
+                    val items = UiMode.values()
                     var selectedIndex by remember { mutableStateOf(0) }
                     selectedIndex = if (switchT) {
                         1

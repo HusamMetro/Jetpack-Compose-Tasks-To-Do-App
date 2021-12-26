@@ -14,10 +14,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.CalendarToday
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -146,8 +144,8 @@ fun DisplayTask(
                 }
             }
 
-            if ( isDismissedStartToEnd && dismissDirection == DismissDirection.StartToEnd) {
-                LaunchedEffect(key1 = false ) {
+            if (isDismissedStartToEnd && dismissDirection == DismissDirection.StartToEnd) {
+                LaunchedEffect(key1 = false) {
                     navigateToTaskScreens(task.id)
                 }
             }
@@ -303,97 +301,283 @@ fun TaskItem(
                     )
                     .fillMaxWidth()
             ) {
-                Row {
-                    CustomComponent(
-                        indicatorValue = Random.nextInt(6),
-                        canvasSize = if (expandState) 60.dp else 32.dp,
-                        backgroundIndicatorStrokeWidth = 10f,
-                        foregroundIndicatorStrokeWidth = 10f,
-                        foregroundIndicatorColor = MaterialTheme.colors.foregroundIndicatorColor,
-                        backgroundIndicatorColor = MaterialTheme.colors.backgroundIndicatorColor,
-                        bigTextFontSize = 10.sp,
-                        smallTextFontSize = 0.sp,
-                        maxIndicatorValue = 5,
-                        bigTextSuffix = "",
-                        smallText = "",
-                    )
-                    Text(
-                        modifier = Modifier
-                            .weight(8f)
-                            .padding(start = 10.dp),
-                        text = toDoTask.title,
-                        color = MaterialTheme.colors.taskItemTextColor,
-                        style = if (!expandState) MaterialTheme.typography.h5 else MaterialTheme.typography.h4,
-                        fontWeight = FontWeight.Bold,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f),
-                        contentAlignment = Alignment.TopEnd
-                    ) {
-                        Canvas(
-                            modifier = Modifier.size(PRIORITY_INDICATOR_SIZE),
+                if (expandState) {
+                    CardExpanded(toDoTask = toDoTask)
+                } else {
+                    Row(Modifier.padding(bottom = SMALL_PADDING)) {
+                        Row(
+                            Modifier.weight(19f),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
                         ) {
-                            drawCircle(
-                                toDoTask.priority.color
+                            CustomComponent(
+                                indicatorValue = Random.nextInt(6),
+                                canvasSize = 32.dp,
+                                backgroundIndicatorStrokeWidth = 10f,
+                                foregroundIndicatorStrokeWidth = 10f,
+                                foregroundIndicatorColor = MaterialTheme.colors.foregroundIndicatorColor,
+                                backgroundIndicatorColor = MaterialTheme.colors.backgroundIndicatorColor,
+                                bigTextFontSize = 10.sp,
+                                smallTextFontSize = 0.sp,
+                                maxIndicatorValue = 5,
+                                bigTextSuffix = "",
+                                smallText = "",
+                            )
+                            Text(
+                                modifier = Modifier
+                                    .weight(8f)
+                                    .padding(start = 10.dp),
+                                text = toDoTask.title,
+                                color = MaterialTheme.colors.taskItemTextColor,
+                                style = MaterialTheme.typography.h5,
+                                fontWeight = FontWeight.Bold,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
                             )
                         }
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(1f),
+                            contentAlignment = Alignment.TopEnd
+                        ) {
+                            Canvas(
+                                modifier = Modifier.size(PRIORITY_INDICATOR_SIZE),
+                            ) {
+                                drawCircle(
+                                    toDoTask.priority.color
+                                )
+                            }
+                        }
                     }
+                    Text(
+                        text = toDoTask.description,
+                        modifier = Modifier.fillMaxWidth(),
+                        color = MaterialTheme.colors.taskItemTextColor,
+                        style = MaterialTheme.typography.subtitle1,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+
+                    /*
+                    if (expandState) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = MEDIUM_PADDING),
+                            horizontalAlignment = Alignment.Start,
+                            verticalArrangement = Arrangement.spacedBy(MEDIUM_PADDING)
+                        ) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(SMALL_PADDING)
+                            ) {
+                                Icon(imageVector = Icons.Filled.CalendarToday, contentDescription = "")
+                                Text(
+                                    text = "Start Date :",
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    color = MaterialTheme.colors.taskItemTextColor
+                                )
+                                Text(
+                                    text = "8/10/2021",
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    color = MaterialTheme.colors.taskItemTextColor
+                                )
+                            }
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(SMALL_PADDING)
+                            ) {
+                                Icon(imageVector = Icons.Filled.CalendarToday, contentDescription = "")
+                                Text(
+                                    text = "End Date :",
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    color = MaterialTheme.colors.taskItemTextColor
+                                )
+                                Text(
+                                    text = "20/12/2021",
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    color = MaterialTheme.colors.taskItemTextColor
+                                )
+                            }
+    
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(SMALL_PADDING)
+                            ) {
+                                Icon(imageVector = Icons.Filled.Person, contentDescription = "n")
+                                Text(
+                                    text = "Anything ... just to fill the column",
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    color = MaterialTheme.colors.taskItemTextColor
+                                )
+                            }
+                        }
+                    }
+                    */
+
+                    /*Row(
+                        Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        IconButton(modifier = Modifier
+                            .offset(15.dp)
+    //                        .alpha(ContentAlpha.medium)
+                            .rotate(rotationState),
+                            onClick = {
+                                expandState = !expandState
+                            }) {
+                            Icon(
+                                imageVector = Icons.Filled.ArrowDropDown,
+                                contentDescription = "Drop-Down Arrow",
+                                tint = MaterialTheme.colors.taskItemTextColor
+                            )
+                        }
+                    }*/
                 }
-                Text(
-                    text = toDoTask.description,
-                    modifier = Modifier.fillMaxWidth(),
-                    color = MaterialTheme.colors.taskItemTextColor,
-                    style = MaterialTheme.typography.subtitle1,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
+            }
+        }
+    }
+}
+
+@Composable
+fun CardExpanded(toDoTask: ToDoTask) {
+
+    Row(Modifier.padding(bottom = SMALL_PADDING)) {
+        Text(
+            modifier = Modifier
+                .weight(8f),
+            text = toDoTask.title,
+            color = MaterialTheme.colors.taskItemTextColor,
+            style = MaterialTheme.typography.h5,
+            fontWeight = FontWeight.Bold,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f),
+            contentAlignment = Alignment.TopEnd
+        ) {
+            Canvas(
+                modifier = Modifier.size(PRIORITY_INDICATOR_SIZE),
+            ) {
+                drawCircle(
+                    toDoTask.priority.color
                 )
-                if (expandState) {
-                    Text(
-                        text = "Start Date : 8/10/2021",
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        color = MaterialTheme.colors.taskItemTextColor
-                    )
-                    Text(
-                        text = "End Date : 20/12/2021",
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        color = MaterialTheme.colors.taskItemTextColor
-                    )
-                    Row {
-                        Icon(imageVector = Icons.Filled.Person, contentDescription = "n")
-                        Spacer(modifier = Modifier.padding(horizontal = 5.dp))
-                        Text(
-                            text = "Anything ... just to fill the column",
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            color = MaterialTheme.colors.taskItemTextColor
-                        )
-                    }
-                }
-                /*Row(
-                    Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    IconButton(modifier = Modifier
-                        .offset(15.dp)
-//                        .alpha(ContentAlpha.medium)
-                        .rotate(rotationState),
-                        onClick = {
-                            expandState = !expandState
-                        }) {
-                        Icon(
-                            imageVector = Icons.Filled.ArrowDropDown,
-                            contentDescription = "Drop-Down Arrow",
-                            tint = MaterialTheme.colors.taskItemTextColor
-                        )
-                    }
-                }*/
+            }
+        }
+    }
+    Text(
+        text = toDoTask.description,
+        modifier = Modifier.fillMaxWidth(),
+        color = MaterialTheme.colors.taskItemTextColor,
+        style = MaterialTheme.typography.subtitle1,
+//        maxLines = 2,
+//        overflow = TextOverflow.Ellipsis
+    )
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = MEDIUM_PADDING),
+        horizontalAlignment = Alignment.Start,
+        verticalArrangement = Arrangement.spacedBy(MEDIUM_PADDING)
+    ) {
+        Divider(
+            Modifier
+                .fillMaxWidth()
+                .padding(vertical = LARGE_PADDING, horizontal = SMALL_PADDING)
+        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(MEDIUM_PADDING)
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.CalendarToday,
+                    contentDescription = ""
+                )
+                /*Text(
+                    text = "Start Date :",
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    color = MaterialTheme.colors.taskItemTextColor
+                )*/
+                Text(
+                    text = "8/10/2021",
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    color = MaterialTheme.colors.taskItemTextColor
+                )
+            }
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(MEDIUM_PADDING)
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.CalendarToday,
+                    contentDescription = "",
+                )
+                /*Text(
+                    text = "End Date :",
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    color = MaterialTheme.colors.taskItemTextColor
+                )*/
+                Text(
+                    text = "20/12/2021",
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    color = MaterialTheme.colors.taskItemTextColor
+                )
+            }
+
+        }
+        Divider(Modifier.padding(vertical = LARGE_PADDING , horizontal = SMALL_PADDING ))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+//                .padding(top = MEDIUM_PADDING)
+            ,
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            IconButton(
+                modifier = Modifier.padding(horizontal = SMALL_PADDING),
+                onClick = { /*TODO*/ }) {
+                Icon(imageVector = Icons.Filled.Remove, contentDescription = "")
+            }
+            CustomComponent(
+                indicatorValue = Random.nextInt(6),
+                canvasSize = 48.dp,
+                backgroundIndicatorStrokeWidth = 12f,
+                foregroundIndicatorStrokeWidth = 12f,
+                foregroundIndicatorColor = MaterialTheme.colors.foregroundIndicatorColor,
+                backgroundIndicatorColor = MaterialTheme.colors.backgroundIndicatorColor,
+                bigTextFontSize = 15.sp,
+                smallTextFontSize = 0.sp,
+                maxIndicatorValue = 5,
+                bigTextSuffix = "",
+                smallText = "",
+            )
+            IconButton(
+                modifier = Modifier.padding(horizontal = SMALL_PADDING),
+                onClick = { /*TODO*/ }) {
+                Icon(imageVector = Icons.Filled.Add, contentDescription = "")
             }
         }
     }
@@ -418,7 +602,6 @@ private fun TaskItemPreview() {
             )
         ) {}
     }
-
 }
 /*
 

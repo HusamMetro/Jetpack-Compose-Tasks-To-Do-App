@@ -1,8 +1,7 @@
 package com.tuwaiq.husam.taskstodoapp.navigation.destinations
 
-import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.slideInHorizontally
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -30,7 +29,13 @@ fun NavGraphBuilder.taskComposable(
             slideInHorizontally(
                 animationSpec = tween(durationMillis = 300),
                 initialOffsetX = { fullWidth -> -fullWidth }
-            )
+            )+  fadeIn(animationSpec = tween(durationMillis = 300))
+        },
+        exitTransition = {_,_ ->
+            slideOutHorizontally(
+                animationSpec = tween(durationMillis = 500),
+                targetOffsetX = { fullWidth -> -fullWidth }
+            )+  fadeOut(animationSpec = tween(durationMillis = 500))
         }
     ) { navBackStackEntry ->
         val taskId = navBackStackEntry.arguments!!.getInt(TASK_ARGUMENT_KEY)
