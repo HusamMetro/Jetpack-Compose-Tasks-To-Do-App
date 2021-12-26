@@ -4,10 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
-import androidx.activity.OnBackPressedDispatcher
 import androidx.activity.compose.BackHandler
-import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
@@ -26,7 +23,11 @@ fun TaskScreen(
     val title: String by sharedViewModel.title
     val description: String by sharedViewModel.description
     val priority: Priority by sharedViewModel.priority
-    val context = LocalContext.current
+    var startDate: String by remember { mutableStateOf("00/00/00") }
+    var endDate: String by remember { mutableStateOf("00/00/00") }
+    var maxTask: String by remember { mutableStateOf("10") }
+    var taskCounter: String by remember { mutableStateOf("2") }
+    var context = LocalContext.current
 //    BackHandler(onBackPressed = { navigateToListScreen(Action.NO_ACTION) })
     BackHandler {
         navigateToListScreen(Action.NO_ACTION)
@@ -75,6 +76,22 @@ fun TaskScreen(
                 priority = priority,
                 onPrioritySelected = {
                     sharedViewModel.priority.value = it
+                },
+                startDate = startDate,
+                onStartDateChanged = {
+                    startDate = it
+                },
+                endDate = endDate,
+                onEndDateChanged = {
+                    endDate = it
+                },
+                maxTask = maxTask,
+                onMaxTaskChanged = {
+                    maxTask = it
+                },
+                taskCounter =taskCounter ,
+                onTaskCounterChanged = {
+                    taskCounter = it
                 }
             )
         }

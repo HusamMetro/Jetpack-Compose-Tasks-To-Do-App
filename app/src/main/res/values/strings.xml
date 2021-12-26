@@ -38,4 +38,7 @@
     <string name="confirm_possword">Confirm Password</string>
     <string name="share_icon">Share Icon</string>
     <string name="edit_icon">Edit Icon</string>
+    <string name="start_date">Start Date</string>
+    <string name="end_date">End Date</string>
+    <string name="max_task">Max Task</string>
 </resources>
