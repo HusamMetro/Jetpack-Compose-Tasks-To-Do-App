@@ -6,7 +6,7 @@ import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.ui.graphics.vector.ImageVector
 
-enum class Mode(val imageVector: ImageVector) {
+enum class UiMode(val imageVector: ImageVector) {
     Light(Icons.Filled.LightMode),
     Dark(Icons.Filled.DarkMode)
 }
