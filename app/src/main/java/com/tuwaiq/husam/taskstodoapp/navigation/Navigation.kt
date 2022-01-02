@@ -87,7 +87,7 @@ fun SetupNavigation(
             LoginScreen(navController = navController, sharedViewModel = sharedViewModel)
         }
         composable(route = REGISTER_SCREEN) {
-            RegisterScreen(navController = navController)
+            RegisterScreen(navController = navController,sharedViewModel = sharedViewModel)
         }
     }
 }

@@ -206,7 +206,11 @@ private fun ExistingTaskAppBarPreview() {
             0,
             "Sleep Task",
             " Before 3 am",
-            Priority.MEDIUM
+            Priority.MEDIUM,
+            "20/12/21",
+            "30/12/21",
+            "20",
+            "5"
         ),
         navigateToListScreen = {}, onShareClicked = {})
 }

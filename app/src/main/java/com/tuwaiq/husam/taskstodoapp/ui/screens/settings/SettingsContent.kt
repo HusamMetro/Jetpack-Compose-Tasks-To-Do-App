@@ -130,6 +130,7 @@ fun SettingsContent(
                 .background(
                     MaterialTheme.colors.surface
                 )
+                .verticalScroll(rememberScrollState())
                 .padding(bottom = TOP_APP_BAR_HEIGHT.plus(MEDIUM_PADDING)),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceEvenly

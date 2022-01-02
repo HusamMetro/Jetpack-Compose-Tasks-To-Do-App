@@ -77,7 +77,13 @@ fun ListScreen(
                     sharedViewModel.updateTaskFields(task)
                     scaffoldState.snackbarHostState.currentSnackbarData?.dismiss()
                 },
-                navigateToTaskScreens = navigateToTaskScreen
+                navigateToTaskScreens = navigateToTaskScreen,
+                onUpdate = { task, operation ->
+                    sharedViewModel.updateTaskFields(task)
+                    sharedViewModel.taskCounter.value =
+                        getTaskCounterInt2(sharedViewModel.taskCounter.value,sharedViewModel.maxTask.value, operation).toString()
+                    sharedViewModel.handleDatabaseAction(Action.UPDATE)
+                }
             )
         }, bottomBar = {
             BottomBar(navController = navController)
@@ -86,6 +92,24 @@ fun ListScreen(
             ListFab(onFabClicked = navigateToTaskScreen)
         }
     )
+}
+fun getTaskCounterInt2(taskCounter: String, maxTask: String , operation: Int) : Int{
+    return try {
+        var result = taskCounter.toInt()
+        when(operation) {
+            1 -> {
+                if (result < maxTask.toInt() )
+                    result++
+            }
+            -1 -> {
+                if (result > 0)
+                    result--
+            }
+        }
+        result
+    } catch (e: Exception) {
+        0
+    }
 }
 
 @Composable

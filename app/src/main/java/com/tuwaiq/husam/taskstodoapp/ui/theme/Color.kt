@@ -137,6 +137,10 @@ val Colors.backgroundIndicatorColor: Color
     @Composable
     get() = if (isLight) Color.White else MediumGray
 
+val Colors.backgroundIndicatorColor2: Color
+    @Composable
+    get() = if (isLight) greenLight1 else MediumGray
+
 val Colors.bottomBarSelectedContentColor: Color
     @Composable
     get() = topAppBarContentColor

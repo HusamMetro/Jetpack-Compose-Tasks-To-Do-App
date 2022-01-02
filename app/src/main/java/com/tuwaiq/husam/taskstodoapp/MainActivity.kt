@@ -6,19 +6,15 @@ import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
-import androidx.activity.ComponentActivity
+import android.view.WindowManager
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Button
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.*
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavHostController
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
@@ -28,7 +24,7 @@ import com.tuwaiq.husam.taskstodoapp.ui.viewmodels.SharedViewModel
 
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavHostController
 
     //    private val sharedViewModel: SharedViewModel by viewModels()
@@ -44,7 +40,7 @@ class MainActivity : ComponentActivity() {
             sharedViewModel.readRememberState()
             val darkTheme by sharedViewModel.darkThemeState.collectAsState()
             TasksToDoAppTheme(darkTheme = darkTheme) {
-//                ClickButton(context = this)
+//                TestLayout(context = this,sharedViewModel,this)
                 navController = rememberAnimatedNavController()
                 SetupNavigation(
                     navController = navController,
@@ -55,9 +51,32 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@ExperimentalMaterialApi
+@ExperimentalAnimationApi
+@ExperimentalComposeUiApi
 @Composable
-fun ClickButton(context: Context) {
+fun TestLayout(context: Context,viewModel: SharedViewModel,mainActivity: MainActivity) {
+    Button(onClick = { viewModel.displayNotification(mainActivity)}) {
+        Text(text = "Click me")
+    }
 
+   /* var datePicked : String? by remember {
+        mutableStateOf(null)
+    }
+
+    val updatedDate = { date : Long? ->
+        datePicked = DateFormater(date)
+    }
+
+    Scaffold(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+    ) {
+        DatePickerview( datePicked, updatedDate )
+    }*/
+
+/*
     Column(modifier = Modifier.fillMaxSize()) {
         Button(onClick = {
             if (checkForInternet(context)) {
@@ -69,7 +88,7 @@ fun ClickButton(context: Context) {
         Text("Click B")
         }
 
-    }
+    }*/
 }
 
 private fun checkForInternet(context: Context): Boolean {

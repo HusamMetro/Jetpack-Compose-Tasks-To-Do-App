@@ -4,10 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
-import androidx.activity.OnBackPressedDispatcher
 import androidx.activity.compose.BackHandler
-import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
@@ -26,6 +23,11 @@ fun TaskScreen(
     val title: String by sharedViewModel.title
     val description: String by sharedViewModel.description
     val priority: Priority by sharedViewModel.priority
+    var titleIsError: Boolean by remember { mutableStateOf(false) }
+    var startDate: String by sharedViewModel.startDate
+    var endDate: String by sharedViewModel.endDate
+    var maxTask: String by sharedViewModel.maxTask
+    var taskCounter: String by sharedViewModel.taskCounter
     val context = LocalContext.current
 //    BackHandler(onBackPressed = { navigateToListScreen(Action.NO_ACTION) })
     BackHandler {
@@ -43,12 +45,13 @@ fun TaskScreen(
                         if (sharedViewModel.validateFields()) {
                             navigateToListScreen(action)
                         } else {
+                            titleIsError = true
                             displayToast(context = context)
                         }
                     }
                 },
-                onShareClicked =  {
-                    Log.e("Shared","Shared Clicked")
+                onShareClicked = {
+                    Log.e("Shared", "Shared Clicked")
                     val sendIntent = Intent().apply {
                         action = Intent.ACTION_SEND
                         putExtra(
@@ -65,9 +68,11 @@ fun TaskScreen(
             TaskContent(
                 title = title,
                 onTitleChange = {
+                    titleIsError = it.isEmpty()
                     sharedViewModel.updateTitle(it)
 //                    sharedViewModel.title.value = it
                 },
+                titleIsError = titleIsError,
                 description = description,
                 onDescriptionChange = {
                     sharedViewModel.description.value = it
@@ -75,6 +80,22 @@ fun TaskScreen(
                 priority = priority,
                 onPrioritySelected = {
                     sharedViewModel.priority.value = it
+                },
+                startDate = startDate,
+                onStartDateChanged = {
+                    startDate = it
+                },
+                endDate = endDate,
+                onEndDateChanged = {
+                    endDate = it
+                },
+                maxTask = maxTask,
+                onMaxTaskChanged = {
+                    maxTask = it
+                },
+                taskCounter = taskCounter,
+                onTaskCounterChanged = {
+                    taskCounter = it
                 }
             )
         }
