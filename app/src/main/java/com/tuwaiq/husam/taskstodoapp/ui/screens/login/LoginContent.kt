@@ -1,6 +1,5 @@
 package com.tuwaiq.husam.taskstodoapp.ui.screens.login
 
-import android.text.TextUtils
 import android.util.Log
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
@@ -15,15 +14,16 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Password
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusManager
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
@@ -40,7 +40,6 @@ import com.tuwaiq.husam.taskstodoapp.R
 import com.tuwaiq.husam.taskstodoapp.components.CommonPasswordTextField
 import com.tuwaiq.husam.taskstodoapp.components.CommonTextField
 import com.tuwaiq.husam.taskstodoapp.components.GradientButton
-import com.tuwaiq.husam.taskstodoapp.ui.theme.cardSecondColor
 import com.tuwaiq.husam.taskstodoapp.ui.theme.gradientButtonColors
 import com.tuwaiq.husam.taskstodoapp.ui.theme.signUpColor
 import com.tuwaiq.husam.taskstodoapp.ui.theme.taskItemTextColor
@@ -48,13 +47,23 @@ import com.tuwaiq.husam.taskstodoapp.ui.viewmodels.SharedViewModel
 import com.tuwaiq.husam.taskstodoapp.util.Constants.LIST_SCREEN
 import com.tuwaiq.husam.taskstodoapp.util.Constants.LOGIN_SCREEN
 import com.tuwaiq.husam.taskstodoapp.util.Constants.REGISTER_SCREEN
+import com.wajahatkarim3.easyvalidation.core.view_ktx.validEmail
+import com.wajahatkarim3.easyvalidation.core.view_ktx.validator
 
 
 @Composable
-fun LoginContent(navController: NavHostController, sharedViewModel: SharedViewModel) {
+fun LoginContent(navController: NavHostController, sharedViewModel: SharedViewModel, snackBoolean : () -> Unit ) {
     val focusManager: FocusManager = LocalFocusManager.current
+    var firstTimeAttempt by rememberSaveable { mutableStateOf(false) }
+
     var email by rememberSaveable { mutableStateOf("") }
+    var emailIsError by rememberSaveable { mutableStateOf(false) }
+    var emailIsErrorMsg by rememberSaveable { mutableStateOf("") }
+
     var password by rememberSaveable { mutableStateOf("") }
+    var passwordIsError by rememberSaveable { mutableStateOf(false) }
+    var passwordIsErrorMsg by rememberSaveable { mutableStateOf("") }
+
 //    val checkedRememberState by sharedViewModel.rememberState.collectAsState()
     var checked by rememberSaveable { mutableStateOf(false) }
 
@@ -83,7 +92,7 @@ fun LoginContent(navController: NavHostController, sharedViewModel: SharedViewMo
             contentAlignment = Alignment.TopCenter
         ) {
             Image(
-                modifier = Modifier.offset( y = translateAnimation.value.dp),
+                modifier = Modifier.offset(y = translateAnimation.value.dp),
                 painter = painterResource(id = R.drawable.ic_logo_dark),
                 contentDescription = stringResource(id = R.string.application_logo)
             )
@@ -105,6 +114,7 @@ fun LoginContent(navController: NavHostController, sharedViewModel: SharedViewMo
                     .verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                Spacer(modifier = Modifier.padding(10.dp))
                 Text(
                     text = "Sign In",
                     style = TextStyle(
@@ -114,11 +124,14 @@ fun LoginContent(navController: NavHostController, sharedViewModel: SharedViewMo
                     color = MaterialTheme.colors.taskItemTextColor,
                     fontSize = 30.sp
                 )
-                Spacer(modifier = Modifier.padding(20.dp))
+                Spacer(modifier = Modifier.padding(10.dp))
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     CommonTextField(
                         value = email,
-                        onValueChange = { newText -> email = newText },
+                        onValueChange = { newText ->
+                                emailIsError = !newText.validEmail { emailIsErrorMsg = it }
+                            email = newText
+                        },
                         strResId = R.string.email_address,
                         singleLine = true,
                         icon = Icons.Filled.Email,
@@ -128,19 +141,34 @@ fun LoginContent(navController: NavHostController, sharedViewModel: SharedViewMo
                         ),
                         keyboardActions = KeyboardActions(onNext = {
                             focusManager.moveFocus(FocusDirection.Down)
-                        })
+                        }),
+                        isError = emailIsError,
+                        errorMsg = emailIsErrorMsg
                     )
 
                     CommonPasswordTextField(
                         text = password,
-                        onValueChange = { newText -> password = newText },
+                        onValueChange = { newText ->
+                                passwordIsError = !newText.validator()
+                                    .nonEmpty()
+                                    .atleastOneUpperCase()
+                                    .atleastOneNumber()
+                                    .minLength(6)
+                                    .maxLength(12)
+                                    .addErrorCallback {
+                                        passwordIsErrorMsg = it
+                                    }.check()
+                            password = newText
+                        },
                         strResId = R.string.password,
                         icon = Icons.Filled.Password,
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Password,
                             imeAction = ImeAction.Done
                         ),
-                        keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
+                        keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
+                        isError = passwordIsError,
+                        errorMsg = passwordIsErrorMsg
                     )
                     Spacer(modifier = Modifier.padding(10.dp))
                     Row(
@@ -160,15 +188,11 @@ fun LoginContent(navController: NavHostController, sharedViewModel: SharedViewMo
                         text = "Log In",
                         textColor = Color.White,
                         gradient = MaterialTheme.colors.gradientButtonColors,
-                        onClick = {
+                        onClick = { mutableBoolean ->
                             when {
-                                TextUtils.isEmpty(email.trim { it <= ' ' }) -> {
+                                emailIsError || passwordIsError -> {
 //                                    emailTextInputSignup.helperText = "*"
-                                    Log.e("first", "email")
-                                }
-                                TextUtils.isEmpty(password.trim { it <= ' ' }) -> {
-//                                    passwordTextInputSignUp.helperText = "*"
-                                    Log.e("second", "password")
+                                    mutableBoolean.value = false
                                 }
                                 else -> {
                                     // create an instance and create a register with email and password
@@ -192,7 +216,8 @@ fun LoginContent(navController: NavHostController, sharedViewModel: SharedViewMo
                                                 }
                                             } else {
                                                 // if the registration is not successful then show error massage
-                                                it.value = false
+                                                snackBoolean()
+                                                mutableBoolean.value = false
                                                 Log.e("register", "${task.exception?.message}")
                                             }
                                         }
@@ -214,6 +239,7 @@ fun LoginContent(navController: NavHostController, sharedViewModel: SharedViewMo
                             Text(text = "Forgot Password?", color = Color.Gray)
                         }
                     }
+                    Spacer(modifier = Modifier.padding(10.dp))
                 }
             }
 

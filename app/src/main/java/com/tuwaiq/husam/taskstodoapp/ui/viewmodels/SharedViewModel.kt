@@ -2,18 +2,22 @@ package com.tuwaiq.husam.taskstodoapp.ui.viewmodels
 
 import android.app.Application
 import android.util.Log
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.*
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.toObject
+import com.tuwaiq.husam.taskstodoapp.MainActivity
 import com.tuwaiq.husam.taskstodoapp.data.models.MockToDoTask
 import com.tuwaiq.husam.taskstodoapp.data.models.Priority
 import com.tuwaiq.husam.taskstodoapp.data.models.ToDoTask
 import com.tuwaiq.husam.taskstodoapp.data.models.User
 import com.tuwaiq.husam.taskstodoapp.data.repositories.DataStoreRepository
 import com.tuwaiq.husam.taskstodoapp.data.repositories.MockRepo
+import com.tuwaiq.husam.taskstodoapp.data.repositories.NotificationRepo
 import com.tuwaiq.husam.taskstodoapp.data.repositories.ToDoRepository
 import com.tuwaiq.husam.taskstodoapp.util.Action
 import com.tuwaiq.husam.taskstodoapp.util.Constants.MAX_TITLE_LENGTH
@@ -27,8 +31,14 @@ class SharedViewModel(context: Application) : AndroidViewModel(context) {
     private val repository: ToDoRepository = ToDoRepository(context)
     private val dataStoreRepository: DataStoreRepository = DataStoreRepository(context = context)
 
-
+    private val notificationRepo : NotificationRepo = NotificationRepo()
     private val mockRepo: MockRepo = MockRepo()
+
+    @ExperimentalMaterialApi
+    @ExperimentalAnimationApi
+    fun displayNotification(mainActivity: MainActivity) {
+        notificationRepo.displayNotification(mainActivity = mainActivity)
+    }
 
     private val _darkThemeState = MutableStateFlow(false)
     val darkThemeState: StateFlow<Boolean> = _darkThemeState
@@ -107,6 +117,10 @@ class SharedViewModel(context: Application) : AndroidViewModel(context) {
     val id: MutableState<Int> = mutableStateOf(0)
     val title: MutableState<String> = mutableStateOf("")
     val description: MutableState<String> = mutableStateOf("")
+    val startDate: MutableState<String> =mutableStateOf("")
+    val endDate:  MutableState<String> = mutableStateOf("")
+    val maxTask:  MutableState<String> = mutableStateOf("")
+    val taskCounter: MutableState<String> = mutableStateOf("")
 
     val priority: MutableState<Priority> = mutableStateOf(Priority.LOW)
     val searchAppBarState: MutableState<SearchAppBarState> =
@@ -242,7 +256,12 @@ class SharedViewModel(context: Application) : AndroidViewModel(context) {
             val toDoTask = ToDoTask(
                 title = title.value,
                 description = description.value,
-                priority = priority.value
+                priority = priority.value,
+                startDate = startDate.value,
+                endDate = endDate.value,
+                maxTask = maxTask.value,
+                taskCounter = taskCounter.value
+
             )
             repository.addTask(toDoTask = toDoTask)
         }
@@ -255,7 +274,11 @@ class SharedViewModel(context: Application) : AndroidViewModel(context) {
                 id = id.value,
                 title = title.value,
                 description = description.value,
-                priority = priority.value
+                priority = priority.value,
+                startDate = startDate.value,
+                endDate = endDate.value,
+                maxTask = maxTask.value,
+                taskCounter = taskCounter.value
             )
             repository.updateTask(toDoTask = toDoTask)
         }
@@ -267,7 +290,11 @@ class SharedViewModel(context: Application) : AndroidViewModel(context) {
                 id = id.value,
                 title = title.value,
                 description = description.value,
-                priority = priority.value
+                priority = priority.value,
+                startDate = startDate.value,
+                endDate = endDate.value,
+                maxTask = maxTask.value,
+                taskCounter = taskCounter.value
             )
             repository.deleteTask(toDoTask = toDoTask)
         }
@@ -309,11 +336,19 @@ class SharedViewModel(context: Application) : AndroidViewModel(context) {
             title.value = selectedTask.title
             description.value = selectedTask.description
             priority.value = selectedTask.priority
+            startDate.value = selectedTask.startDate
+             endDate.value = selectedTask.endDate
+            maxTask.value = selectedTask.maxTask
+             taskCounter.value = selectedTask.taskCounter
         } else {
             id.value = 0
             title.value = ""
             description.value = ""
             priority.value = Priority.LOW
+            startDate.value = ""
+            endDate.value = ""
+            maxTask.value = ""
+            taskCounter.value =""
         }
     }
 

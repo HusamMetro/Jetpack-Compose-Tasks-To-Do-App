@@ -21,6 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import com.tuwaiq.husam.taskstodoapp.ui.theme.ERROR_MESSAGE_PADDING
 import com.tuwaiq.husam.taskstodoapp.ui.theme.taskItemTextColor
 
 
@@ -35,29 +36,50 @@ fun CommonTextField(
     keyboardOptions: KeyboardOptions,
     keyboardActions: KeyboardActions,
     textColor: Color = MaterialTheme.colors.taskItemTextColor,
-    colors : TextFieldColors = TextFieldDefaults.outlinedTextFieldColors(
+    colors: TextFieldColors = TextFieldDefaults.outlinedTextFieldColors(
         textColor = textColor,
     ),
-    enabled : Boolean = true
+    enabled: Boolean = true,
+    isError: Boolean = false,
+    errorMsg: String = ""
 ) {
-    OutlinedTextField(
-        modifier = modifier,
-        value = value,
-        onValueChange = onValueChange,
-        label = { Text(text = stringResource(id = strResId)) },
-        singleLine = singleLine,
-        leadingIcon = {
-            Icon(
-                imageVector = icon,
-                contentDescription = "${stringResource(strResId)} Icon "
+    Column(
+        modifier = Modifier
+            .padding(
+                bottom = if (isError) {
+                    0.dp
+                } else {
+                    ERROR_MESSAGE_PADDING
+                }
             )
-        },
-        keyboardOptions = keyboardOptions,
-        keyboardActions = keyboardActions,
-        colors = colors,
-        enabled = enabled
-    )
-
+    ) {
+        OutlinedTextField(
+            modifier = modifier,
+            value = value,
+            onValueChange = onValueChange,
+            label = { Text(text = stringResource(id = strResId)) },
+            singleLine = singleLine,
+            leadingIcon = {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = "${stringResource(strResId)} Icon "
+                )
+            },
+            keyboardOptions = keyboardOptions,
+            keyboardActions = keyboardActions,
+            colors = colors,
+            enabled = enabled,
+            isError = isError
+        )
+        if (isError) {
+            Text(
+                text = errorMsg,
+                color = MaterialTheme.colors.error,
+                style = MaterialTheme.typography.caption,
+                modifier = Modifier.padding(start = 16.dp)
+            )
+        }
+    }
 }
 
 @Composable
@@ -70,38 +92,61 @@ fun CommonPasswordTextField(
     keyboardOptions: KeyboardOptions,
     keyboardActions: KeyboardActions,
     textColor: Color = MaterialTheme.colors.taskItemTextColor,
-    colors : TextFieldColors = TextFieldDefaults.outlinedTextFieldColors(
+    colors: TextFieldColors = TextFieldDefaults.outlinedTextFieldColors(
         textColor = textColor,
-    )
+    ),
+    isError: Boolean = false,
+    errorMsg: String = ""
 ) {
     var passwordVisibility by remember { mutableStateOf(false) }
     val iconB = if (passwordVisibility)
         Icons.Filled.Visibility
     else
         Icons.Filled.VisibilityOff
-    OutlinedTextField(
-        modifier = modifier,
-        value = text,
-        onValueChange = onValueChange,
-        label = { Text(text = stringResource(id = strResId)) },
-        singleLine = true,
-        leadingIcon = {
-            Icon(
-                imageVector = icon,
-                contentDescription = "${stringResource(id = strResId)} Icon "
+    Column(
+        modifier = Modifier
+            .padding(
+                bottom = if (isError) {
+                    0.dp
+                } else {
+                    ERROR_MESSAGE_PADDING
+                }
             )
-        },
-        keyboardOptions = keyboardOptions,
-        keyboardActions = keyboardActions,
-        colors = colors,
-        trailingIcon = {
-            IconButton(onClick = { passwordVisibility = !passwordVisibility }) {
-                Icon(iconB, contentDescription = "Visibility Icon")
-            }
-        },
-        visualTransformation = if (passwordVisibility) VisualTransformation.None
-        else PasswordVisualTransformation()
-    )
+    ){
+        OutlinedTextField(
+            modifier = modifier,
+            value = text,
+            onValueChange = onValueChange,
+            label = { Text(text = stringResource(id = strResId)) },
+            singleLine = true,
+            leadingIcon = {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = "${stringResource(id = strResId)} Icon "
+                )
+            },
+            keyboardOptions = keyboardOptions,
+            keyboardActions = keyboardActions,
+            colors = colors,
+            trailingIcon = {
+                IconButton(onClick = { passwordVisibility = !passwordVisibility }) {
+                    Icon(iconB, contentDescription = "Visibility Icon")
+                }
+            },
+            visualTransformation = if (passwordVisibility) VisualTransformation.None
+            else PasswordVisualTransformation(),
+            isError = isError,
+        )
+        if (isError) {
+            Text(
+                text = errorMsg,
+                color = MaterialTheme.colors.error,
+                style = MaterialTheme.typography.caption,
+                modifier = Modifier.padding(start = 16.dp)
+            )
+        }
+    }
+
 }
 
 

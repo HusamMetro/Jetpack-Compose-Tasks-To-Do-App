@@ -38,7 +38,6 @@ import com.tuwaiq.husam.taskstodoapp.util.RequestState
 import com.tuwaiq.husam.taskstodoapp.util.SearchAppBarState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlin.random.Random
 
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
@@ -51,7 +50,8 @@ fun ListContent(
     searchedTasks: RequestState<List<ToDoTask>>,
     searchAppBarState: SearchAppBarState,
     onSwipeToDelete: (Action, ToDoTask) -> Unit,
-    navigateToTaskScreens: (taskId: Int) -> Unit
+    navigateToTaskScreens: (taskId: Int) -> Unit,
+    onUpdate: (ToDoTask, Int) -> Unit
 ) {
 //    Log.e("listPage","${FirebaseAuth.getInstance().currentUser?.uid}")
     if (sortState is RequestState.Success) {
@@ -61,7 +61,8 @@ fun ListContent(
                     HandleListContent(
                         tasks = searchedTasks.data,
                         onSwipeToDelete = onSwipeToDelete,
-                        navigateToTaskScreens = navigateToTaskScreens
+                        navigateToTaskScreens = navigateToTaskScreens,
+                        onUpdate
                     )
                 }
             }
@@ -70,21 +71,24 @@ fun ListContent(
                     HandleListContent(
                         tasks = allTasks.data,
                         onSwipeToDelete = onSwipeToDelete,
-                        navigateToTaskScreens = navigateToTaskScreens
+                        navigateToTaskScreens = navigateToTaskScreens,
+                        onUpdate
                     )
             }
             sortState.data == Priority.LOW -> {
                 HandleListContent(
                     tasks = lowPriorityTasks,
                     onSwipeToDelete = onSwipeToDelete,
-                    navigateToTaskScreens = navigateToTaskScreens
+                    navigateToTaskScreens = navigateToTaskScreens,
+                    onUpdate
                 )
             }
             sortState.data == Priority.HIGH -> {
                 HandleListContent(
                     tasks = highPriorityTasks,
                     onSwipeToDelete = onSwipeToDelete,
-                    navigateToTaskScreens = navigateToTaskScreens
+                    navigateToTaskScreens = navigateToTaskScreens,
+                    onUpdate
                 )
             }
         }
@@ -97,7 +101,8 @@ fun ListContent(
 fun HandleListContent(
     tasks: List<ToDoTask>,
     onSwipeToDelete: (Action, ToDoTask) -> Unit,
-    navigateToTaskScreens: (taskId: Int) -> Unit
+    navigateToTaskScreens: (taskId: Int) -> Unit,
+    onUpdate: (ToDoTask, Int) -> Unit
 ) {
     if (tasks.isEmpty()) {
         EmptyContent()
@@ -105,7 +110,8 @@ fun HandleListContent(
         DisplayTask(
             tasks = tasks,
             onSwipeToDelete = onSwipeToDelete,
-            navigateToTaskScreens = navigateToTaskScreens
+            navigateToTaskScreens = navigateToTaskScreens,
+            onUpdate
         )
     }
 }
@@ -117,7 +123,8 @@ fun HandleListContent(
 fun DisplayTask(
     tasks: List<ToDoTask>,
     onSwipeToDelete: (Action, ToDoTask) -> Unit,
-    navigateToTaskScreens: (taskId: Int) -> Unit
+    navigateToTaskScreens: (taskId: Int) -> Unit,
+    onUpdate: (ToDoTask, Int) -> Unit
 ) {
     var itemAppeared by remember { mutableStateOf(false) }
     LazyColumn(
@@ -193,7 +200,8 @@ fun DisplayTask(
                     dismissContent = {
                         TaskItem(
                             toDoTask = task,
-                            navigateToTaskScreens = navigateToTaskScreens
+                            navigateToTaskScreens = navigateToTaskScreens,
+                            onUpdate =  onUpdate
                         )
                     }
                 )
@@ -261,7 +269,8 @@ fun GreenBackground(degrees: Float) {
 @Composable
 fun TaskItem(
     toDoTask: ToDoTask,
-    navigateToTaskScreens: (taskId: Int) -> Unit
+    navigateToTaskScreens: (taskId: Int) -> Unit,
+    onUpdate: (ToDoTask, Int) -> Unit
 ) {
     var expandState by remember { mutableStateOf(false) }
     Surface(
@@ -302,7 +311,7 @@ fun TaskItem(
                     .fillMaxWidth()
             ) {
                 if (expandState) {
-                    CardExpanded(toDoTask = toDoTask)
+                    CardExpanded(toDoTask = toDoTask, onUpdate)
                 } else {
                     Row(Modifier.padding(bottom = SMALL_PADDING)) {
                         Row(
@@ -311,7 +320,8 @@ fun TaskItem(
                             horizontalArrangement = Arrangement.Center
                         ) {
                             CustomComponent(
-                                indicatorValue = Random.nextInt(6),
+                                indicatorValue = getTaskCounterInt(toDoTask.taskCounter),
+                                maxIndicatorValue = getMaxTaskInt(toDoTask.maxTask),
                                 canvasSize = 32.dp,
                                 backgroundIndicatorStrokeWidth = 10f,
                                 foregroundIndicatorStrokeWidth = 10f,
@@ -319,7 +329,6 @@ fun TaskItem(
                                 backgroundIndicatorColor = MaterialTheme.colors.backgroundIndicatorColor,
                                 bigTextFontSize = 10.sp,
                                 smallTextFontSize = 0.sp,
-                                maxIndicatorValue = 5,
                                 bigTextSuffix = "",
                                 smallText = "",
                             )
@@ -350,15 +359,16 @@ fun TaskItem(
                             }
                         }
                     }
-                    Text(
-                        text = toDoTask.description,
-                        modifier = Modifier.fillMaxWidth(),
-                        color = MaterialTheme.colors.taskItemTextColor,
-                        style = MaterialTheme.typography.subtitle1,
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis
-                    )
-
+//                    if (toDoTask.description.isNotEmpty()) {
+                        Text(
+                            text = toDoTask.description,
+                            modifier = Modifier.fillMaxWidth(),
+                            color = MaterialTheme.colors.taskItemTextColor,
+                            style = MaterialTheme.typography.subtitle1,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis
+                        )
+//                    }
                     /*
                     if (expandState) {
                         Column(
@@ -450,7 +460,10 @@ fun TaskItem(
 }
 
 @Composable
-fun CardExpanded(toDoTask: ToDoTask) {
+fun CardExpanded(
+    toDoTask: ToDoTask,
+    onUpdate: (ToDoTask, Int) -> Unit
+) {
 
     Row(Modifier.padding(bottom = SMALL_PADDING)) {
         Text(
@@ -478,14 +491,16 @@ fun CardExpanded(toDoTask: ToDoTask) {
             }
         }
     }
-    Text(
-        text = toDoTask.description,
-        modifier = Modifier.fillMaxWidth(),
-        color = MaterialTheme.colors.taskItemTextColor,
-        style = MaterialTheme.typography.subtitle1,
+    if (toDoTask.description.isNotEmpty()) {
+        Text(
+            text = toDoTask.description,
+            modifier = Modifier.fillMaxWidth(),
+            color = MaterialTheme.colors.taskItemTextColor,
+            style = MaterialTheme.typography.subtitle1,
 //        maxLines = 2,
 //        overflow = TextOverflow.Ellipsis
-    )
+        )
+    }
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -493,61 +508,64 @@ fun CardExpanded(toDoTask: ToDoTask) {
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.spacedBy(MEDIUM_PADDING)
     ) {
-        Divider(
-            Modifier
-                .fillMaxWidth()
-                .padding(vertical = LARGE_PADDING, horizontal = SMALL_PADDING)
-        )
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
+        if (toDoTask.startDate.isNotEmpty()){
+            Divider(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = LARGE_PADDING, horizontal = SMALL_PADDING)
+            )
             Row(
+                modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(MEDIUM_PADDING)
+                horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                Icon(
-                    imageVector = Icons.Outlined.CalendarToday,
-                    contentDescription = ""
-                )
-                /*Text(
-                    text = "Start Date :",
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    color = MaterialTheme.colors.taskItemTextColor
-                )*/
-                Text(
-                    text = "8/10/2021",
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    color = MaterialTheme.colors.taskItemTextColor
-                )
-            }
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(MEDIUM_PADDING)
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.CalendarToday,
-                    contentDescription = "",
-                )
-                /*Text(
-                    text = "End Date :",
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    color = MaterialTheme.colors.taskItemTextColor
-                )*/
-                Text(
-                    text = "20/12/2021",
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    color = MaterialTheme.colors.taskItemTextColor
-                )
-            }
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(MEDIUM_PADDING)
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.CalendarToday,
+                        contentDescription = ""
+                    )
+                    /*Text(
+                        text = "Start Date :",
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        color = MaterialTheme.colors.taskItemTextColor
+                    )*/
+                    Text(
+                        text = toDoTask.startDate,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        color = MaterialTheme.colors.taskItemTextColor
+                    )
+                }
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(MEDIUM_PADDING)
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.CalendarToday,
+                        contentDescription = "",
+                    )
+                    /*Text(
+                        text = "End Date :",
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        color = MaterialTheme.colors.taskItemTextColor
+                    )*/
+                    Text(
+                        text = toDoTask.endDate,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        color = MaterialTheme.colors.taskItemTextColor
+                    )
+                }
 
+            }
+            Divider(Modifier.padding(vertical = LARGE_PADDING , horizontal = SMALL_PADDING ))
         }
-        Divider(Modifier.padding(vertical = LARGE_PADDING , horizontal = SMALL_PADDING ))
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -556,13 +574,16 @@ fun CardExpanded(toDoTask: ToDoTask) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
+
             IconButton(
                 modifier = Modifier.padding(horizontal = SMALL_PADDING),
-                onClick = { /*TODO*/ }) {
+                onClick = { onUpdate(toDoTask,-1) }
+            ) {
                 Icon(imageVector = Icons.Filled.Remove, contentDescription = "")
             }
             CustomComponent(
-                indicatorValue = Random.nextInt(6),
+                indicatorValue = getTaskCounterInt(toDoTask.taskCounter),
+                maxIndicatorValue =getMaxTaskInt(toDoTask.maxTask),
                 canvasSize = 48.dp,
                 backgroundIndicatorStrokeWidth = 12f,
                 foregroundIndicatorStrokeWidth = 12f,
@@ -570,16 +591,30 @@ fun CardExpanded(toDoTask: ToDoTask) {
                 backgroundIndicatorColor = MaterialTheme.colors.backgroundIndicatorColor,
                 bigTextFontSize = 15.sp,
                 smallTextFontSize = 0.sp,
-                maxIndicatorValue = 5,
                 bigTextSuffix = "",
                 smallText = "",
             )
             IconButton(
                 modifier = Modifier.padding(horizontal = SMALL_PADDING),
-                onClick = { /*TODO*/ }) {
+                onClick = { onUpdate(toDoTask,+1) }
+            ) {
                 Icon(imageVector = Icons.Filled.Add, contentDescription = "")
             }
         }
+    }
+}
+fun getTaskCounterInt( taskCounter:String ) : Int{
+    return try {
+        taskCounter.toInt()
+    } catch (e: Exception) {
+        0
+    }
+}
+fun getMaxTaskInt(maxTask:String):Int {
+    return try {
+        maxTask.toInt()
+    } catch (e: Exception) {
+        1
     }
 }
 
@@ -598,9 +633,13 @@ private fun TaskItemPreview() {
                 1,
                 "Finish Project",
                 "Before the End of 30 December",
-                Priority.HIGH
+                Priority.HIGH,
+                "20/12/21",
+                "30/12/21",
+                "20",
+                "10"
             )
-        ) {}
+        ,{},{ toDoTask, int -> })
     }
 }
 /*

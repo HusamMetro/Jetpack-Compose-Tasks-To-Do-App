@@ -173,20 +173,28 @@ fun EmbeddedElements(
     smallTextColor: Color,
     smallTextFontSize: TextUnit
 ) {
-    Text(
-        text = smallText,
-        color = smallTextColor,
-        fontSize = smallTextFontSize,
-        textAlign = TextAlign.Center
-    )
-    Text(
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            modifier = Modifier.fillMaxWidth(),
 //        text = "$bigText ${bigTextSuffix.take(2)}",
-        text = "$bigText",
-        color = bigTextColor,
-        fontSize = bigTextFontSize,
-        textAlign = TextAlign.Center,
-        fontWeight = FontWeight.Bold
-    )
+            text = "$bigText",
+            color = bigTextColor,
+            fontSize = bigTextFontSize,
+            textAlign = TextAlign.Center,
+            fontWeight = FontWeight.Bold
+        )
+        Text(
+            modifier = Modifier.fillMaxWidth(),
+            text = smallText,
+            color = smallTextColor,
+            fontSize = smallTextFontSize,
+            textAlign = TextAlign.Center
+        )
+    }
 }
 
 @Composable
@@ -202,9 +210,9 @@ fun CustomComponentPreview() {
             foregroundIndicatorColor = LightBlue1,
             backgroundIndicatorColor = MediumGray,
             bigTextFontSize = 8.sp,
-            smallTextFontSize = 0.sp,
+            smallTextFontSize = 5.sp,
             bigTextSuffix = "%",
-            smallText = "",
+            smallText = "80",
         )
 
 }

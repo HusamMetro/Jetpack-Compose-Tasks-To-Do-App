@@ -23,11 +23,12 @@ fun TaskScreen(
     val title: String by sharedViewModel.title
     val description: String by sharedViewModel.description
     val priority: Priority by sharedViewModel.priority
-    var startDate: String by remember { mutableStateOf("00/00/00") }
-    var endDate: String by remember { mutableStateOf("00/00/00") }
-    var maxTask: String by remember { mutableStateOf("10") }
-    var taskCounter: String by remember { mutableStateOf("2") }
-    var context = LocalContext.current
+    var titleIsError: Boolean by remember { mutableStateOf(false) }
+    var startDate: String by sharedViewModel.startDate
+    var endDate: String by sharedViewModel.endDate
+    var maxTask: String by sharedViewModel.maxTask
+    var taskCounter: String by sharedViewModel.taskCounter
+    val context = LocalContext.current
 //    BackHandler(onBackPressed = { navigateToListScreen(Action.NO_ACTION) })
     BackHandler {
         navigateToListScreen(Action.NO_ACTION)
@@ -44,12 +45,13 @@ fun TaskScreen(
                         if (sharedViewModel.validateFields()) {
                             navigateToListScreen(action)
                         } else {
+                            titleIsError = true
                             displayToast(context = context)
                         }
                     }
                 },
-                onShareClicked =  {
-                    Log.e("Shared","Shared Clicked")
+                onShareClicked = {
+                    Log.e("Shared", "Shared Clicked")
                     val sendIntent = Intent().apply {
                         action = Intent.ACTION_SEND
                         putExtra(
@@ -66,9 +68,11 @@ fun TaskScreen(
             TaskContent(
                 title = title,
                 onTitleChange = {
+                    titleIsError = it.isEmpty()
                     sharedViewModel.updateTitle(it)
 //                    sharedViewModel.title.value = it
                 },
+                titleIsError = titleIsError,
                 description = description,
                 onDescriptionChange = {
                     sharedViewModel.description.value = it
@@ -89,7 +93,7 @@ fun TaskScreen(
                 onMaxTaskChanged = {
                     maxTask = it
                 },
-                taskCounter =taskCounter ,
+                taskCounter = taskCounter,
                 onTaskCounterChanged = {
                     taskCounter = it
                 }
