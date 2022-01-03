@@ -4,10 +4,12 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.tuwaiq.husam.taskstodoapp.R
 import com.tuwaiq.husam.taskstodoapp.navigation.BottomBarScreen
 import com.tuwaiq.husam.taskstodoapp.ui.theme.bottomBarSelectedContentColor
 import com.tuwaiq.husam.taskstodoapp.ui.theme.bottomBarUnselectedContentColor
@@ -42,9 +44,18 @@ fun RowScope.AddItem(
     currentDestination: NavDestination?,
     navController: NavHostController
 ) {
+    val context = LocalContext.current
     BottomNavigationItem(
         label = {
-            Text(text = screen.title)
+            Text(
+                // i used the route because its constant not like the title could change
+                text = when (screen.route) {
+                    BottomBarScreen.Home.route -> context.getString(R.string.list_bottom_bar)
+                    BottomBarScreen.Challenges.route -> context.getString(R.string.challenges_bottom_bar)
+                    BottomBarScreen.Settings.route -> context.getString(R.string.settings_bottom_bar)
+                    else -> ""
+                }
+            )
         },
         icon = {
             Icon(
@@ -57,7 +68,7 @@ fun RowScope.AddItem(
         } == true,
         onClick = {
             navController.navigate(screen.route) {
-                popUpTo(BottomBarScreen.Home.route){
+                popUpTo(BottomBarScreen.Home.route) {
                     saveState = true
                 }
                 launchSingleTop = true

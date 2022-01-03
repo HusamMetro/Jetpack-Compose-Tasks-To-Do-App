@@ -28,6 +28,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -130,7 +131,7 @@ fun RegisterContent(navController: NavHostController, sharedViewModel: SharedVie
             ) {
                 Spacer(modifier = Modifier.padding(10.dp))
                 Text(
-                    text = "Sign Up",
+                    text = stringResource(R.string.sign_up),
                     style = TextStyle(
                         fontWeight = FontWeight.Bold,
                         letterSpacing = 2.sp
@@ -246,7 +247,7 @@ fun RegisterContent(navController: NavHostController, sharedViewModel: SharedVie
                          keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
                      )*/
                     Spacer(modifier = Modifier.padding(20.dp))
-                    GradientButton(text = "Sign Up",
+                    GradientButton(text = stringResource(R.string.sign_up_button),
                         textColor = Color.White,
                         gradient = MaterialTheme.colors.gradientButtonColors,
                         onClick = { mutableBoolean ->

@@ -12,6 +12,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import com.tuwaiq.husam.taskstodoapp.R
 import com.tuwaiq.husam.taskstodoapp.components.BottomBar
+import com.tuwaiq.husam.taskstodoapp.data.models.Priority
 import com.tuwaiq.husam.taskstodoapp.ui.theme.fabBackgroundColor
 import com.tuwaiq.husam.taskstodoapp.ui.viewmodels.SharedViewModel
 import com.tuwaiq.husam.taskstodoapp.util.Action
@@ -169,9 +170,19 @@ private fun setActionLabel(action: Action, context: Context): String {
 private fun setMessage(action: Action, taskTitle: String, context: Context): String {
     return when (action) {
         Action.DELETE_ALL -> context.getString(R.string.all_tasks_deleted)
-        else -> "${action.name}: $taskTitle"
+        else -> "${getActionDisplayName(action,context)} : $taskTitle"
     }
 }
+
+fun getActionDisplayName(action: Action,context: Context) =
+    when (action.name) {
+        Action.ADD.name -> context.getString(R.string.action_add)
+        Action.UPDATE.name -> context.getString( R.string.action_update)
+        Action.DELETE.name ->context.getString(R.string.action_delete)
+        Action.DELETE_ALL.name -> context.getString(R.string.action_delete_all)
+        Action.UNDO.name -> context.getString(R.string.action_undo)
+        else -> "NOTHING"
+    }
 
 private fun undoDeletedTask(
     action: Action,

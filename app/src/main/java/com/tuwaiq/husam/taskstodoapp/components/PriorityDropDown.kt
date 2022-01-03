@@ -61,7 +61,7 @@ fun PriorityDropDown(
         }
         Text(
             modifier = Modifier.weight(8f),
-            text = priority.name,
+            text = getDisplayName(priority = priority),
             style = MaterialTheme.typography.subtitle2
         )
         IconButton(
@@ -94,6 +94,16 @@ fun PriorityDropDown(
         }
     }
 }
+
+@Composable
+fun getDisplayName(priority: Priority) =
+    when (priority.name) {
+        Priority.HIGH.name -> stringResource(id = R.string.high_priority)
+        Priority.MEDIUM.name -> stringResource(id = R.string.medium_priority)
+        Priority.LOW.name -> stringResource(id = R.string.low_priority)
+        Priority.NONE.name -> stringResource(id = R.string.none_priority)
+        else -> "NOTHING"
+    }
 
 @Composable
 @Preview

@@ -91,7 +91,7 @@ dependencies {
     // jason
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 
-
+    // use ObserveAsState
     implementation "androidx.compose.runtime:runtime-livedata:1.0.5"
 
     // Extended Icons
