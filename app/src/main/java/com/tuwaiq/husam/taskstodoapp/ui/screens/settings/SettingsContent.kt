@@ -58,7 +58,7 @@ fun SettingsContent(
     var phoneValue by remember { mutableStateOf("") }
 
     var switchT by remember { mutableStateOf(sharedViewModel.darkThemeState.value) }
-    var langaguge by remember { mutableStateOf(Languages.English) }
+    var langaguge by remember { mutableStateOf(sharedViewModel.langState.value) }
 
     val transition = rememberInfiniteTransition()
     val translateAnimation = transition.animateFloat(
@@ -331,6 +331,11 @@ fun SettingsContent(
                     Spacer(modifier = Modifier.weight(5f))
                     val langList = Languages.values()
                     var selectedLangIndex by remember { mutableStateOf(0) }
+                    selectedLangIndex = if (langaguge == "en") {
+                        0
+                    } else {
+                        1
+                    }
                     langList.forEachIndexed { index, item ->
                         OutlinedButton(
                             modifier = when (index) {
@@ -358,7 +363,15 @@ fun SettingsContent(
                                     }
                                 }
                             },
-                            onClick = { selectedLangIndex = index },
+                            onClick = {
+                                selectedLangIndex = index
+                                val langState = when (selectedLangIndex) {
+                                    0 -> Languages.English.lang
+                                    else -> Languages.Arabic.lang
+                                }
+                                langaguge = langState
+                                sharedViewModel.persistLangState(langState)
+                            },
                             shape = when (index) {
                                 // left outer button
                                 0 -> RoundedCornerShape(
@@ -410,7 +423,7 @@ fun SettingsContent(
                                 horizontalArrangement = Arrangement.Center
                             ) {
                                 Text(
-                                    text = item.name,
+                                    text = item.displayName,
                                     color = if (selectedLangIndex == index) {
                                         MaterialTheme.colors.signUpColor
                                     } else {
@@ -465,7 +478,7 @@ fun SettingsContent(
                         ),
 
                     )*/
-                    GradientButton(text = "Update",
+                    GradientButton(text = stringResource(R.string.update_button),
                         textColor = Color.White,
                         gradient = MaterialTheme.colors.gradientButtonColors,
                         onClick = {
@@ -488,7 +501,7 @@ fun SettingsContent(
                             }
                         }
                     }) {
-                    Text(text = "Sign Out", color = MaterialTheme.colors.signUpColor)
+                    Text(text = stringResource(R.string.sign_out_button), color = MaterialTheme.colors.signUpColor)
                 }
 
 //                Spacer(modifier = Modifier.padding(20.dp))

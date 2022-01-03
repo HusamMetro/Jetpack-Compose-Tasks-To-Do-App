@@ -61,6 +61,26 @@ class SharedViewModel(context: Application) : AndroidViewModel(context) {
         }
     }
 
+    private val _langState = MutableStateFlow("en")
+    val langState: StateFlow<String> = _langState
+
+    fun readLangStateState() {
+        try {
+            viewModelScope.launch {
+                dataStoreRepository.readLangState.collect {
+                    _langState.value = it
+                }
+            }
+        } catch (e: Throwable) {
+            Log.e("readLangState", "${e.message}")
+        }
+    }
+
+    fun persistLangState(lang: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            dataStoreRepository.persistLangState(lang = lang)
+        }
+    }
     /*fun getMockTasks(): MutableLiveData<List<MockToDoTask>> {
         val tasks = MutableLiveData<List<MockToDoTask>>()
         viewModelScope.launch(Dispatchers.IO) {

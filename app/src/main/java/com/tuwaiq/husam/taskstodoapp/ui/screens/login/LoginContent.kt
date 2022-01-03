@@ -116,7 +116,7 @@ fun LoginContent(navController: NavHostController, sharedViewModel: SharedViewMo
             ) {
                 Spacer(modifier = Modifier.padding(10.dp))
                 Text(
-                    text = "Sign In",
+                    text = stringResource(R.string.sign_in),
                     style = TextStyle(
                         fontWeight = FontWeight.Bold,
                         letterSpacing = 2.sp
@@ -181,11 +181,15 @@ fun LoginContent(navController: NavHostController, sharedViewModel: SharedViewMo
                             onCheckedChange = { checked = it },
                             colors = CheckboxDefaults.colors(MaterialTheme.colors.primary)
                         )
-                        Text(modifier = Modifier.padding(horizontal = 10.dp), text = "Remember Me")
+                        Text(
+                            modifier = Modifier.padding(horizontal = 10.dp),
+                            text = stringResource(
+                            R.string.remember_me)
+                        )
                     }
                     Spacer(modifier = Modifier.padding(10.dp))
                     GradientButton(
-                        text = "Log In",
+                        text = stringResource(R.string.log_in_button),
                         textColor = Color.White,
                         gradient = MaterialTheme.colors.gradientButtonColors,
                         onClick = { mutableBoolean ->
@@ -233,10 +237,10 @@ fun LoginContent(navController: NavHostController, sharedViewModel: SharedViewMo
                         TextButton(onClick = {
                             navController.navigate(REGISTER_SCREEN)
                         }) {
-                            Text(text = "Sign Up", color = MaterialTheme.colors.signUpColor)
+                            Text(text = stringResource(R.string.sign_up), color = MaterialTheme.colors.signUpColor)
                         }
                         TextButton(onClick = { }) {
-                            Text(text = "Forgot Password?", color = Color.Gray)
+                            Text(text = stringResource(R.string.forgot_password), color = Color.Gray)
                         }
                     }
                     Spacer(modifier = Modifier.padding(10.dp))

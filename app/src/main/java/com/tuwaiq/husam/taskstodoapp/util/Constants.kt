@@ -20,6 +20,7 @@ object Constants {
     const val REMEMBER_KEY = "remember_state"
     const val DARK_THEME_KEY = "dark_theme_state"
     const val FIRST_TIME_KEY = "first_time_state"
+    const val LANG_KEY = "lang_state"
 
 
     const val MAX_TITLE_LENGTH = 50

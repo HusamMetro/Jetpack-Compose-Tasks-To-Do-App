@@ -24,6 +24,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tuwaiq.husam.taskstodoapp.components.CustomComponent
+import com.tuwaiq.husam.taskstodoapp.data.models.Languages
 import com.tuwaiq.husam.taskstodoapp.data.models.MockToDoTask
 import com.tuwaiq.husam.taskstodoapp.data.models.ToDoTask
 import com.tuwaiq.husam.taskstodoapp.ui.screens.list.getMaxTaskInt
@@ -66,6 +67,7 @@ fun MockTaskItem(
     navigateToTaskScreens: (taskId: Int) -> Unit,
     sharedViewModel: SharedViewModel
 ) {
+    val lang by remember { mutableStateOf(sharedViewModel.langState.value  ) }
     var expandState by remember { mutableStateOf(false) }
     Surface(
         modifier = Modifier.fillMaxWidth(),
@@ -109,8 +111,8 @@ fun MockTaskItem(
                         onAdd = { mock ->
                             sharedViewModel.updateTaskFields(
                                 ToDoTask(
-                                    title = mock.title,
-                                    description = mock.description,
+                                    title = getTitleLang(mockToDoTask, lang),
+                                    description = getDescriptionLang(mockToDoTask,lang),
                                     priority = mock.priority,
                                     startDate = mock.startDate,
                                     endDate = mock.endDate,
@@ -119,7 +121,8 @@ fun MockTaskItem(
                                 )
                             )
                             sharedViewModel.handleDatabaseAction(Action.ADD)
-                        })
+                        },
+                    lang = lang)
                 }
                 else{
                     Row(Modifier.padding(bottom = SMALL_PADDING)) {
@@ -145,7 +148,7 @@ fun MockTaskItem(
                                 modifier = Modifier
                                     .weight(8f)
                                     .padding(start = 10.dp),
-                                text = mockToDoTask.title,
+                                text = getTitleLang(mockToDoTask, lang = lang),
                                 color = MaterialTheme.colors.taskItemTextColor,
                                 style = MaterialTheme.typography.h5,
                                 fontWeight = FontWeight.Bold,
@@ -170,7 +173,7 @@ fun MockTaskItem(
                     }
 //                    if (toDoTask.description.isNotEmpty()) {
                     Text(
-                        text = mockToDoTask.description,
+                        text = getDescriptionLang(mockToDoTask, lang = lang),
                         modifier = Modifier.fillMaxWidth(),
                         color = MaterialTheme.colors.taskItemTextColor,
                         style = MaterialTheme.typography.subtitle1,
@@ -182,18 +185,27 @@ fun MockTaskItem(
         }
     }
 }
+fun getDescriptionLang(mockToDoTask: MockToDoTask,lang : String):String  =
+    if (lang == Languages.English.lang) mockToDoTask.description
+    else mockToDoTask.descriptionAR
+
+
+fun getTitleLang(mockToDoTask: MockToDoTask,lang : String):String  =
+    if (lang == Languages.English.lang) mockToDoTask.title
+    else mockToDoTask.titleAR
 
 @Composable
 fun MockCardExpanded(
     mockToDoTask: MockToDoTask,
-    onAdd: (MockToDoTask) -> Unit
+    onAdd: (MockToDoTask) -> Unit,
+    lang: String
 ) {
 
     Row(Modifier.padding(bottom = SMALL_PADDING)) {
         Text(
             modifier = Modifier
                 .weight(8f),
-            text = mockToDoTask.title,
+            text = getTitleLang(mockToDoTask, lang),
             color = MaterialTheme.colors.taskItemTextColor,
             style = MaterialTheme.typography.h5,
             fontWeight = FontWeight.Bold,
@@ -217,7 +229,7 @@ fun MockCardExpanded(
     }
     if (mockToDoTask.description.isNotEmpty()) {
         Text(
-            text = mockToDoTask.description,
+            text = getDescriptionLang(mockToDoTask, lang),
             modifier = Modifier.fillMaxWidth(),
             color = MaterialTheme.colors.taskItemTextColor,
             style = MaterialTheme.typography.subtitle1,

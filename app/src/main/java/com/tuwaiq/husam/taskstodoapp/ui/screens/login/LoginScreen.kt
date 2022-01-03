@@ -4,6 +4,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import com.tuwaiq.husam.taskstodoapp.R
 import com.tuwaiq.husam.taskstodoapp.ui.viewmodels.SharedViewModel
@@ -20,7 +21,7 @@ fun LoginScreen(navController: NavHostController, sharedViewModel: SharedViewMod
         LaunchedEffect(key1 = snackBoolean) {
             scope.launch {
                scaffoldState.snackbarHostState.showSnackbar(
-                    message = "check your Email/Password",
+                    message = context.getString(R.string.email_password_check_message),
                     actionLabel = context.getString(R.string.ok)
                 )
             }

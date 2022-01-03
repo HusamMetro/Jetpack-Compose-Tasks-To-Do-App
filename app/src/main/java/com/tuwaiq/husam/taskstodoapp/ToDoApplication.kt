@@ -3,12 +3,27 @@ package com.tuwaiq.husam.taskstodoapp
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.content.Context
 import android.util.Log
 
 class ToDoApplication : Application() {
+
+
     init {
         Log.e("app", "Application Works before ")
     }
+
+    override fun onCreate() {
+        super.onCreate()
+        appContext = applicationContext
+    }
+    companion object{
+        lateinit var appContext: Context
+        fun getToDoContext(): Context {
+            return appContext
+        }
+    }
+
     /*override fun onCreate() {
         super.onCreate()
 //        appSharedPreferences = this.getSharedPreferences("stockSharedPreference", MODE_PRIVATE)

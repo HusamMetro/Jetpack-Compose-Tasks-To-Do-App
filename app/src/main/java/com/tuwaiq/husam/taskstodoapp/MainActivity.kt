@@ -1,12 +1,12 @@
 package com.tuwaiq.husam.taskstodoapp
 
 import android.content.Context
+import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.WindowManager
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -15,12 +15,15 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavHostController
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.tuwaiq.husam.taskstodoapp.navigation.SetupNavigation
 import com.tuwaiq.husam.taskstodoapp.ui.theme.TasksToDoAppTheme
 import com.tuwaiq.husam.taskstodoapp.ui.viewmodels.SharedViewModel
+import java.util.*
 
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
@@ -36,9 +39,13 @@ class MainActivity : AppCompatActivity() {
         Log.e("start", "Main Activity ")
         sharedViewModel = ViewModelProvider(this)[SharedViewModel::class.java]
         setContent {
+            ToDoApplication.appContext = LocalContext.current
             sharedViewModel.readDarkThemeState()
             sharedViewModel.readRememberState()
+            sharedViewModel.readLangStateState()
             val darkTheme by sharedViewModel.darkThemeState.collectAsState()
+            val lang by sharedViewModel.langState.collectAsState()
+            SetLanguage(lang, this)
             TasksToDoAppTheme(darkTheme = darkTheme) {
 //                TestLayout(context = this,sharedViewModel,this)
                 navController = rememberAnimatedNavController()
@@ -48,6 +55,23 @@ class MainActivity : AppCompatActivity() {
                 )
             }
         }
+    }
+}
+
+@ExperimentalMaterialApi
+@ExperimentalAnimationApi
+@Composable
+fun SetLanguage(lang:String, mainActivity: MainActivity) {
+    val locale = Locale(lang)
+    val configuration =  LocalConfiguration.current
+    val oldLan = LocalConfiguration.current.locales[0].language.trim()
+    configuration.setLocale(locale)
+    val resources = LocalContext.current.resources
+    resources.updateConfiguration(configuration,resources.displayMetrics)
+    Log.e("language",LocalConfiguration.current.locales[0].language.trim())
+    if (!oldLan.equals(lang) ) {
+        mainActivity.startActivity(Intent(mainActivity, MainActivity::class.java))
+        mainActivity.finish()
     }
 }
 

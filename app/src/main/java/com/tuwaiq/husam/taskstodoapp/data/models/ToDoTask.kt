@@ -15,5 +15,4 @@ data class ToDoTask(
     val endDate : String,
     val maxTask : String,
     val taskCounter : String,
-
 )

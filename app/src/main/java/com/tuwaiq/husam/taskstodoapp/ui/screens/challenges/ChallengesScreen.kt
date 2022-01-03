@@ -112,7 +112,7 @@ fun EmptyContentNoConnection() {
             tint = MediumGray
         )
         Text(
-            text = "No Network Please Reconnect",
+            text = stringResource(R.string.no_network),
             color = MediumGray,
             fontWeight = FontWeight.Bold,
             fontSize = MaterialTheme.typography.h6.fontSize

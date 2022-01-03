@@ -9,4 +9,6 @@ data class MockToDoTask(
     val endDate: String = "",
     val maxTask: String = "1",
     val taskCounter: String = "0",
+    val titleAR: String = "",
+    val descriptionAR: String = "",
 )
