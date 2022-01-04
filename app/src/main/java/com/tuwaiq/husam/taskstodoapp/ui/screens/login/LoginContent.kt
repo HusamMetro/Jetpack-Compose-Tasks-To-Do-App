@@ -14,11 +14,8 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Password
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,6 +29,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -52,20 +50,26 @@ import com.wajahatkarim3.easyvalidation.core.view_ktx.validator
 
 
 @Composable
-fun LoginContent(navController: NavHostController, sharedViewModel: SharedViewModel, snackBoolean : () -> Unit ) {
+fun LoginContent(
+    registerOnClicked : () -> Unit,
+    onForgotPassword : () -> Unit,
+    email:String,
+    emailOnValueChange:(String) -> Unit,
+    emailIsError:Boolean,
+    emailIsErrorMsg:String,
+    password:String,
+    passwordOnValueChange:(String) -> Unit,
+    passwordIsError:Boolean,
+    passwordIsErrorMsg:String,
+    signInOnClicked : (MutableState<Boolean>) -> Unit,
+    checked : Boolean,
+    onCheckedChange : (Boolean) -> Unit
+
+) {
     val focusManager: FocusManager = LocalFocusManager.current
     var firstTimeAttempt by rememberSaveable { mutableStateOf(false) }
 
-    var email by rememberSaveable { mutableStateOf("") }
-    var emailIsError by rememberSaveable { mutableStateOf(false) }
-    var emailIsErrorMsg by rememberSaveable { mutableStateOf("") }
-
-    var password by rememberSaveable { mutableStateOf("") }
-    var passwordIsError by rememberSaveable { mutableStateOf(false) }
-    var passwordIsErrorMsg by rememberSaveable { mutableStateOf("") }
-
 //    val checkedRememberState by sharedViewModel.rememberState.collectAsState()
-    var checked by rememberSaveable { mutableStateOf(false) }
 
     val transition = rememberInfiniteTransition()
     val translateAnimation = transition.animateFloat(
@@ -128,10 +132,7 @@ fun LoginContent(navController: NavHostController, sharedViewModel: SharedViewMo
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     CommonTextField(
                         value = email,
-                        onValueChange = { newText ->
-                                emailIsError = !newText.validEmail { emailIsErrorMsg = it }
-                            email = newText
-                        },
+                        onValueChange = {emailOnValueChange(it)},
                         strResId = R.string.email_address,
                         singleLine = true,
                         icon = Icons.Filled.Email,
@@ -148,18 +149,7 @@ fun LoginContent(navController: NavHostController, sharedViewModel: SharedViewMo
 
                     CommonPasswordTextField(
                         text = password,
-                        onValueChange = { newText ->
-                                passwordIsError = !newText.validator()
-                                    .nonEmpty()
-                                    .atleastOneUpperCase()
-                                    .atleastOneNumber()
-                                    .minLength(6)
-                                    .maxLength(12)
-                                    .addErrorCallback {
-                                        passwordIsErrorMsg = it
-                                    }.check()
-                            password = newText
-                        },
+                        onValueChange = { passwordOnValueChange(it)},
                         strResId = R.string.password,
                         icon = Icons.Filled.Password,
                         keyboardOptions = KeyboardOptions(
@@ -178,7 +168,7 @@ fun LoginContent(navController: NavHostController, sharedViewModel: SharedViewMo
                     ) {
                         Checkbox(
                             checked = checked,
-                            onCheckedChange = { checked = it },
+                            onCheckedChange = { onCheckedChange(it)},
                             colors = CheckboxDefaults.colors(MaterialTheme.colors.primary)
                         )
                         Text(
@@ -192,54 +182,17 @@ fun LoginContent(navController: NavHostController, sharedViewModel: SharedViewMo
                         text = stringResource(R.string.log_in_button),
                         textColor = Color.White,
                         gradient = MaterialTheme.colors.gradientButtonColors,
-                        onClick = { mutableBoolean ->
-                            when {
-                                emailIsError || passwordIsError -> {
-//                                    emailTextInputSignup.helperText = "*"
-                                    mutableBoolean.value = false
-                                }
-                                else -> {
-                                    // create an instance and create a register with email and password
-                                    FirebaseAuth.getInstance()
-                                        .signInWithEmailAndPassword(email, password)
-                                        .addOnCompleteListener { task ->
-
-                                            // if the registration is sucessfully done
-                                            if (task.isSuccessful) {
-                                                //firebase register user
-//                                                val firebaseUser: FirebaseUser =
-//                                                    task.result!!.user!!
-//                                                val user = User(userName, email, phoneNumber)
-//                                                saveUser(user)
-                                                sharedViewModel.persistRememberState(checked)
-                                                sharedViewModel.loadUserInformation()
-                                                navController.navigate(LIST_SCREEN) {
-                                                    popUpTo(LOGIN_SCREEN) {
-                                                        inclusive = true
-                                                    }
-                                                }
-                                            } else {
-                                                // if the registration is not successful then show error massage
-                                                snackBoolean()
-                                                mutableBoolean.value = false
-                                                Log.e("register", "${task.exception?.message}")
-                                            }
-                                        }
-                                }
-                            }
-                        }
+                        onClick = {signInOnClicked(it)}
                     )
                     Spacer(modifier = Modifier.padding(20.dp))
                     Row(
                         modifier = Modifier.fillMaxWidth(0.8f),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        TextButton(onClick = {
-                            navController.navigate(REGISTER_SCREEN)
-                        }) {
+                        TextButton(onClick = registerOnClicked) {
                             Text(text = stringResource(R.string.sign_up), color = MaterialTheme.colors.signUpColor)
                         }
-                        TextButton(onClick = { }) {
+                        TextButton(onClick = onForgotPassword) {
                             Text(text = stringResource(R.string.forgot_password), color = Color.Gray)
                         }
                     }
@@ -251,11 +204,23 @@ fun LoginContent(navController: NavHostController, sharedViewModel: SharedViewMo
     }
 }
 
-/*
 @Composable
 @Preview
 private fun LoginContentPreview() {
-    LoginContent(rememberNavController(), sharedViewModel)
+    LoginContent(
+        {},
+        {},
+        "Husam@email.com",
+        {},
+        false,
+        "No Error",
+        "Confi",
+        {},
+        false,
+        "No Error",
+        {},
+        false,
+        {}
+    )
 }
 
-*/

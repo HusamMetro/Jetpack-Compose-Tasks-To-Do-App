@@ -17,11 +17,8 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Password
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Phone
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -65,26 +62,26 @@ import kotlinx.coroutines.withContext
 val userCollectionRef = Firebase.firestore.collection("users")
 
 @Composable
-fun RegisterContent(navController: NavHostController, sharedViewModel: SharedViewModel) {
+fun RegisterContent(
+    name: String,
+    nameOnValueChange:(String) -> Unit,
+    nameIsError:Boolean,
+    nameIsErrorMsg:String,
+    email:String,
+    emailOnValueChange:(String) -> Unit,
+    emailIsError:Boolean,
+    emailIsErrorMsg:String,
+    phone:String,
+    phoneOnValueChange:(String) -> Unit,
+    phoneIsError:Boolean,
+    phoneIsErrorMsg:String,
+    password:String,
+    passwordOnValueChange:(String) -> Unit,
+    passwordIsError:Boolean,
+    passwordIsErrorMsg:String,
+    signUpOnClicked : (MutableState<Boolean>) -> Unit,
+) {
     val focusManager: FocusManager = LocalFocusManager.current
-
-    var name by rememberSaveable { mutableStateOf("") }
-    var nameIsError by rememberSaveable { mutableStateOf(false) }
-    var nameIsErrorMsg by rememberSaveable { mutableStateOf("") }
-
-    var email by rememberSaveable { mutableStateOf("") }
-    var emailIsError by rememberSaveable { mutableStateOf(false) }
-    var emailIsErrorMsg by rememberSaveable { mutableStateOf("") }
-
-    var phone by rememberSaveable { mutableStateOf("") }
-    var phoneIsError by rememberSaveable { mutableStateOf(false) }
-    var phoneIsErrorMsg by rememberSaveable { mutableStateOf("") }
-
-    var password by rememberSaveable { mutableStateOf("") }
-    var passwordIsError by rememberSaveable { mutableStateOf(false) }
-    var passwordIsErrorMsg by rememberSaveable { mutableStateOf("") }
-
-//    var confirmPasswordValue by rememberSaveable { mutableStateOf("") }
 
     val transition = rememberInfiniteTransition()
     val translateAnimation = transition.animateFloat(
@@ -143,17 +140,7 @@ fun RegisterContent(navController: NavHostController, sharedViewModel: SharedVie
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     CommonTextField(
                         value = name,
-                        onValueChange = { newText ->
-                            nameIsError = !newText.validator()
-                                .nonEmpty()
-                                .minLength(3)
-                                .noNumbers()
-                                .noSpecialCharacters()
-                                .addErrorCallback {
-                                    nameIsErrorMsg = it
-                                }.check()
-                            name = newText
-                        },
+                        onValueChange = {nameOnValueChange(it)},
                         strResId = R.string.name,
                         icon = Icons.Filled.Person,
                         keyboardOptions = KeyboardOptions(
@@ -168,10 +155,7 @@ fun RegisterContent(navController: NavHostController, sharedViewModel: SharedVie
                     )
                     CommonTextField(
                         value = email,
-                        onValueChange = { newText ->
-                            emailIsError = !newText.validEmail { emailIsErrorMsg = it }
-                            email = newText
-                        },
+                        onValueChange = {emailOnValueChange(it)},
                         strResId = R.string.email_address,
                         icon = Icons.Filled.Email,
                         keyboardOptions = KeyboardOptions(
@@ -186,19 +170,7 @@ fun RegisterContent(navController: NavHostController, sharedViewModel: SharedVie
                     )
                     CommonTextField(
                         value = phone,
-                        onValueChange = { newText ->
-                            phoneIsError = !newText.validator()
-                                .nonEmpty()
-                                .noSpecialCharacters()
-                                .onlyNumbers()
-                                .minLength(10)
-                                .maxLength(12)
-                                .addErrorCallback {
-                                    phoneIsErrorMsg = it
-                                }
-                                .check()
-                            phone = newText
-                        },
+                        onValueChange = {phoneOnValueChange(it)},
                         strResId = R.string.phone_number,
                         icon = Icons.Filled.Phone,
                         keyboardOptions = KeyboardOptions(
@@ -213,18 +185,7 @@ fun RegisterContent(navController: NavHostController, sharedViewModel: SharedVie
                     )
                     CommonPasswordTextField(
                         text = password,
-                        onValueChange = { newText ->
-                            passwordIsError = !newText.validator()
-                                .nonEmpty()
-                                .atleastOneUpperCase()
-                                .atleastOneNumber()
-                                .minLength(6)
-                                .maxLength(12)
-                                .addErrorCallback {
-                                    passwordIsErrorMsg = it
-                                }.check()
-                            password = newText
-                        },
+                        onValueChange = { passwordOnValueChange(it)},
                         strResId = R.string.password,
                         icon = Icons.Filled.Password,
                         keyboardOptions = KeyboardOptions(
@@ -235,72 +196,12 @@ fun RegisterContent(navController: NavHostController, sharedViewModel: SharedVie
                         isError = passwordIsError,
                         errorMsg = passwordIsErrorMsg
                     )
-                    /* CommonPasswordTextField(
-                         text = confirmPasswordValue,
-                         onValueChange = { confirmPasswordValue = it },
-                         strResId = R.string.confirm_possword,
-                         icon = Icons.Filled.Password,
-                         keyboardOptions = KeyboardOptions(
-                             keyboardType = KeyboardType.Password,
-                             imeAction = ImeAction.Done
-                         ),
-                         keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
-                     )*/
                     Spacer(modifier = Modifier.padding(20.dp))
                     GradientButton(text = stringResource(R.string.sign_up_button),
                         textColor = Color.White,
                         gradient = MaterialTheme.colors.gradientButtonColors,
-                        onClick = { mutableBoolean ->
-                            when {
-                                nameIsError || emailIsError || passwordIsError || phoneIsError -> {
-                                    mutableBoolean.value = false
-                                }
-                                else -> {
-                                    Log.e("else", "Else")
-                                    val userName: String = name.trim { it <= ' ' }
-                                    val email: String = email.trim { it <= ' ' }
-                                    val password: String = password.trim { it <= ' ' }
-                                    val phoneNumber: String = phone.trim { it <= ' ' }
-
-
-                                    // create an instance and create a register with email and password
-                                    FirebaseAuth.getInstance()
-                                        .createUserWithEmailAndPassword(email, password)
-                                        .addOnCompleteListener { task ->
-
-                                            // if the registration is sucessfully done
-                                            if (task.isSuccessful) {
-                                                //firebase register user
-                                                val firebaseUser: FirebaseUser =
-                                                    task.result!!.user!!
-                                                val user = User(userName, email, phoneNumber)
-                                                saveUser(user)
-                                                sharedViewModel.loadUserInformation()
-                                                navController.navigate(LIST_SCREEN) {
-                                                    popUpTo(LOGIN_SCREEN) {
-                                                        inclusive = true
-                                                    }
-                                                }
-                                            } else {
-                                                // if the registration is not successful then show error massage
-                                                Log.e("register", "${task.exception?.message}")
-                                            }
-                                        }
-                                }
-                            }
-                        }
+                        onClick = {signUpOnClicked(it)}
                     )
-//                    Spacer(modifier = Modifier.padding(20.dp))
-                    /*Text(
-                        text = "Login Instead",
-                        modifier = Modifier.clickable(onClick = {
-                            navController.navigate("login_page"){
-                                popUpTo = navController.graph.startDestination
-                                launchSingleTop = true
-                            }
-                        })
-                    )
-                    Spacer(modifier = Modifier.padding(20.dp))*/
                 }
             }
         }
