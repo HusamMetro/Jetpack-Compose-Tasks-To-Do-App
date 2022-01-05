@@ -47,7 +47,7 @@
     <string name="settings_bottom_bar">SETTINGS</string>
     <string name="update_button">Update</string>
     <string name="sign_out_button">Sign Out</string>
-    <string name="email_password_check_message">check your Email/Password</string>
+    <string name="email_password_check_message">Please check your Email/Password</string>
     <string name="sign_up">Sign Up</string>
     <string name="forgot_password">Forgot Password?</string>
     <string name="log_in_button">Log In</string>
@@ -64,4 +64,11 @@
     <string name="action_delete">DELETE</string>
     <string name="action_delete_all">DELETE ALL</string>
     <string name="action_undo">UNDO</string>
+    <string name="email_exists_message">Please check your Email</string>
+    <string name="update_successful_message">Information Updated Successful</string>
+    <string name="update_failed_message">Information Update Failed</string>
+    <string name="send">Send</string>
+    <string name="cancel">Cancel</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="password_reset_success">Email sent successfully to reset your password</string>
 </resources>
