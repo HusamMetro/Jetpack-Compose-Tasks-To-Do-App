@@ -1,6 +1,5 @@
 package com.tuwaiq.husam.taskstodoapp.ui.screens.settings
 
-import android.util.Log
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -29,36 +28,39 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import androidx.navigation.NavHostController
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import com.tuwaiq.husam.taskstodoapp.R
 import com.tuwaiq.husam.taskstodoapp.components.CommonTextField
 import com.tuwaiq.husam.taskstodoapp.components.GradientButton
 import com.tuwaiq.husam.taskstodoapp.data.models.Languages
 import com.tuwaiq.husam.taskstodoapp.data.models.UiMode
 import com.tuwaiq.husam.taskstodoapp.ui.theme.*
-import com.tuwaiq.husam.taskstodoapp.ui.viewmodels.SharedViewModel
-import com.tuwaiq.husam.taskstodoapp.util.Constants.LIST_SCREEN
-import com.tuwaiq.husam.taskstodoapp.util.Constants.LOGIN_SCREEN
 
 @Composable
 fun SettingsContent(
-    navController: NavHostController,
-    sharedViewModel: SharedViewModel,
+    onLaunchedEffect: () -> Unit,
+    email: String,
+    emailOnValueChange: (String) -> Unit,
+    phone: String,
+    phoneOnValueChange: (String) -> Unit,
+    phoneIsError: Boolean,
+    phoneIsErrorMsg: String,
+    name: String,
+    nameOnValueChange: (String) -> Unit,
+    nameIsError: Boolean,
+    nameIsErrorMsg: String,
+    updateOnClicked: (MutableState<Boolean>) -> Unit,
+    signOutOnClicked: () -> Unit,
+    darkMode: Boolean,
+    darkModeOnChange: (Boolean) -> Unit,
+    language: String,
+    languageOnChange: (String) -> Unit,
 ) {
 
     val focusManager: FocusManager = LocalFocusManager.current
-    var nameValue by remember { mutableStateOf("") }
-    var emailValue by remember { mutableStateOf("") }
-    var phoneValue by remember { mutableStateOf("") }
-
-    var switchT by remember { mutableStateOf(sharedViewModel.darkThemeState.value) }
-    var langaguge by remember { mutableStateOf(sharedViewModel.langState.value) }
 
     val transition = rememberInfiniteTransition()
     val translateAnimation = transition.animateFloat(
@@ -82,27 +84,8 @@ fun SettingsContent(
     val docRef = db.collection("users").document("$userUID")*/
 
     LaunchedEffect(key1 = true) {
-        nameValue = sharedViewModel.user.username
-        emailValue = sharedViewModel.user.email
-        phoneValue = sharedViewModel.user.phoneNumber
+        onLaunchedEffect()
     }
-
-
-    /*ScreenTestingCards(
-        name = nameValue,
-        email = emailValue,
-        phone = phoneValue,
-        switchT = switchT,
-        onCheckedChange = {
-            switchT = it
-            sharedViewModel.persistDarkThemeState(it)
-//                          sharedViewModel.readDarkThemeState()
-        },
-        language = langaguge,
-        onLanguageSelected = {
-            langaguge = it
-        }
-    )*/
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -141,8 +124,8 @@ fun SettingsContent(
             ) {
                 CommonTextField(
                     modifier = Modifier.fillMaxWidth(SETTINGS_MAX_WIDTH_FRACTION),
-                    value = nameValue,
-                    onValueChange = { nameValue = it },
+                    value = name,
+                    onValueChange = { nameOnValueChange(it) },
                     strResId = R.string.name,
                     icon = Icons.Filled.Person,
                     keyboardOptions = KeyboardOptions(
@@ -151,12 +134,14 @@ fun SettingsContent(
                     ),
                     keyboardActions = KeyboardActions(onNext = {
                         focusManager.moveFocus(FocusDirection.Down)
-                    })
+                    }),
+                    isError = nameIsError,
+                    errorMsg = nameIsErrorMsg
                 )
                 CommonTextField(
                     modifier = Modifier.fillMaxWidth(SETTINGS_MAX_WIDTH_FRACTION),
-                    value = emailValue,
-                    onValueChange = { emailValue = it },
+                    value = email,
+                    onValueChange = { emailOnValueChange(it) },
                     strResId = R.string.email_address,
                     icon = Icons.Filled.Email,
                     keyboardOptions = KeyboardOptions(
@@ -170,8 +155,8 @@ fun SettingsContent(
                 )
                 CommonTextField(
                     modifier = Modifier.fillMaxWidth(SETTINGS_MAX_WIDTH_FRACTION),
-                    value = phoneValue,
-                    onValueChange = { phoneValue = it },
+                    value = phone,
+                    onValueChange = { phoneOnValueChange(it) },
                     strResId = R.string.phone_number,
                     icon = Icons.Filled.Phone,
                     keyboardOptions = KeyboardOptions(
@@ -181,24 +166,10 @@ fun SettingsContent(
                     keyboardActions = KeyboardActions(onDone = {
                         focusManager.clearFocus()
                     }),
+                    isError = phoneIsError,
+                    errorMsg = phoneIsErrorMsg
                 )
                 Spacer(modifier = Modifier.padding(SMALL_PADDING))
-                /*Row(
-                    modifier = Modifier.fillMaxWidth(SETTINGS_MAX_WIDTH_FRACTION),
-                    horizontalArrangement = Arrangement.spacedBy(MEDIUM_PADDING),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(imageVector = Icons.Filled.DarkMode, contentDescription = "Dark Mode")
-                    Text(text = "Dark Mode")
-                    Switch(
-                        checked = switchT,
-                        onCheckedChange = {
-                            switchT = it
-                            sharedViewModel.persistDarkThemeState(it)
-//                            sharedViewModel.readDarkThemeState()
-                        },
-                    )
-                }*/
 
                 // -------------------------- Transfer to Composable fun later -----------------------------
                 val cornerRadius = SMALL_PADDING
@@ -211,7 +182,7 @@ fun SettingsContent(
                     Spacer(modifier = Modifier.weight(1f))
                     val items = UiMode.values()
                     var selectedIndex by remember { mutableStateOf(0) }
-                    selectedIndex = if (switchT) {
+                    selectedIndex = if (darkMode) {
                         1
                     } else {
                         0
@@ -249,8 +220,7 @@ fun SettingsContent(
                                     0 -> false
                                     else -> true
                                 }
-                                switchT = darkThemeState
-                                sharedViewModel.persistDarkThemeState(darkThemeState)
+                                darkModeOnChange(darkThemeState)
                             },
                             shape = when (index) {
                                 // left outer button
@@ -314,16 +284,6 @@ fun SettingsContent(
                                     }
                                 )
                             }
-
-                            /*Text(
-                                text = item.name,
-                                color = if (selectedIndex == index) {
-                                    MaterialTheme.colors.signUpColor
-                                } else {
-                                    Color.DarkGray.copy(alpha = 0.9f)
-                                },
-                                modifier = Modifier.padding(horizontal = 8.dp)
-                            )*/
                         }
                     }
                     Spacer(modifier = Modifier.weight(5f))
@@ -331,7 +291,7 @@ fun SettingsContent(
                     Spacer(modifier = Modifier.weight(5f))
                     val langList = Languages.values()
                     var selectedLangIndex by remember { mutableStateOf(0) }
-                    selectedLangIndex = if (langaguge == "en") {
+                    selectedLangIndex = if (language == "en") {
                         0
                     } else {
                         1
@@ -369,8 +329,7 @@ fun SettingsContent(
                                     0 -> Languages.English.lang
                                     else -> Languages.Arabic.lang
                                 }
-                                langaguge = langState
-                                sharedViewModel.persistLangState(langState)
+                                languageOnChange(langState)
                             },
                             shape = when (index) {
                                 // left outer button
@@ -438,28 +397,6 @@ fun SettingsContent(
                 }
                 // -------------------------- Transfer to Composable fun later -----------------------------
 
-                // -------------------------- Transfer to Composable fun later -----------------------------
-                /* Row(
-                     modifier = Modifier
-                         .fillMaxWidth()
-                         .padding(8.dp)
-                 ) {
-
-                 }*/
-                // -------------------------- Transfer to Composable fun later -----------------------------
-                /*Spacer(modifier = Modifier.padding(SMALL_PADDING))
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center,
-                    modifier = Modifier.fillMaxWidth(SETTINGS_MAX_WIDTH_FRACTION)
-                ) {
-                    LanguageDropDown(
-                        language = langaguge,
-                        onLanguageSelected = { languages ->
-                            langaguge = languages
-                        }
-                    )
-                }*/
                 Spacer(modifier = Modifier.padding(MEDIUM_PADDING))
                 Row(
                     modifier = Modifier.fillMaxWidth(SETTINGS_MAX_WIDTH_FRACTION),
@@ -467,62 +404,21 @@ fun SettingsContent(
                     horizontalArrangement = Arrangement.Center
                 ) {
 
-                    /*GradientButton(
-                        text = "Sign Out",
-                        textColor = Color.White,
-                        gradient = Brush.horizontalGradient(
-                            colors = listOf(
-                                MaterialTheme.colors.primary,
-                                MaterialTheme.colors.primaryVariant
-                            )
-                        ),
-
-                    )*/
                     GradientButton(text = stringResource(R.string.update_button),
                         textColor = Color.White,
                         gradient = MaterialTheme.colors.gradientButtonColors,
-                        onClick = {
-                            updateInFirestore(nameValue, phoneValue, it)
-                            sharedViewModel.loadUserInformation()
-                        }
+                        onClick = { updateOnClicked(it) }
                     )
                 }
                 Spacer(modifier = Modifier.padding(MEDIUM_PADDING))
                 OutlinedButton(
-                    onClick = {
-                        FirebaseAuth.getInstance().signOut()
-                        sharedViewModel.persistRememberState(false)
-                        navController.navigate(LOGIN_SCREEN) {
-                            /*popUpTo(SETTINGS_SCREEN){
-                            inclusive = true
-                        } */
-                            popUpTo(LIST_SCREEN) {
-                                inclusive = true
-                            }
-                        }
-                    }) {
-                    Text(text = stringResource(R.string.sign_out_button), color = MaterialTheme.colors.signUpColor)
+                    onClick = signOutOnClicked
+                ) {
+                    Text(
+                        text = stringResource(R.string.sign_out_button),
+                        color = MaterialTheme.colors.signUpColor
+                    )
                 }
-
-//                Spacer(modifier = Modifier.padding(20.dp))
-
-//                    Spacer(modifier = Modifier.padding(20.dp))
-
-/*Text(
-                    text = "Login Instead",
-                    modifier = Modifier.clickable(onClick = {
-                        navController.navigate("login_page"){
-                            popUpTo = navController.graph.startDestination
-                            launchSingleTop = true
-                        }
-                    })
-                )
-                Spacer(modifier = Modifier.padding(20.dp))*//*
-            }
-
-
-        }
-    }*/
             }
         }
     }
@@ -706,30 +602,6 @@ fun ScreenTestingCards(
 
 */
 
-private fun updateInFirestore(
-    newUsername: String,
-    newPhoneNumber: String,
-    mutableState: MutableState<Boolean>
-) {
-    val userUID = FirebaseAuth.getInstance().currentUser?.uid
-    val collectionRef = Firebase.firestore.collection("users")
-    collectionRef.document(userUID.toString())
-        .update(
-            "username",
-            newUsername,
-            "phoneNumber",
-            newPhoneNumber
-        ).addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                Log.e("update", "Successful")
-                mutableState.value = false
-            } else {
-                Log.e("update", "Failed")
-                mutableState.value = false
-            }
-        }
-
-}
 
 /*
 @Composable
@@ -834,18 +706,26 @@ private fun PriorityDropDownPreview() {
 private fun LanguageItemPreview() {
     LanguageItem(language = Languages.English)
 }*/
-/*
-        @Preview(showBackground = true)
-        @Composable
-        fun ScreenTestingCardsPreview() {
-            ScreenTestingCards(
-                "Husam Metro",
-                "husam5009@gmail.com",
-                "0598554858",
-                true,
-                onLanguageSelected = {},
-                onCheckedChange = {},
-                language = Languages.English
-            )
-        }
-        */
+@Preview(showBackground = true)
+@Composable
+fun ScreenTestingCardsPreview() {
+    SettingsContent(
+        onLaunchedEffect = {},
+        email = "husam@test.com",
+        emailOnValueChange = {},
+        phone = "0555555555",
+        phoneOnValueChange = {},
+        phoneIsError = false,
+        phoneIsErrorMsg = "",
+        name = "Husam",
+        nameOnValueChange = {},
+        nameIsError = false,
+        nameIsErrorMsg = "",
+        updateOnClicked = {},
+        signOutOnClicked = {},
+        darkMode = false,
+        darkModeOnChange = {},
+        language = "en",
+        languageOnChange = {}
+    )
+}

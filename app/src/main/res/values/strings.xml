@@ -65,4 +65,10 @@
     <string name="action_delete_all">DELETE ALL</string>
     <string name="action_undo">UNDO</string>
     <string name="email_exists_message">Please check your Email</string>
+    <string name="update_successful_message">Information Updated Successful</string>
+    <string name="update_failed_message">Information Update Failed</string>
+    <string name="send">Send</string>
+    <string name="cancel">Cancel</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="password_reset_success">Email sent successfully to reset your password</string>
 </resources>

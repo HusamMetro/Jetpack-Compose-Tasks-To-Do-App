@@ -66,4 +66,10 @@
     <string name="action_delete_all">حذف الكل</string>
     <string name="action_undo">تراجع</string>
     <string name="email_exists_message">الرجاء التحقق من البريد الالكتروني</string>
+    <string name="update_successful_message">تم تحديث البيانات بنجاح</string>
+    <string name="update_failed_message">فشل تحديث البيانات</string>
+    <string name="send">ارسال</string>
+    <string name="cancel">اغلاق</string>
+    <string name="reset_password">اعادة تعيين كلمة المرور</string>
+    <string name="password_reset_success">تم ارسال رسالة التحقق من الرقم السري بنجاح</string>
 </resources>

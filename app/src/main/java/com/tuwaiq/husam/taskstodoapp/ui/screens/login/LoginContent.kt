@@ -67,7 +67,6 @@ fun LoginContent(
 
 ) {
     val focusManager: FocusManager = LocalFocusManager.current
-    var firstTimeAttempt by rememberSaveable { mutableStateOf(false) }
 
 //    val checkedRememberState by sharedViewModel.rememberState.collectAsState()
 

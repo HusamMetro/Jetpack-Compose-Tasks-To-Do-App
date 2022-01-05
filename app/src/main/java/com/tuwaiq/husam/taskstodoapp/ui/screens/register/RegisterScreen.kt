@@ -8,13 +8,19 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.tuwaiq.husam.taskstodoapp.R
 import com.tuwaiq.husam.taskstodoapp.data.models.User
 import com.tuwaiq.husam.taskstodoapp.ui.viewmodels.SharedViewModel
 import com.tuwaiq.husam.taskstodoapp.util.Constants
 import com.wajahatkarim3.easyvalidation.core.view_ktx.validEmail
 import com.wajahatkarim3.easyvalidation.core.view_ktx.validator
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
 @Composable
 fun RegisterScreen(navController: NavHostController, sharedViewModel: SharedViewModel) {
@@ -109,7 +115,10 @@ fun RegisterScreen(navController: NavHostController, sharedViewModel: SharedView
                 passwordIsErrorMsg = passwordIsErrorMsg,
                 signUpOnClicked = { mutableBoolean ->
                     when {
-                        nameIsError || emailIsError || passwordIsError || phoneIsError -> {
+                        nameIsError || emailIsError || passwordIsError || phoneIsError ||
+                                name.isEmpty() || email.isEmpty() ||
+                                password.isEmpty() || phone.isEmpty()
+                        -> {
                             mutableBoolean.value = false
                         }
                         else -> {
@@ -126,8 +135,8 @@ fun RegisterScreen(navController: NavHostController, sharedViewModel: SharedView
                                     // if the registration is successfully done
                                     if (task.isSuccessful) {
                                         //firebase register user
-                                        val firebaseUser: FirebaseUser =
-                                            task.result!!.user!!
+                                       /* val firebaseUser: FirebaseUser =
+                                            task.result!!.user!! */
                                         val user = User(userName, emailTrimmed, phoneNumber)
                                         saveUser(user)
                                         sharedViewModel.loadUserInformation()
@@ -152,6 +161,22 @@ fun RegisterScreen(navController: NavHostController, sharedViewModel: SharedView
     )
 
 }
+
+fun saveUser(user: User) = CoroutineScope(Dispatchers.IO).launch {
+    val userCollectionRef = Firebase.firestore.collection("users")
+    val userUid = FirebaseAuth.getInstance().currentUser!!.uid
+    try {
+        userCollectionRef.document(userUid).set(user).await()
+        withContext(Dispatchers.Main) {
+            Log.e("FireStore", "Successfully saved data")
+        }
+    } catch (e: Exception) {
+        withContext(Dispatchers.Main) {
+            Log.e("FireStore", "${e.message}")
+        }
+    }
+}
+
 /*
 @Preview
 @Composable

@@ -33,6 +33,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -59,7 +60,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
-val userCollectionRef = Firebase.firestore.collection("users")
 
 @Composable
 fun RegisterContent(
@@ -209,23 +209,27 @@ fun RegisterContent(
 
 }
 
-fun saveUser(user: User) = CoroutineScope(Dispatchers.IO).launch {
-    val userUid = FirebaseAuth.getInstance().currentUser!!.uid
-    try {
-        userCollectionRef.document(userUid).set(user).await()
-        withContext(Dispatchers.Main) {
-            Log.e("FireStore", "Successfully saved data")
-        }
-    } catch (e: Exception) {
-        withContext(Dispatchers.Main) {
-            Log.e("FireStore", "${e.message}")
-        }
-    }
-}
 
-/*
 @Preview
 @Composable
 private fun RegisterContentPreview() {
-    RegisterContent(rememberNavController())
-}*/
+    RegisterContent(
+        name = "Husam",
+        nameOnValueChange = {},
+        nameIsErrorMsg = "",
+        nameIsError = false,
+        email = "husam@test.com",
+        emailOnValueChange = {},
+        emailIsErrorMsg = "",
+        emailIsError = false,
+        phone = "055555555555",
+        phoneOnValueChange = {},
+        phoneIsErrorMsg = "",
+        phoneIsError = false,
+        password = "password",
+        passwordOnValueChange = {},
+        passwordIsErrorMsg = "",
+        passwordIsError = false,
+        signUpOnClicked = {}
+    )
+}

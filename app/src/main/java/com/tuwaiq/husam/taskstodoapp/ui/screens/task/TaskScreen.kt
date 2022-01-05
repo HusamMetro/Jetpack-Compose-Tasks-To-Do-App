@@ -20,7 +20,7 @@ fun TaskScreen(
     sharedViewModel: SharedViewModel,
     navigateToListScreen: (Action) -> Unit
 ) {
-    val title: String by sharedViewModel.title
+    val title: String by sharedViewModel. title
     val description: String by sharedViewModel.description
     val priority: Priority by sharedViewModel.priority
     var titleIsError: Boolean by remember { mutableStateOf(false) }
