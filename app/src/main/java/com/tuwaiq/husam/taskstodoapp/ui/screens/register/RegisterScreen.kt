@@ -14,6 +14,7 @@ import com.tuwaiq.husam.taskstodoapp.R
 import com.tuwaiq.husam.taskstodoapp.data.models.User
 import com.tuwaiq.husam.taskstodoapp.ui.viewmodels.SharedViewModel
 import com.tuwaiq.husam.taskstodoapp.util.Constants
+import com.tuwaiq.husam.taskstodoapp.util.getInvalidMessage
 import com.wajahatkarim3.easyvalidation.core.view_ktx.validEmail
 import com.wajahatkarim3.easyvalidation.core.view_ktx.validator
 import kotlinx.coroutines.CoroutineScope
@@ -68,7 +69,7 @@ fun RegisterScreen(navController: NavHostController, sharedViewModel: SharedView
                         .noNumbers()
                         .noSpecialCharacters()
                         .addErrorCallback {
-                            nameIsErrorMsg = it
+                            nameIsErrorMsg = getInvalidMessage(it,context)
                         }.check()
                     name = newText
                 },
@@ -76,7 +77,9 @@ fun RegisterScreen(navController: NavHostController, sharedViewModel: SharedView
                 nameIsErrorMsg = nameIsErrorMsg,
                 email = email,
                 emailOnValueChange = { newText ->
-                    emailIsError = !newText.validEmail { emailIsErrorMsg = it }
+                    emailIsError = !newText.validEmail {
+                        emailIsErrorMsg = getInvalidMessage(it,context)
+                    }
                     email = newText
 
                 },
@@ -91,7 +94,7 @@ fun RegisterScreen(navController: NavHostController, sharedViewModel: SharedView
                         .minLength(10)
                         .maxLength(12)
                         .addErrorCallback {
-                            phoneIsErrorMsg = it
+                            phoneIsErrorMsg = getInvalidMessage(it,context)
                         }
                         .check()
                     phone = newText
@@ -107,7 +110,7 @@ fun RegisterScreen(navController: NavHostController, sharedViewModel: SharedView
                         .minLength(6)
                         .maxLength(12)
                         .addErrorCallback {
-                            passwordIsErrorMsg = it
+                            passwordIsErrorMsg = getInvalidMessage(it,context)
                         }.check()
                     password = newText
                 },

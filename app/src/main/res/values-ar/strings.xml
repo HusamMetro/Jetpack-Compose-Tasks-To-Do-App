@@ -72,4 +72,13 @@
     <string name="cancel">اغلاق</string>
     <string name="reset_password">اعادة تعيين كلمة المرور</string>
     <string name="password_reset_success">تم ارسال رسالة التحقق من الرقم السري بنجاح</string>
+    <string name="invalid_email">البريد الالكتروني غير صالح</string>
+    <string name="invalid_not_empty">الحقل لا يمكن ان يكون فارغ</string>
+    <string name="invalid_upper_case">يجب على الاقل يكون عنصر واحد حرف كبير</string>
+    <string name="invalid_one_number">يب على الاقل عنصر واحد يكون رقم</string>
+    <string name="invalid_number">يجب ان لا يحتوي على اي ارقام</string>
+    <string name="invalid_special">يب ان لايحتوي على اي رموز خاصة</string>
+    <string name="invalid_alphabet">يب ان لايحتوي على اي حروف</string>
+    <string name="invalid_greater_than">الطول يجب ان يكون اكثر من  </string>
+    <string name="invalid_less_than">الطول يجب ان يكون اقل من </string>
 </resources>
