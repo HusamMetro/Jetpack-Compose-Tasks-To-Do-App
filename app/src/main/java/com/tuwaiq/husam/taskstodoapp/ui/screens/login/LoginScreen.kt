@@ -25,6 +25,7 @@ import com.tuwaiq.husam.taskstodoapp.components.CommonTextField
 import com.tuwaiq.husam.taskstodoapp.ui.theme.SMALL_PADDING
 import com.tuwaiq.husam.taskstodoapp.ui.viewmodels.SharedViewModel
 import com.tuwaiq.husam.taskstodoapp.util.Constants
+import com.tuwaiq.husam.taskstodoapp.util.getInvalidMessage
 import com.wajahatkarim3.easyvalidation.core.view_ktx.validEmail
 import com.wajahatkarim3.easyvalidation.core.view_ktx.validator
 import kotlinx.coroutines.launch
@@ -76,7 +77,9 @@ fun LoginScreen(navController: NavHostController, sharedViewModel: SharedViewMod
                     openDialog = true
                 },
                 emailOnValueChange = { newText ->
-                    emailIsError = !newText.validEmail { emailIsErrorMsg = it }
+                    emailIsError = !newText.validEmail {
+                        emailIsErrorMsg = getInvalidMessage(it, context)
+                    }
                     email = newText
                 },
                 email = email,
@@ -91,7 +94,7 @@ fun LoginScreen(navController: NavHostController, sharedViewModel: SharedViewMod
                         .minLength(6)
                         .maxLength(12)
                         .addErrorCallback {
-                            passwordIsErrorMsg = it
+                            passwordIsErrorMsg = getInvalidMessage(it, context)
                         }.check()
                     password = newText
                 },
@@ -129,7 +132,8 @@ fun LoginScreen(navController: NavHostController, sharedViewModel: SharedViewMod
                                         }
                                     } else {
                                         // if the registration is not successful then show error massage
-                                        snackMessage = context.getString(R.string.email_password_check_message)
+                                        snackMessage =
+                                            context.getString(R.string.email_password_check_message)
                                         firstTime = true
                                         snackBoolean = !snackBoolean
 
@@ -163,7 +167,9 @@ fun LoginScreen(navController: NavHostController, sharedViewModel: SharedViewMod
                                 modifier = Modifier.fillMaxWidth(),
                                 value = email,
                                 onValueChange = { newText ->
-                                    emailIsError = !newText.validEmail { emailIsErrorMsg = it }
+                                    emailIsError = !newText.validEmail {
+                                        emailIsErrorMsg = getInvalidMessage(it, context)
+                                    }
                                     email = newText
                                 },
                                 strResId = R.string.email_address,
@@ -191,7 +197,8 @@ fun LoginScreen(navController: NavHostController, sharedViewModel: SharedViewMod
                                         FirebaseAuth.getInstance().sendPasswordResetEmail(email)
                                             .addOnCompleteListener { task ->
                                                 if (task.isSuccessful) {
-                                                    snackMessage = context.getString(R.string.password_reset_success)
+                                                    snackMessage =
+                                                        context.getString(R.string.password_reset_success)
                                                     firstTime = true
                                                     snackBoolean = !snackBoolean
                                                     Log.e(
@@ -203,7 +210,8 @@ fun LoginScreen(navController: NavHostController, sharedViewModel: SharedViewMod
                                                         "forgot",
                                                         task.exception!!.message.toString()
                                                     )
-                                                    snackMessage = task.exception!!.message.toString()
+                                                    snackMessage =
+                                                        task.exception!!.message.toString()
                                                     firstTime = true
                                                     snackBoolean = !snackBoolean
                                                 }

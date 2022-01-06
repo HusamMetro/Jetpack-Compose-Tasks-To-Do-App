@@ -71,4 +71,13 @@
     <string name="cancel">Cancel</string>
     <string name="reset_password">Reset Password</string>
     <string name="password_reset_success">Email sent successfully to reset your password</string>
+    <string name="invalid_email">Invalid Email Address!</string>
+    <string name="invalid_not_empty">Can\'t be empty!</string>
+    <string name="invalid_upper_case">At least one letter should be in upper case.</string>
+    <string name="invalid_one_number">At least one letter should be a number.</string>
+    <string name="invalid_number">Should not contain any numbers!</string>
+    <string name="invalid_special">Should not contain any special characters</string>
+    <string name="invalid_alphabet">Should not contain any alphabet characters!</string>
+    <string name="invalid_greater_than">\"Length should be greater than \"</string>
+    <string name="invalid_less_than">\"Length should be less than or equal to \"</string>
 </resources>
