@@ -5,10 +5,14 @@ import android.content.Intent
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material.Scaffold
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import com.tuwaiq.husam.taskstodoapp.R
+import com.tuwaiq.husam.taskstodoapp.components.dateFormatter
+import com.tuwaiq.husam.taskstodoapp.components.showDatePicker
 import com.tuwaiq.husam.taskstodoapp.data.models.Priority
 import com.tuwaiq.husam.taskstodoapp.data.models.ToDoTask
 import com.tuwaiq.husam.taskstodoapp.ui.viewmodels.SharedViewModel
@@ -20,15 +24,16 @@ fun TaskScreen(
     sharedViewModel: SharedViewModel,
     navigateToListScreen: (Action) -> Unit
 ) {
-    val title: String by sharedViewModel. title
+    val title: String by sharedViewModel.title
     val description: String by sharedViewModel.description
     val priority: Priority by sharedViewModel.priority
-    var titleIsError: Boolean by remember { mutableStateOf(false) }
-    var startDate: String by sharedViewModel.startDate
-    var endDate: String by sharedViewModel.endDate
-    var maxTask: String by sharedViewModel.maxTask
-    var taskCounter: String by sharedViewModel.taskCounter
+    val titleIsError: Boolean by sharedViewModel.titleIsError
+    val startDate: String by sharedViewModel.startDate
+    val endDate: String by sharedViewModel.endDate
+    val maxTask: String by sharedViewModel.maxTask
+    val taskCounter: String by sharedViewModel.taskCounter
     val context = LocalContext.current
+    val activity = context as AppCompatActivity
 //    BackHandler(onBackPressed = { navigateToListScreen(Action.NO_ACTION) })
     BackHandler {
         navigateToListScreen(Action.NO_ACTION)
@@ -45,7 +50,7 @@ fun TaskScreen(
                         if (sharedViewModel.validateFields()) {
                             navigateToListScreen(action)
                         } else {
-                            titleIsError = true
+                            sharedViewModel.titleIsError.value = true
                             displayToast(context = context)
                         }
                     }
@@ -68,7 +73,7 @@ fun TaskScreen(
             TaskContent(
                 title = title,
                 onTitleChange = {
-                    titleIsError = it.isEmpty()
+                    sharedViewModel.titleIsError.value = it.isEmpty()
                     sharedViewModel.updateTitle(it)
 //                    sharedViewModel.title.value = it
                 },
@@ -83,23 +88,39 @@ fun TaskScreen(
                 },
                 startDate = startDate,
                 onStartDateChanged = {
-                    startDate = it
+                    sharedViewModel.startDate.value = it
                 },
                 endDate = endDate,
                 onEndDateChanged = {
-                    endDate = it
+                    sharedViewModel.endDate.value = it
                 },
                 maxTask = maxTask,
                 onMaxTaskChanged = {
-                    maxTask = it
+                    sharedViewModel.maxTask.value = removeSpecial(it)
                 },
                 taskCounter = taskCounter,
                 onTaskCounterChanged = {
-                    taskCounter = it
+                    sharedViewModel.taskCounter.value = removeSpecial(it)
+                },
+                showStartDatePicker = {
+                    showDatePicker(activity) { date: Long? ->
+                        sharedViewModel.startDate.value = (dateFormatter(date)!!)
+                    }
+                },
+                showEndDatePicker = {
+                    showDatePicker(activity) { date: Long? ->
+                        sharedViewModel.endDate.value = (dateFormatter(date)!!)
+                    }
                 }
             )
         }
     )
+}
+
+fun removeSpecial(input: String): String {
+    Regex("[^A-Za-z0-9]+$").also {
+        return it.replace(input, "")
+    }
 }
 
 fun displayToast(context: Context) {

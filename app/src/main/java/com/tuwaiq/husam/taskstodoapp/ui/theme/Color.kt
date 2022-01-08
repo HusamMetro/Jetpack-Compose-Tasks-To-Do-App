@@ -1,11 +1,10 @@
 package com.tuwaiq.husam.taskstodoapp.ui.theme
 
-import androidx.compose.material.Colors
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.TileMode
+import androidx.compose.ui.graphics.compositeOver
 
 val Purple200 = Color(0xFFBB86FC)
 val Purple500 = Color(0xFF6200EE)
@@ -65,7 +64,7 @@ val greenLight1 = Color(0xFFCDE3D8)
 val secondaryGreenMid3 = Color(0xFFA1C254)
 val secondaryGreenLight2 = Color(0xFFD9E6BA)
 
-val secondaryBlue =  Color(0xFF83ABD6)
+val secondaryBlue = Color(0xFF83ABD6)
 
 val greenPrimary3 = Color(0xFF244234)
 val greenPrimary5 = Color(0xFFc4cbbf)
@@ -75,14 +74,14 @@ val greenPrimary6 = Color(0xFF3c4236)
 val Colors.gradientButtonColors: Brush
     @Composable
     get() = Brush.horizontalGradient(
-        colors = listOf(primary,primaryVariant,primary),
+        colors = listOf(primary, primaryVariant, primary),
     )
 
 val Colors.signUpColor: Color
     get() = if (isLight) primary else primaryVariant
 
 val Colors.cardFirstColor: Color
-get() = if (isLight) greenLight1 else DarkerBlue
+    get() = if (isLight) greenLight1 else DarkerBlue
 
 val Colors.cardSecondColor: Color
     get() = if (isLight) greenLight1 else DarkBlue
@@ -151,3 +150,43 @@ val Colors.bottomBarUnselectedContentColor: Color
     get() = if (isLight) Color.White else MediumGray
 
 
+val Colors.customOutlinedTextFieldColor: TextFieldColors
+    @Composable
+    get() = TextFieldDefaults.outlinedTextFieldColors(
+        cursorColor = if (isLight) MaterialTheme.colors.primary else MaterialTheme.colors.primaryVariant,
+        focusedBorderColor = if (isLight)
+            MaterialTheme.colors.primary.copy(alpha = ContentAlpha.high)
+        else MaterialTheme.colors.primaryVariant.copy(alpha = ContentAlpha.high),
+        focusedLabelColor =
+        if (isLight)
+            MaterialTheme.colors.primary.copy(alpha = ContentAlpha.high)
+        else MaterialTheme.colors.primaryVariant.copy(alpha = ContentAlpha.high),
+    )
+
+val Colors.checkBoxColor: CheckboxColors
+    @Composable
+    get() = if (isLight) CheckboxDefaults.colors(MaterialTheme.colors.primary) else CheckboxDefaults.colors(
+        MaterialTheme.colors.primaryVariant
+    )
+
+
+val Colors.alertButtonColor: ButtonColors
+    @Composable
+    get() = ButtonDefaults.buttonColors(
+        backgroundColor = if (isLight) MaterialTheme.colors.primary else MaterialTheme.colors.primary,
+        contentColor = MaterialTheme.colors.taskItemTextColor,
+        disabledBackgroundColor = MaterialTheme.colors.onSurface.copy(alpha = 0.12f)
+            .compositeOver(MaterialTheme.colors.surface),
+        disabledContentColor = MaterialTheme.colors.onSurface
+            .copy(alpha = ContentAlpha.disabled),
+
+        )
+
+val Colors.alertOutlinedButtonColor: ButtonColors
+    @Composable
+    get() = ButtonDefaults.outlinedButtonColors(
+        backgroundColor = MaterialTheme.colors.surface,
+        contentColor = if (isLight) MaterialTheme.colors.primary else MaterialTheme.colors.taskItemTextColor,
+        disabledContentColor = MaterialTheme.colors.onSurface
+            .copy(alpha = ContentAlpha.disabled)
+    )

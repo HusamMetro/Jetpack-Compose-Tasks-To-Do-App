@@ -16,7 +16,9 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.tuwaiq.husam.taskstodoapp.ui.theme.*
+import com.tuwaiq.husam.taskstodoapp.ui.theme.LARGE_PADDING
+import com.tuwaiq.husam.taskstodoapp.ui.theme.PRIORITY_INDICATOR_SIZE
+import com.tuwaiq.husam.taskstodoapp.ui.theme.cardSecondColor
 
 @Composable
 fun AnimatedShimmerEffect() {
@@ -52,11 +54,10 @@ fun ShimmerGridItem(brush: Brush) {
             .fillMaxWidth()
             .height(85.dp)
             .clip(RoundedCornerShape(LARGE_PADDING))
-            .background(brush = brush)
-            ,
+            .background(brush = brush),
         verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center
     ) {
-        Column(modifier = Modifier.fillMaxWidth(0.9f),verticalArrangement = Arrangement.Center) {
+        Column(modifier = Modifier.fillMaxWidth(0.9f), verticalArrangement = Arrangement.Center) {
             Spacer(
                 modifier = Modifier
                     .height(20.dp)
@@ -88,13 +89,13 @@ fun ShimmerGridItem(brush: Brush) {
     }
 }
 
-@Preview (showBackground = true,uiMode = UI_MODE_NIGHT_YES )
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
 @Composable
 private fun ShimmerGridItemPreview() {
     AnimatedShimmerEffect()
 }
 
-@Preview (showBackground = true , uiMode = UI_MODE_NIGHT_YES )
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
 @Composable
 private fun ShimmerGridItemDarkPreview() {
     ShimmerGridItem(

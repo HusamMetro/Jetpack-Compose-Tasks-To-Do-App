@@ -21,21 +21,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tuwaiq.husam.taskstodoapp.components.CustomComponent
 import com.tuwaiq.husam.taskstodoapp.data.models.Languages
 import com.tuwaiq.husam.taskstodoapp.data.models.MockToDoTask
-import com.tuwaiq.husam.taskstodoapp.data.models.ToDoTask
 import com.tuwaiq.husam.taskstodoapp.ui.screens.list.getMaxTaskInt
 import com.tuwaiq.husam.taskstodoapp.ui.screens.list.getTaskCounterInt
 import com.tuwaiq.husam.taskstodoapp.ui.theme.*
-import com.tuwaiq.husam.taskstodoapp.ui.viewmodels.SharedViewModel
-import com.tuwaiq.husam.taskstodoapp.util.Action
 
 @ExperimentalMaterialApi
 @Composable
-fun ChallengesContent(mockTasks: List<MockToDoTask>, sharedViewModel: SharedViewModel) {
+fun ChallengesContent(
+    mockTasks: List<MockToDoTask>,
+    lang: String,
+    onAdd: (MockToDoTask) -> Unit
+) {
     LazyColumn(
         Modifier.padding(bottom = TOP_APP_BAR_HEIGHT),
         contentPadding = PaddingValues(MEDIUM_PADDING),
@@ -49,7 +51,11 @@ fun ChallengesContent(mockTasks: List<MockToDoTask>, sharedViewModel: SharedView
                     task.id
                 }
             ) { task ->
-                MockTaskItem(mockToDoTask = task, {}, sharedViewModel = sharedViewModel)
+                MockTaskItem(
+                    mockToDoTask = task,
+                    lang = lang,
+                    onAdd = onAdd
+                )
             }
         } catch (e: Throwable) {
             Log.e("lazyColumn", e.message.toString())
@@ -64,10 +70,9 @@ fun ChallengesContent(mockTasks: List<MockToDoTask>, sharedViewModel: SharedView
 @Composable
 fun MockTaskItem(
     mockToDoTask: MockToDoTask,
-    navigateToTaskScreens: (taskId: Int) -> Unit,
-    sharedViewModel: SharedViewModel
+    lang: String,
+    onAdd: (MockToDoTask) -> Unit
 ) {
-    val lang by remember { mutableStateOf(sharedViewModel.langState.value  ) }
     var expandState by remember { mutableStateOf(false) }
     Surface(
         modifier = Modifier.fillMaxWidth(),
@@ -105,26 +110,14 @@ fun MockTaskItem(
                     )
                     .fillMaxWidth()
             ) {
-                if (expandState) {
+                if (!expandState) {
                     MockCardExpanded(
                         mockToDoTask = mockToDoTask,
-                        onAdd = { mock ->
-                            sharedViewModel.updateTaskFields(
-                                ToDoTask(
-                                    title = getTitleLang(mockToDoTask, lang),
-                                    description = getDescriptionLang(mockToDoTask,lang),
-                                    priority = mock.priority,
-                                    startDate = mock.startDate,
-                                    endDate = mock.endDate,
-                                    maxTask = mock.maxTask,
-                                    taskCounter = "0"
-                                )
-                            )
-                            sharedViewModel.handleDatabaseAction(Action.ADD)
-                        },
-                    lang = lang)
-                }
-                else{
+                        onAdd = onAdd,
+                        lang = lang
+                    )
+                } /*
+                else {
                     Row(Modifier.padding(bottom = SMALL_PADDING)) {
                         Row(
                             Modifier.weight(19f),
@@ -180,17 +173,18 @@ fun MockTaskItem(
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis
                     )
-                }
+                }*/
             }
         }
     }
 }
-fun getDescriptionLang(mockToDoTask: MockToDoTask,lang : String):String  =
+
+fun getDescriptionLang(mockToDoTask: MockToDoTask, lang: String): String =
     if (lang == Languages.English.lang) mockToDoTask.description
     else mockToDoTask.descriptionAR
 
 
-fun getTitleLang(mockToDoTask: MockToDoTask,lang : String):String  =
+fun getTitleLang(mockToDoTask: MockToDoTask, lang: String): String =
     if (lang == Languages.English.lang) mockToDoTask.title
     else mockToDoTask.titleAR
 
@@ -245,11 +239,11 @@ fun MockCardExpanded(
         verticalArrangement = Arrangement.spacedBy(MEDIUM_PADDING)
     ) {
         if (mockToDoTask.startDate.isNotEmpty()) {
-            Divider(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = LARGE_PADDING, horizontal = SMALL_PADDING)
-            )
+            /* Divider(
+                 Modifier
+                     .fillMaxWidth()
+                     .padding(vertical = LARGE_PADDING, horizontal = SMALL_PADDING)
+             )*/
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
@@ -299,7 +293,7 @@ fun MockCardExpanded(
                 }
 
             }
-            Divider(Modifier.padding(vertical = LARGE_PADDING, horizontal = SMALL_PADDING))
+//            Divider(Modifier.padding(vertical = LARGE_PADDING, horizontal = SMALL_PADDING))
         }
 
         Row(
@@ -330,15 +324,26 @@ fun MockCardExpanded(
             verticalAlignment = Alignment.CenterVertically
         ) {
             TextButton(onClick = { onAdd(mockToDoTask) }) {
-                Text(text ="Add Task", color = MaterialTheme.colors.topAppBarContentColor)
+                Text(text = "Add Task", color = MaterialTheme.colors.topAppBarContentColor)
             }
         }
     }
 }
-/*
 
+@ExperimentalMaterialApi
 @Composable
-@Preview
+@Preview(showBackground = true)
 private fun ChallengesContentPreview() {
-    ChallengesContent(mockTasks, sharedViewModel)
-}*/
+    MockTaskItem(
+        MockToDoTask(
+            title = "Mock Task",
+            description = "This is a description of the Mock Task , Say hello Description",
+            startDate = "02/05/22",
+            endDate = "30/05/22",
+            maxTask = "9",
+            taskCounter = "9",
+        ),
+        lang = "en",
+        onAdd = {}
+    )
+}

@@ -1,6 +1,5 @@
 package com.tuwaiq.husam.taskstodoapp.ui.screens.register
 
-import android.util.Log
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -17,15 +16,14 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Password
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Phone
-import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -36,50 +34,33 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import com.tuwaiq.husam.taskstodoapp.R
 import com.tuwaiq.husam.taskstodoapp.components.CommonPasswordTextField
 import com.tuwaiq.husam.taskstodoapp.components.CommonTextField
 import com.tuwaiq.husam.taskstodoapp.components.GradientButton
-import com.tuwaiq.husam.taskstodoapp.data.models.User
 import com.tuwaiq.husam.taskstodoapp.ui.theme.gradientButtonColors
 import com.tuwaiq.husam.taskstodoapp.ui.theme.taskItemTextColor
-import com.tuwaiq.husam.taskstodoapp.ui.viewmodels.SharedViewModel
-import com.tuwaiq.husam.taskstodoapp.util.Constants.LIST_SCREEN
-import com.tuwaiq.husam.taskstodoapp.util.Constants.LOGIN_SCREEN
-import com.wajahatkarim3.easyvalidation.core.view_ktx.validEmail
-import com.wajahatkarim3.easyvalidation.core.view_ktx.validNumber
-import com.wajahatkarim3.easyvalidation.core.view_ktx.validator
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 
 
 @Composable
 fun RegisterContent(
     name: String,
-    nameOnValueChange:(String) -> Unit,
-    nameIsError:Boolean,
-    nameIsErrorMsg:String,
-    email:String,
-    emailOnValueChange:(String) -> Unit,
-    emailIsError:Boolean,
-    emailIsErrorMsg:String,
-    phone:String,
-    phoneOnValueChange:(String) -> Unit,
-    phoneIsError:Boolean,
-    phoneIsErrorMsg:String,
-    password:String,
-    passwordOnValueChange:(String) -> Unit,
-    passwordIsError:Boolean,
-    passwordIsErrorMsg:String,
-    signUpOnClicked : (MutableState<Boolean>) -> Unit,
+    nameOnValueChange: (String) -> Unit,
+    nameIsError: Boolean,
+    nameIsErrorMsg: String,
+    email: String,
+    emailOnValueChange: (String) -> Unit,
+    emailIsError: Boolean,
+    emailIsErrorMsg: String,
+    phone: String,
+    phoneOnValueChange: (String) -> Unit,
+    phoneIsError: Boolean,
+    phoneIsErrorMsg: String,
+    password: String,
+    passwordOnValueChange: (String) -> Unit,
+    passwordIsError: Boolean,
+    passwordIsErrorMsg: String,
+    signUpOnClicked: (MutableState<Boolean>) -> Unit,
 ) {
     val focusManager: FocusManager = LocalFocusManager.current
 
@@ -140,7 +121,7 @@ fun RegisterContent(
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     CommonTextField(
                         value = name,
-                        onValueChange = {nameOnValueChange(it)},
+                        onValueChange = { nameOnValueChange(it) },
                         strResId = R.string.name,
                         icon = Icons.Filled.Person,
                         keyboardOptions = KeyboardOptions(
@@ -155,7 +136,7 @@ fun RegisterContent(
                     )
                     CommonTextField(
                         value = email,
-                        onValueChange = {emailOnValueChange(it)},
+                        onValueChange = { emailOnValueChange(it) },
                         strResId = R.string.email_address,
                         icon = Icons.Filled.Email,
                         keyboardOptions = KeyboardOptions(
@@ -170,7 +151,7 @@ fun RegisterContent(
                     )
                     CommonTextField(
                         value = phone,
-                        onValueChange = {phoneOnValueChange(it)},
+                        onValueChange = { phoneOnValueChange(it) },
                         strResId = R.string.phone_number,
                         icon = Icons.Filled.Phone,
                         keyboardOptions = KeyboardOptions(
@@ -185,7 +166,7 @@ fun RegisterContent(
                     )
                     CommonPasswordTextField(
                         text = password,
-                        onValueChange = { passwordOnValueChange(it)},
+                        onValueChange = { passwordOnValueChange(it) },
                         strResId = R.string.password,
                         icon = Icons.Filled.Password,
                         keyboardOptions = KeyboardOptions(
@@ -200,7 +181,7 @@ fun RegisterContent(
                     GradientButton(text = stringResource(R.string.sign_up_button),
                         textColor = Color.White,
                         gradient = MaterialTheme.colors.gradientButtonColors,
-                        onClick = {signUpOnClicked(it)}
+                        onClick = { signUpOnClicked(it) }
                     )
                 }
             }

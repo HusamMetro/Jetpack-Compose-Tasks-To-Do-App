@@ -1,8 +1,6 @@
 package com.tuwaiq.husam.taskstodoapp
 
 import android.app.Application
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.content.Context
 import android.util.Log
 
@@ -17,7 +15,8 @@ class ToDoApplication : Application() {
         super.onCreate()
         appContext = applicationContext
     }
-    companion object{
+
+    companion object {
         lateinit var appContext: Context
         fun getToDoContext(): Context {
             return appContext

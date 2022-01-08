@@ -5,20 +5,13 @@ import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.*
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.viewModelScope
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.toObject
+import androidx.lifecycle.*
 import com.tuwaiq.husam.taskstodoapp.MainActivity
 import com.tuwaiq.husam.taskstodoapp.data.models.MockToDoTask
 import com.tuwaiq.husam.taskstodoapp.data.models.Priority
 import com.tuwaiq.husam.taskstodoapp.data.models.ToDoTask
 import com.tuwaiq.husam.taskstodoapp.data.models.User
-import com.tuwaiq.husam.taskstodoapp.data.repositories.DataStoreRepository
-import com.tuwaiq.husam.taskstodoapp.data.repositories.MockRepo
-import com.tuwaiq.husam.taskstodoapp.data.repositories.NotificationRepo
-import com.tuwaiq.husam.taskstodoapp.data.repositories.ToDoRepository
+import com.tuwaiq.husam.taskstodoapp.data.repositories.*
 import com.tuwaiq.husam.taskstodoapp.util.Action
 import com.tuwaiq.husam.taskstodoapp.util.Constants.MAX_TITLE_LENGTH
 import com.tuwaiq.husam.taskstodoapp.util.RequestState
@@ -31,8 +24,9 @@ class SharedViewModel(context: Application) : AndroidViewModel(context) {
     private val repository: ToDoRepository = ToDoRepository(context)
     private val dataStoreRepository: DataStoreRepository = DataStoreRepository(context = context)
 
-    private val notificationRepo : NotificationRepo = NotificationRepo()
+    private val notificationRepo: NotificationRepo = NotificationRepo()
     private val mockRepo: MockRepo = MockRepo()
+    private val firebaseRepo: FirebaseRepo = FirebaseRepo()
 
     @ExperimentalMaterialApi
     @ExperimentalAnimationApi
@@ -136,13 +130,14 @@ class SharedViewModel(context: Application) : AndroidViewModel(context) {
     val action: MutableState<Action> = mutableStateOf(Action.NO_ACTION)
     val id: MutableState<Int> = mutableStateOf(0)
     val title: MutableState<String> = mutableStateOf("")
+    val titleIsError: MutableState<Boolean> = mutableStateOf(false)
     val description: MutableState<String> = mutableStateOf("")
-    val startDate: MutableState<String> =mutableStateOf("")
-    val endDate:  MutableState<String> = mutableStateOf("")
-    val maxTask:  MutableState<String> = mutableStateOf("")
+    val startDate: MutableState<String> = mutableStateOf("")
+    val endDate: MutableState<String> = mutableStateOf("")
+    val maxTask: MutableState<String> = mutableStateOf("")
     val taskCounter: MutableState<String> = mutableStateOf("")
-
     val priority: MutableState<Priority> = mutableStateOf(Priority.LOW)
+
     val searchAppBarState: MutableState<SearchAppBarState> =
         mutableStateOf(SearchAppBarState.CLOSED)
     val searchTextState: MutableState<String> = mutableStateOf("")
@@ -162,15 +157,10 @@ class SharedViewModel(context: Application) : AndroidViewModel(context) {
     private val _rememberState = MutableStateFlow(false)
     val rememberState: StateFlow<Boolean> = _rememberState
 
-    var user : User = User()
+    fun getUserInformation() = firebaseRepo.user
 
     fun loadUserInformation() {
-        val db = FirebaseFirestore.getInstance()
-        val userUID = FirebaseAuth.getInstance().currentUser?.uid
-        val docRef = db.collection("users").document("$userUID")
-        docRef.get().addOnSuccessListener { documentSnapshot ->
-            user = documentSnapshot.toObject<User>()!!
-        }
+        firebaseRepo.loadUserInformation()
     }
 
     init {
@@ -228,7 +218,7 @@ class SharedViewModel(context: Application) : AndroidViewModel(context) {
         }
     }
 
-     fun readRememberState() {
+    fun readRememberState() {
         try {
             viewModelScope.launch {
                 dataStoreRepository.readRememberState.collect {
@@ -271,8 +261,27 @@ class SharedViewModel(context: Application) : AndroidViewModel(context) {
         }
     }
 
+    private fun checkCounterAndMax() {
+        try {
+            if (taskCounter.value.isEmpty() || taskCounter.value.toInt() <= 0) {
+                taskCounter.value = "0"
+            }
+            if (maxTask.value.isEmpty() || maxTask.value.toInt() <= 0) {
+                maxTask.value = "1"
+            }
+            if (maxTask.value.toInt() < taskCounter.value.toInt()) {
+                taskCounter.value = maxTask.value
+            }
+        } catch (e: Exception) {
+            maxTask.value = "1"
+            taskCounter.value = "0"
+        }
+    }
+
+
     private fun addTask() {
         viewModelScope.launch(Dispatchers.IO) {
+            checkCounterAndMax()
             val toDoTask = ToDoTask(
                 title = title.value,
                 description = description.value,
@@ -290,6 +299,7 @@ class SharedViewModel(context: Application) : AndroidViewModel(context) {
 
     private fun updateTask() {
         viewModelScope.launch(Dispatchers.IO) {
+            checkCounterAndMax()
             val toDoTask = ToDoTask(
                 id = id.value,
                 title = title.value,
@@ -354,21 +364,23 @@ class SharedViewModel(context: Application) : AndroidViewModel(context) {
         if (selectedTask != null) {
             id.value = selectedTask.id
             title.value = selectedTask.title
+            titleIsError.value = false
             description.value = selectedTask.description
             priority.value = selectedTask.priority
             startDate.value = selectedTask.startDate
-             endDate.value = selectedTask.endDate
+            endDate.value = selectedTask.endDate
             maxTask.value = selectedTask.maxTask
-             taskCounter.value = selectedTask.taskCounter
+            taskCounter.value = selectedTask.taskCounter
         } else {
             id.value = 0
             title.value = ""
+            titleIsError.value = false
             description.value = ""
             priority.value = Priority.LOW
             startDate.value = ""
             endDate.value = ""
             maxTask.value = ""
-            taskCounter.value =""
+            taskCounter.value = ""
         }
     }
 
@@ -381,5 +393,84 @@ class SharedViewModel(context: Application) : AndroidViewModel(context) {
     fun validateFields(): Boolean {
 //        return title.value.isNotEmpty() && description.value.isNotEmpty()
         return title.value.isNotEmpty()
+    }
+
+    fun loginFirebase(
+        email: String,
+        password: String,
+        checked: Boolean,
+        lifecycleOwner: LifecycleOwner
+    ): LiveData<Boolean> {
+        val result = MutableLiveData<Boolean>()
+        firebaseRepo.logInFirebase(email, password).observe(lifecycleOwner) {
+            if (it) {
+                persistRememberState(checked)
+                loadUserInformation()
+                result.postValue(true)
+            } else {
+                result.postValue(false)
+            }
+        }
+        return result
+    }
+
+    fun registerFirebase(
+        email: String,
+        password: String,
+        userName: String,
+        emailTrimmed: String,
+        phoneNumber: String,
+        lifecycleOwner: LifecycleOwner
+    ): LiveData<Boolean> {
+        val result = MutableLiveData<Boolean>()
+        firebaseRepo.registerFirebase(email, password).observe(lifecycleOwner) {
+            if (it) {
+                val user = User(userName, emailTrimmed, phoneNumber)
+                loadUserInformation()
+                firebaseRepo.saveUser(user = user)
+                result.postValue(true)
+            } else {
+                result.postValue(false)
+            }
+        }
+        return result
+    }
+
+    fun forgotPasswordFirebase(email: String, lifecycleOwner: LifecycleOwner): LiveData<Boolean> {
+        val result = MutableLiveData<Boolean>()
+        firebaseRepo.forgotPasswordFirebase(email).observe(lifecycleOwner) {
+            if (it) {
+                result.postValue(true)
+            } else {
+                result.postValue(false)
+            }
+        }
+        return result
+    }
+
+    fun updateUserFirestore(
+        name: String,
+        phoneNumber: String,
+        lifecycleOwner: LifecycleOwner
+    ): LiveData<Boolean> {
+        val result = MutableLiveData<Boolean>()
+        firebaseRepo.updateUserFirestore(
+            name = name,
+            phoneNumber = phoneNumber
+        ).observe(lifecycleOwner) {
+            if (it) {
+                result.postValue(true)
+                loadUserInformation()
+            } else {
+                result.postValue(false)
+                loadUserInformation()
+            }
+        }
+        return result
+    }
+
+    fun signOutFirebase() {
+        persistRememberState(false)
+        firebaseRepo.signOutFirebase()
     }
 }

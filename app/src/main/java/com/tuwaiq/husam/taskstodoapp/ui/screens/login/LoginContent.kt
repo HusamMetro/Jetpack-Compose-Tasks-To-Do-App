@@ -1,6 +1,5 @@
 package com.tuwaiq.husam.taskstodoapp.ui.screens.login
 
-import android.util.Log
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -10,12 +9,15 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.*
+import androidx.compose.material.Checkbox
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Password
-import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,38 +34,31 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
-import com.google.firebase.auth.FirebaseAuth
 import com.tuwaiq.husam.taskstodoapp.R
 import com.tuwaiq.husam.taskstodoapp.components.CommonPasswordTextField
 import com.tuwaiq.husam.taskstodoapp.components.CommonTextField
 import com.tuwaiq.husam.taskstodoapp.components.GradientButton
+import com.tuwaiq.husam.taskstodoapp.ui.theme.checkBoxColor
 import com.tuwaiq.husam.taskstodoapp.ui.theme.gradientButtonColors
 import com.tuwaiq.husam.taskstodoapp.ui.theme.signUpColor
 import com.tuwaiq.husam.taskstodoapp.ui.theme.taskItemTextColor
-import com.tuwaiq.husam.taskstodoapp.ui.viewmodels.SharedViewModel
-import com.tuwaiq.husam.taskstodoapp.util.Constants.LIST_SCREEN
-import com.tuwaiq.husam.taskstodoapp.util.Constants.LOGIN_SCREEN
-import com.tuwaiq.husam.taskstodoapp.util.Constants.REGISTER_SCREEN
-import com.wajahatkarim3.easyvalidation.core.view_ktx.validEmail
-import com.wajahatkarim3.easyvalidation.core.view_ktx.validator
 
 
 @Composable
 fun LoginContent(
-    registerOnClicked : () -> Unit,
-    onForgotPassword : () -> Unit,
-    email:String,
-    emailOnValueChange:(String) -> Unit,
-    emailIsError:Boolean,
-    emailIsErrorMsg:String,
-    password:String,
-    passwordOnValueChange:(String) -> Unit,
-    passwordIsError:Boolean,
-    passwordIsErrorMsg:String,
-    signInOnClicked : (MutableState<Boolean>) -> Unit,
-    checked : Boolean,
-    onCheckedChange : (Boolean) -> Unit
+    registerOnClicked: () -> Unit,
+    onForgotPassword: () -> Unit,
+    email: String,
+    emailOnValueChange: (String) -> Unit,
+    emailIsError: Boolean,
+    emailIsErrorMsg: String,
+    password: String,
+    passwordOnValueChange: (String) -> Unit,
+    passwordIsError: Boolean,
+    passwordIsErrorMsg: String,
+    signInOnClicked: (MutableState<Boolean>) -> Unit,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit
 
 ) {
     val focusManager: FocusManager = LocalFocusManager.current
@@ -131,7 +126,7 @@ fun LoginContent(
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     CommonTextField(
                         value = email,
-                        onValueChange = {emailOnValueChange(it)},
+                        onValueChange = { emailOnValueChange(it) },
                         strResId = R.string.email_address,
                         singleLine = true,
                         icon = Icons.Filled.Email,
@@ -148,7 +143,7 @@ fun LoginContent(
 
                     CommonPasswordTextField(
                         text = password,
-                        onValueChange = { passwordOnValueChange(it)},
+                        onValueChange = { passwordOnValueChange(it) },
                         strResId = R.string.password,
                         icon = Icons.Filled.Password,
                         keyboardOptions = KeyboardOptions(
@@ -167,13 +162,14 @@ fun LoginContent(
                     ) {
                         Checkbox(
                             checked = checked,
-                            onCheckedChange = { onCheckedChange(it)},
-                            colors = CheckboxDefaults.colors(MaterialTheme.colors.primary)
+                            onCheckedChange = { onCheckedChange(it) },
+                            colors = MaterialTheme.colors.checkBoxColor
                         )
                         Text(
                             modifier = Modifier.padding(horizontal = 10.dp),
                             text = stringResource(
-                            R.string.remember_me)
+                                R.string.remember_me
+                            )
                         )
                     }
                     Spacer(modifier = Modifier.padding(10.dp))
@@ -181,7 +177,7 @@ fun LoginContent(
                         text = stringResource(R.string.log_in_button),
                         textColor = Color.White,
                         gradient = MaterialTheme.colors.gradientButtonColors,
-                        onClick = {signInOnClicked(it)}
+                        onClick = { signInOnClicked(it) }
                     )
                     Spacer(modifier = Modifier.padding(20.dp))
                     Row(
@@ -189,10 +185,16 @@ fun LoginContent(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         TextButton(onClick = registerOnClicked) {
-                            Text(text = stringResource(R.string.sign_up), color = MaterialTheme.colors.signUpColor)
+                            Text(
+                                text = stringResource(R.string.sign_up),
+                                color = MaterialTheme.colors.signUpColor
+                            )
                         }
                         TextButton(onClick = onForgotPassword) {
-                            Text(text = stringResource(R.string.forgot_password), color = Color.Gray)
+                            Text(
+                                text = stringResource(R.string.forgot_password),
+                                color = Color.Gray
+                            )
                         }
                     }
                     Spacer(modifier = Modifier.padding(10.dp))

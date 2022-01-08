@@ -14,6 +14,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.tuwaiq.husam.taskstodoapp.ui.theme.ERROR_MESSAGE_PADDING
+import com.tuwaiq.husam.taskstodoapp.ui.theme.customOutlinedTextFieldColor
 
 @Composable
 fun OutlineTextFieldWithErrorView(
@@ -35,7 +36,7 @@ fun OutlineTextFieldWithErrorView(
     maxLines: Int = Int.MAX_VALUE,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     shape: Shape = MaterialTheme.shapes.small,
-    colors: TextFieldColors = TextFieldDefaults.outlinedTextFieldColors(),
+    colors: TextFieldColors = MaterialTheme.colors.customOutlinedTextFieldColor,
     errorMsg: String = ""
 ) {
     Column(
