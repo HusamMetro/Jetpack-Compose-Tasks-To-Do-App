@@ -102,6 +102,23 @@ class SharedViewModel(context: Application) : AndroidViewModel(context) {
         }
     }
 
+    private val _goldMockTasks = mutableStateListOf<MockToDoTask>()
+    var errorMessageGold: String by mutableStateOf("")
+    val goldMockTasks: List<MockToDoTask>
+        get() = _goldMockTasks
+
+    fun getGoldMockTasks() {
+        errorMessageGold = ""
+        viewModelScope.launch {
+            try {
+               _goldMockTasks.clear()
+                _goldMockTasks.addAll(mockRepo.fetchGoldTasks())
+            } catch (e: Throwable) {
+                errorMessageGold = e.message.toString()
+            }
+        }
+    }
+
     /* private fun getMockTasks() {
          _mockTasks.value = RequestState.Loading
          try {

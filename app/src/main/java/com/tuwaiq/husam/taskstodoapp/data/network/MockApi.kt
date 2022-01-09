@@ -8,4 +8,7 @@ interface MockApi {
     @GET("Task")
     suspend fun fetchTasks(): List<MockToDoTask>
 
+    @GET("Gold")
+    suspend fun fetchGoldTasks(): List<MockToDoTask>
+
 }

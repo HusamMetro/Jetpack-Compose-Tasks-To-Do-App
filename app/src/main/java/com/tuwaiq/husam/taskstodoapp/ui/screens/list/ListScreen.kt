@@ -6,7 +6,6 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -14,8 +13,7 @@ import androidx.navigation.NavHostController
 import com.tuwaiq.husam.taskstodoapp.R
 import com.tuwaiq.husam.taskstodoapp.components.BottomBar
 import com.tuwaiq.husam.taskstodoapp.ui.theme.cardColor
-import com.tuwaiq.husam.taskstodoapp.ui.theme.cardFirstColor
-import com.tuwaiq.husam.taskstodoapp.ui.theme.cardSecondColor
+import com.tuwaiq.husam.taskstodoapp.ui.theme.cardColorReversed
 import com.tuwaiq.husam.taskstodoapp.ui.theme.fabBackgroundColor
 import com.tuwaiq.husam.taskstodoapp.ui.viewmodels.SharedViewModel
 import com.tuwaiq.husam.taskstodoapp.util.Action
@@ -96,13 +94,7 @@ fun ListScreen(
                     if (sharedViewModel.langState.value == "en")
                         MaterialTheme.colors.cardColor
                     else
-                        Brush.horizontalGradient(
-                            listOf(
-                                MaterialTheme.colors.cardFirstColor,
-                                MaterialTheme.colors.cardSecondColor
-                            ).reversed()
-                        )
-
+                        MaterialTheme.colors.cardColorReversed
                 }
             )
         }, bottomBar = {

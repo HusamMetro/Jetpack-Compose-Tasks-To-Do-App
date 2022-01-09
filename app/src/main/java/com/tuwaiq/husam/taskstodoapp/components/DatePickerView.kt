@@ -94,6 +94,17 @@ fun dateFormatter(milliseconds: Long?): String? {
     }
     return null
 }
+
+fun dateFormatterForMock(milliseconds: Long?): String? {
+    milliseconds?.let {
+        val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.US)
+        val calendar: Calendar = Calendar.getInstance()
+        calendar.timeInMillis = it
+        calendar.add(Calendar.DATE,7)
+        return formatter.format(calendar.time)
+    }
+    return null
+}
 /*
 
 @ExperimentalComposeUiApi

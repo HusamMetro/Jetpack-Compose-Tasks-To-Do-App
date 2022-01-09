@@ -56,9 +56,9 @@
     <string name="sign_in">تسجيل الدخول</string>
     <string name="sign_up_button">تسجيل</string>
     <string name="no_network">خطأ: لايوجد اتصال ب الانترنت</string>
-    <string name="high_priority">عالي - منخفض</string>
+    <string name="high_priority">عالي</string>
     <string name="medium_priority">متوسط</string>
-    <string name="low_priority">منخفض - عالي</string>
+    <string name="low_priority">منخفض</string>
     <string name="none_priority">الاصلي</string>
     <string name="action_add">اضافة</string>
     <string name="action_update">تحديث</string>
@@ -83,4 +83,6 @@
     <string name="invalid_less_than">الطول يجب ان يكون اقل من </string>
     <string name="title_invalid">العنوان لا يمكن ان يكون فارغ</string>
     <string name="email_forgot_password_invalid">خطأ: البريد الالكتروني غير مسجل</string>
+    <string name="ad_challenge">أقبل التحدي</string>
+    <string name="gold_challenges">التحديات الذهبية</string>
 </resources>

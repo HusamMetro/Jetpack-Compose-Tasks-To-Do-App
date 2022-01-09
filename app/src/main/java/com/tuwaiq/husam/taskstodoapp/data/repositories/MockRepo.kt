@@ -13,6 +13,9 @@ class MockRepo {
     suspend fun fetchTasks(): List<MockToDoTask> = withContext(Dispatchers.IO) {
         api.fetchTasks()
     }
+    suspend fun fetchGoldTasks(): List<MockToDoTask> = withContext(Dispatchers.IO) {
+        api.fetchGoldTasks()
+    }
 }
 /*
 private val api = FlickrBuilder.flickrAPI

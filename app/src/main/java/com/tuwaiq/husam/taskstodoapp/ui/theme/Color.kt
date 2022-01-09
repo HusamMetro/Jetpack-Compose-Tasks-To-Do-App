@@ -70,6 +70,14 @@ val greenPrimary3 = Color(0xFF244234)
 val greenPrimary5 = Color(0xFFc4cbbf)
 val greenPrimary6 = Color(0xFF3c4236)
 
+val marahGold = Color(0xFFD6AD60)
+val marahGold2 = Color(0xA6D6AD60)
+val gold = Color(0xFFEEBC1D)
+val gold2 = Color(0xFFBE9617)
+val gold3 = Color(0xFFb08f26)
+val goldDark = Color(0x90EEBC1D)
+val goldDark2 = Color(0xFF5F4B0C)
+
 
 val Colors.gradientButtonColors: Brush
     @Composable
@@ -86,9 +94,28 @@ val Colors.cardFirstColor: Color
 val Colors.cardSecondColor: Color
     get() = if (isLight) greenLight1 else DarkBlue
 
+val Colors.cardFirstColorGold: Color
+    get() = if (isLight) MediumBeige else marahGold
+
+val Colors.cardSecondColorGold: Color
+    get() = if (isLight) PeachBeige2 else marahGold2
+
 val Colors.cardColor: Brush
     @Composable
     get() = Brush.horizontalGradient(listOf(cardFirstColor, cardSecondColor))
+
+val Colors.cardColorReversed: Brush
+    @Composable
+    get() = Brush.horizontalGradient(
+        listOf(MaterialTheme.colors.cardFirstColor, MaterialTheme.colors.cardSecondColor).reversed())
+
+val Colors.cardColorGold: Brush
+    @Composable
+    get() = Brush.horizontalGradient(listOf(cardFirstColorGold, cardSecondColorGold))
+
+val Colors.cardColorGoldReversed: Brush
+    @Composable
+    get() = Brush.horizontalGradient(listOf(cardFirstColorGold, cardSecondColorGold).reversed())
 
 val Colors.splashScreenBackground: Color
     @Composable
@@ -112,6 +139,9 @@ val Colors.topAppBarContentColor: Color
     @Composable
     get() = if (isLight) Color.Black else LightGray
 
+val Colors.textButtonBorderColor: Color
+    @Composable
+    get() = if (isLight) Color.DarkGray else goldDark2
 
 val Colors.topAppBarBackgroundColor: Color
     @Composable

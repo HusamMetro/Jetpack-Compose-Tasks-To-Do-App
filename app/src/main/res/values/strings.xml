@@ -55,9 +55,9 @@
     <string name="sign_in">Sign In</string>
     <string name="sign_up_button">Sign Up</string>
     <string name="no_network">Error: No Network Please Reconnect</string>
-    <string name="high_priority">HIGH - LOW</string>
+    <string name="high_priority">HIGH</string>
     <string name="medium_priority">MEDIUM</string>
-    <string name="low_priority">LOW - HIGH</string>
+    <string name="low_priority">LOW</string>
     <string name="none_priority">ORIGINAL</string>
     <string name="action_add">ADD</string>
     <string name="action_update">UPDATE</string>
@@ -82,4 +82,6 @@
     <string name="invalid_less_than">Length should be less than or equal to </string>
     <string name="title_invalid">title cannot be empty</string>
     <string name="email_forgot_password_invalid">Error: Email is not registered</string>
+    <string name="ad_challenge">Accept Challenge</string>
+    <string name="gold_challenges">Gold Challenges</string>
 </resources>
