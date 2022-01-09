@@ -1,6 +1,6 @@
 package com.tuwaiq.husam.taskstodoapp.ui.screens.login
 
-import android.util.Log
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,10 +19,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.navigation.NavHostController
-import com.google.firebase.auth.FirebaseAuth
+import com.tuwaiq.husam.taskstodoapp.MainActivity
 import com.tuwaiq.husam.taskstodoapp.R
 import com.tuwaiq.husam.taskstodoapp.components.CommonTextField
 import com.tuwaiq.husam.taskstodoapp.ui.theme.SMALL_PADDING
+import com.tuwaiq.husam.taskstodoapp.ui.theme.alertButtonColor
+import com.tuwaiq.husam.taskstodoapp.ui.theme.alertOutlinedButtonColor
 import com.tuwaiq.husam.taskstodoapp.ui.viewmodels.SharedViewModel
 import com.tuwaiq.husam.taskstodoapp.util.Constants
 import com.tuwaiq.husam.taskstodoapp.util.getInvalidMessage
@@ -30,6 +32,7 @@ import com.wajahatkarim3.easyvalidation.core.view_ktx.validEmail
 import com.wajahatkarim3.easyvalidation.core.view_ktx.validator
 import kotlinx.coroutines.launch
 
+@ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @Composable
 fun LoginScreen(navController: NavHostController, sharedViewModel: SharedViewModel) {
@@ -111,36 +114,26 @@ fun LoginScreen(navController: NavHostController, sharedViewModel: SharedViewMod
                             mutableBoolean.value = false
                         }
                         else -> {
-                            // create an instance and create a register with email and password
-                            FirebaseAuth.getInstance()
-                                .signInWithEmailAndPassword(email, password)
-                                .addOnCompleteListener { task ->
-
-                                    // if the registration is sucessfully done
-                                    if (task.isSuccessful) {
-                                        //firebase register user
-//                                                val firebaseUser: FirebaseUser =
-//                                                    task.result!!.user!!
-//                                                val user = User(userName, email, phoneNumber)
-//                                                saveUser(user)
-                                        sharedViewModel.persistRememberState(checked)
-                                        sharedViewModel.loadUserInformation()
-                                        navController.navigate(Constants.LIST_SCREEN) {
-                                            popUpTo(Constants.LOGIN_SCREEN) {
-                                                inclusive = true
-                                            }
+                            sharedViewModel.loginFirebase(
+                                email = email,
+                                password = password,
+                                checked = checked,
+                                lifecycleOwner = context as MainActivity
+                            ).observe(context) {
+                                if (it) {
+                                    navController.navigate(Constants.LIST_SCREEN) {
+                                        popUpTo(Constants.LOGIN_SCREEN) {
+                                            inclusive = true
                                         }
-                                    } else {
-                                        // if the registration is not successful then show error massage
-                                        snackMessage =
-                                            context.getString(R.string.email_password_check_message)
-                                        firstTime = true
-                                        snackBoolean = !snackBoolean
-
-                                        mutableBoolean.value = false
-                                        Log.e("register", "${task.exception?.message}")
                                     }
+                                } else {
+                                    snackMessage =
+                                        context.getString(R.string.email_password_check_message)
+                                    firstTime = true
+                                    snackBoolean = !snackBoolean
+                                    mutableBoolean.value = false
                                 }
+                            }
                         }
                     }
                 }
@@ -194,31 +187,26 @@ fun LoginScreen(navController: NavHostController, sharedViewModel: SharedViewMod
                                     }
                                     else -> {
                                         openDialog = false
-                                        FirebaseAuth.getInstance().sendPasswordResetEmail(email)
-                                            .addOnCompleteListener { task ->
-                                                if (task.isSuccessful) {
-                                                    snackMessage =
-                                                        context.getString(R.string.password_reset_success)
-                                                    firstTime = true
-                                                    snackBoolean = !snackBoolean
-                                                    Log.e(
-                                                        "forgot",
-                                                        context.getString(R.string.password_reset_success)
-                                                    )
-                                                } else {
-                                                    Log.e(
-                                                        "forgot",
-                                                        task.exception!!.message.toString()
-                                                    )
-                                                    snackMessage =
-                                                        task.exception!!.message.toString()
-                                                    firstTime = true
-                                                    snackBoolean = !snackBoolean
-                                                }
+                                        sharedViewModel.forgotPasswordFirebase(
+                                            email = email,
+                                            lifecycleOwner = context as MainActivity
+                                        ).observe(context) {
+                                            if (it) {
+                                                snackMessage =
+                                                    context.getString(R.string.password_reset_success)
+                                                firstTime = true
+                                                snackBoolean = !snackBoolean
+                                            } else {
+                                                snackMessage =
+                                                    context.getString(R.string.email_forgot_password_invalid)
+                                                firstTime = true
+                                                snackBoolean = !snackBoolean
                                             }
+                                        }
                                     }
                                 }
-                            }
+                            },
+                            colors = MaterialTheme.colors.alertButtonColor
                         ) {
                             Text(text = stringResource(R.string.send))
                         }
@@ -227,7 +215,8 @@ fun LoginScreen(navController: NavHostController, sharedViewModel: SharedViewMod
                         OutlinedButton(
                             onClick = {
                                 openDialog = false
-                            }
+                            },
+                            colors = MaterialTheme.colors.alertOutlinedButtonColor
                         ) {
                             Text(text = stringResource(R.string.cancel))
                         }

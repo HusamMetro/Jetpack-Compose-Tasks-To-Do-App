@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -51,9 +52,9 @@ fun ListContent(
     searchAppBarState: SearchAppBarState,
     onSwipeToDelete: (Action, ToDoTask) -> Unit,
     navigateToTaskScreens: (taskId: Int) -> Unit,
-    onUpdate: (ToDoTask, Int) -> Unit
+    onUpdate: (ToDoTask, Int) -> Unit,
+    cardBackgroundColor: @Composable () -> Brush
 ) {
-//    Log.e("listPage","${FirebaseAuth.getInstance().currentUser?.uid}")
     if (sortState is RequestState.Success) {
         when {
             searchAppBarState == SearchAppBarState.TRIGGERED -> {
@@ -62,7 +63,8 @@ fun ListContent(
                         tasks = searchedTasks.data,
                         onSwipeToDelete = onSwipeToDelete,
                         navigateToTaskScreens = navigateToTaskScreens,
-                        onUpdate
+                        onUpdate,
+                        cardBackgroundColor = cardBackgroundColor
                     )
                 }
             }
@@ -72,7 +74,8 @@ fun ListContent(
                         tasks = allTasks.data,
                         onSwipeToDelete = onSwipeToDelete,
                         navigateToTaskScreens = navigateToTaskScreens,
-                        onUpdate
+                        onUpdate,
+                        cardBackgroundColor = cardBackgroundColor
                     )
             }
             sortState.data == Priority.LOW -> {
@@ -80,7 +83,8 @@ fun ListContent(
                     tasks = lowPriorityTasks,
                     onSwipeToDelete = onSwipeToDelete,
                     navigateToTaskScreens = navigateToTaskScreens,
-                    onUpdate
+                    onUpdate,
+                    cardBackgroundColor = cardBackgroundColor
                 )
             }
             sortState.data == Priority.HIGH -> {
@@ -88,7 +92,8 @@ fun ListContent(
                     tasks = highPriorityTasks,
                     onSwipeToDelete = onSwipeToDelete,
                     navigateToTaskScreens = navigateToTaskScreens,
-                    onUpdate
+                    onUpdate,
+                    cardBackgroundColor = cardBackgroundColor
                 )
             }
         }
@@ -102,7 +107,8 @@ fun HandleListContent(
     tasks: List<ToDoTask>,
     onSwipeToDelete: (Action, ToDoTask) -> Unit,
     navigateToTaskScreens: (taskId: Int) -> Unit,
-    onUpdate: (ToDoTask, Int) -> Unit
+    onUpdate: (ToDoTask, Int) -> Unit,
+    cardBackgroundColor: @Composable () -> Brush
 ) {
     if (tasks.isEmpty()) {
         EmptyContent()
@@ -111,7 +117,8 @@ fun HandleListContent(
             tasks = tasks,
             onSwipeToDelete = onSwipeToDelete,
             navigateToTaskScreens = navigateToTaskScreens,
-            onUpdate
+            onUpdate,
+            cardBackgroundColor = cardBackgroundColor
         )
     }
 }
@@ -124,7 +131,8 @@ fun DisplayTask(
     tasks: List<ToDoTask>,
     onSwipeToDelete: (Action, ToDoTask) -> Unit,
     navigateToTaskScreens: (taskId: Int) -> Unit,
-    onUpdate: (ToDoTask, Int) -> Unit
+    onUpdate: (ToDoTask, Int) -> Unit,
+    cardBackgroundColor: @Composable () -> Brush
 ) {
     var itemAppeared by remember { mutableStateOf(false) }
     LazyColumn(
@@ -200,29 +208,12 @@ fun DisplayTask(
                     dismissContent = {
                         TaskItem(
                             toDoTask = task,
-                            navigateToTaskScreens = navigateToTaskScreens,
-                            onUpdate =  onUpdate
+                            onUpdate = onUpdate,
+                            cardBackgroundColor = cardBackgroundColor
                         )
                     }
                 )
             }
-            /*
-            SwipeToDismiss(
-                state = dismissState,
-                directions = setOf(DismissDirection.EndToStart),
-                dismissThresholds = { FractionalThreshold(fraction = 0.2f) },
-                background = { RedBackground(degrees = degrees) },
-                dismissContent = {
-                    TaskItem(
-                        toDoTask = task,
-                        navigateToTaskScreens = navigateToTaskScreens
-                    )
-                }
-            )*/
-            /*TaskItem(
-                toDoTask = task,
-                navigateToTaskScreens = navigateToTaskScreens
-            )*/
         }
     }
 }
@@ -269,8 +260,8 @@ fun GreenBackground(degrees: Float) {
 @Composable
 fun TaskItem(
     toDoTask: ToDoTask,
-    navigateToTaskScreens: (taskId: Int) -> Unit,
-    onUpdate: (ToDoTask, Int) -> Unit
+    onUpdate: (ToDoTask, Int) -> Unit,
+    cardBackgroundColor: @Composable () -> Brush
 ) {
     var expandState by remember { mutableStateOf(false) }
     Surface(
@@ -282,13 +273,13 @@ fun TaskItem(
             expandState = !expandState
         }
     ) {
-        val rotationState by animateFloatAsState(targetValue = if (expandState) 180f else 0f)
+//        val rotationState by animateFloatAsState(targetValue = if (expandState) 180f else 0f)
         Card(
             shape = RoundedCornerShape(10.dp),
             modifier = Modifier
 //                .clip(shape = RoundedCornerShape(10.dp))
                 .background(
-                    MaterialTheme.colors.cardColor
+                    cardBackgroundColor()
                 )
                 .animateContentSize(
                     animationSpec = tween(
@@ -359,100 +350,15 @@ fun TaskItem(
                             }
                         }
                     }
-//                    if (toDoTask.description.isNotEmpty()) {
-                        Text(
-                            text = toDoTask.description,
-                            modifier = Modifier.fillMaxWidth(),
-                            color = MaterialTheme.colors.taskItemTextColor,
-                            style = MaterialTheme.typography.subtitle1,
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis
-                        )
-//                    }
-                    /*
-                    if (expandState) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = MEDIUM_PADDING),
-                            horizontalAlignment = Alignment.Start,
-                            verticalArrangement = Arrangement.spacedBy(MEDIUM_PADDING)
-                        ) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(SMALL_PADDING)
-                            ) {
-                                Icon(imageVector = Icons.Filled.CalendarToday, contentDescription = "")
-                                Text(
-                                    text = "Start Date :",
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
-                                    color = MaterialTheme.colors.taskItemTextColor
-                                )
-                                Text(
-                                    text = "8/10/2021",
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
-                                    color = MaterialTheme.colors.taskItemTextColor
-                                )
-                            }
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(SMALL_PADDING)
-                            ) {
-                                Icon(imageVector = Icons.Filled.CalendarToday, contentDescription = "")
-                                Text(
-                                    text = "End Date :",
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
-                                    color = MaterialTheme.colors.taskItemTextColor
-                                )
-                                Text(
-                                    text = "20/12/2021",
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
-                                    color = MaterialTheme.colors.taskItemTextColor
-                                )
-                            }
-    
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(SMALL_PADDING)
-                            ) {
-                                Icon(imageVector = Icons.Filled.Person, contentDescription = "n")
-                                Text(
-                                    text = "Anything ... just to fill the column",
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
-                                    color = MaterialTheme.colors.taskItemTextColor
-                                )
-                            }
-                        }
-                    }
-                    */
+                    Text(
+                        text = toDoTask.description,
+                        modifier = Modifier.fillMaxWidth(),
+                        color = MaterialTheme.colors.taskItemTextColor,
+                        style = MaterialTheme.typography.subtitle1,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
 
-                    /*Row(
-                        Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.End
-                    ) {
-                        IconButton(modifier = Modifier
-                            .offset(15.dp)
-    //                        .alpha(ContentAlpha.medium)
-                            .rotate(rotationState),
-                            onClick = {
-                                expandState = !expandState
-                            }) {
-                            Icon(
-                                imageVector = Icons.Filled.ArrowDropDown,
-                                contentDescription = "Drop-Down Arrow",
-                                tint = MaterialTheme.colors.taskItemTextColor
-                            )
-                        }
-                    }*/
                 }
             }
         }
@@ -508,18 +414,19 @@ fun CardExpanded(
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.spacedBy(MEDIUM_PADDING)
     ) {
-        if (toDoTask.startDate.isNotEmpty()){
-            Divider(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = LARGE_PADDING, horizontal = SMALL_PADDING)
-            )
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
+        /* Divider(
+             Modifier
+                 .fillMaxWidth()
+                 .padding(vertical = LARGE_PADDING, horizontal = SMALL_PADDING)
+         )*/
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            if (toDoTask.startDate.isNotEmpty()) {
                 Row(
+                    Modifier.padding(vertical = LARGE_PADDING),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(MEDIUM_PADDING)
                 ) {
@@ -527,12 +434,6 @@ fun CardExpanded(
                         imageVector = Icons.Outlined.CalendarToday,
                         contentDescription = ""
                     )
-                    /*Text(
-                        text = "Start Date :",
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        color = MaterialTheme.colors.taskItemTextColor
-                    )*/
                     Text(
                         text = toDoTask.startDate,
                         maxLines = 1,
@@ -540,7 +441,10 @@ fun CardExpanded(
                         color = MaterialTheme.colors.taskItemTextColor
                     )
                 }
+            }
+            if (toDoTask.endDate.isNotEmpty()) {
                 Row(
+                    Modifier.padding(vertical = LARGE_PADDING),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(MEDIUM_PADDING)
                 ) {
@@ -548,12 +452,6 @@ fun CardExpanded(
                         imageVector = Icons.Filled.CalendarToday,
                         contentDescription = "",
                     )
-                    /*Text(
-                        text = "End Date :",
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        color = MaterialTheme.colors.taskItemTextColor
-                    )*/
                     Text(
                         text = toDoTask.endDate,
                         maxLines = 1,
@@ -561,10 +459,9 @@ fun CardExpanded(
                         color = MaterialTheme.colors.taskItemTextColor
                     )
                 }
-
             }
-            Divider(Modifier.padding(vertical = LARGE_PADDING , horizontal = SMALL_PADDING ))
         }
+//            Divider(Modifier.padding(vertical = LARGE_PADDING, horizontal = SMALL_PADDING))
 
         Row(
             modifier = Modifier
@@ -577,13 +474,13 @@ fun CardExpanded(
 
             IconButton(
                 modifier = Modifier.padding(horizontal = SMALL_PADDING),
-                onClick = { onUpdate(toDoTask,-1) }
+                onClick = { onUpdate(toDoTask, -1) }
             ) {
                 Icon(imageVector = Icons.Filled.Remove, contentDescription = "")
             }
             CustomComponent(
                 indicatorValue = getTaskCounterInt(toDoTask.taskCounter),
-                maxIndicatorValue =getMaxTaskInt(toDoTask.maxTask),
+                maxIndicatorValue = getMaxTaskInt(toDoTask.maxTask),
                 canvasSize = 48.dp,
                 backgroundIndicatorStrokeWidth = 12f,
                 foregroundIndicatorStrokeWidth = 12f,
@@ -596,21 +493,23 @@ fun CardExpanded(
             )
             IconButton(
                 modifier = Modifier.padding(horizontal = SMALL_PADDING),
-                onClick = { onUpdate(toDoTask,+1) }
+                onClick = { onUpdate(toDoTask, +1) }
             ) {
                 Icon(imageVector = Icons.Filled.Add, contentDescription = "")
             }
         }
     }
 }
-fun getTaskCounterInt( taskCounter:String ) : Int{
+
+fun getTaskCounterInt(taskCounter: String): Int {
     return try {
         taskCounter.toInt()
     } catch (e: Exception) {
         0
     }
 }
-fun getMaxTaskInt(maxTask:String):Int {
+
+fun getMaxTaskInt(maxTask: String): Int {
     return try {
         maxTask.toInt()
     } catch (e: Exception) {
@@ -638,8 +537,12 @@ private fun TaskItemPreview() {
                 "30/12/21",
                 "20",
                 "10"
-            )
-        ,{},{ toDoTask, int -> })
+            ),
+            onUpdate = { _, _ -> },
+            cardBackgroundColor = {
+                MaterialTheme.colors.cardColor
+            }
+        )
     }
 }
 /*

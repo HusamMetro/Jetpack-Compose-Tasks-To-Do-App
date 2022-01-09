@@ -5,6 +5,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import com.tuwaiq.husam.taskstodoapp.R
+import com.tuwaiq.husam.taskstodoapp.ui.theme.alertButtonColor
+import com.tuwaiq.husam.taskstodoapp.ui.theme.alertOutlinedButtonColor
 
 @Composable
 fun DisplayAlertDialog(
@@ -35,7 +37,8 @@ fun DisplayAlertDialog(
                     onClick = {
                         onYesClicked()
                         closeDialog()
-                    }
+                    },
+                    colors = MaterialTheme.colors.alertButtonColor
                 ) {
                     Text(text = stringResource(R.string.yes))
                 }
@@ -44,7 +47,8 @@ fun DisplayAlertDialog(
                 OutlinedButton(
                     onClick = {
                         closeDialog()
-                    }
+                    },
+                    colors = MaterialTheme.colors.alertOutlinedButtonColor
                 ) {
                     Text(text = stringResource(R.string.no))
                 }

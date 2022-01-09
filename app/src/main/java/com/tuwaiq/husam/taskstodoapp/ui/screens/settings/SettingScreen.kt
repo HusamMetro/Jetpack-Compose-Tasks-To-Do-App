@@ -1,21 +1,24 @@
 package com.tuwaiq.husam.taskstodoapp.ui.screens.settings
 
 import android.util.Log
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Scaffold
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import com.tuwaiq.husam.taskstodoapp.MainActivity
 import com.tuwaiq.husam.taskstodoapp.R
 import com.tuwaiq.husam.taskstodoapp.components.BottomBar
 import com.tuwaiq.husam.taskstodoapp.ui.viewmodels.SharedViewModel
 import com.tuwaiq.husam.taskstodoapp.util.Constants
+import com.tuwaiq.husam.taskstodoapp.util.getInvalidMessage
 import com.wajahatkarim3.easyvalidation.core.view_ktx.validator
 import kotlinx.coroutines.launch
 
+@ExperimentalMaterialApi
+@ExperimentalAnimationApi
 @Composable
 fun SettingsScreen(
     sharedViewModel: SharedViewModel,
@@ -65,9 +68,10 @@ fun SettingsScreen(
         content = {
             SettingsContent(
                 onLaunchedEffect = {
-                    name = sharedViewModel.user.username
-                    email = sharedViewModel.user.email
-                    phone = sharedViewModel.user.phoneNumber
+                    val user = sharedViewModel.getUserInformation()
+                    name = user.username
+                    email = user.email
+                    phone = user.phoneNumber
                 },
                 email = email,
                 emailOnValueChange = { email = it },
@@ -82,7 +86,7 @@ fun SettingsScreen(
                         .minLength(10)
                         .maxLength(12)
                         .addErrorCallback {
-                            phoneIsErrorMsg = it
+                            phoneIsErrorMsg = getInvalidMessage(it, context)
                         }
                         .check()
                     phone = newText
@@ -95,7 +99,7 @@ fun SettingsScreen(
                         .noNumbers()
                         .noSpecialCharacters()
                         .addErrorCallback {
-                            nameIsErrorMsg = it
+                            nameIsErrorMsg = getInvalidMessage(it, context)
                         }.check()
                     name = newText
                 },
@@ -107,28 +111,30 @@ fun SettingsScreen(
                             mutableBoolean.value = false
                         }
                         else -> {
-                            updateInFirestore(
-                                newUsername = name,
-                                newPhoneNumber = phone,
-                                mutableBoolean = mutableBoolean,
-                                onSucceed = {
+                            sharedViewModel.updateUserFirestore(
+                                name = name,
+                                phoneNumber = phone,
+                                lifecycleOwner = context as MainActivity
+                            ).observe(context) {
+                                if (it) {
+                                    Log.e("update", "Successful")
                                     firstTime = true
                                     snackMessageBoolean = true
                                     snackBoolean = !snackBoolean
-                                },
-                                onFailed = {
+                                    mutableBoolean.value = false
+                                } else {
+                                    Log.e("update", "Failed")
                                     firstTime = true
                                     snackMessageBoolean = false
                                     snackBoolean = !snackBoolean
+                                    mutableBoolean.value = false
                                 }
-                            )
-                            sharedViewModel.loadUserInformation()
+                            }
                         }
                     }
                 },
                 signOutOnClicked = {
-                    FirebaseAuth.getInstance().signOut()
-                    sharedViewModel.persistRememberState(false)
+                    sharedViewModel.signOutFirebase()
                     navController.navigate(Constants.LOGIN_SCREEN) {
                         /*popUpTo(SETTINGS_SCREEN){
                         inclusive = true
@@ -153,34 +159,6 @@ fun SettingsScreen(
     )
 }
 
-fun updateInFirestore(
-    newUsername: String,
-    newPhoneNumber: String,
-    mutableBoolean: MutableState<Boolean>,
-    onSucceed: () -> Unit,
-    onFailed: () -> Unit,
-
-    ) {
-    val userUID = FirebaseAuth.getInstance().currentUser?.uid
-    val collectionRef = Firebase.firestore.collection("users")
-    collectionRef.document(userUID.toString())
-        .update(
-            "username",
-            newUsername,
-            "phoneNumber",
-            newPhoneNumber
-        ).addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                Log.e("update", "Successful")
-                onSucceed()
-            } else {
-                Log.e("update", "Failed")
-                onFailed()
-            }
-            mutableBoolean.value = false
-        }
-
-}
 /*
 @Composable
 @Preview

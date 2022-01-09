@@ -4,7 +4,10 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -30,7 +33,7 @@ import com.tuwaiq.husam.taskstodoapp.ui.theme.MediumGray
 
 @Composable
 fun CustomComponent(
-    modifier  : Modifier= Modifier,
+    modifier: Modifier = Modifier,
     canvasSize: Dp = 300.dp,
     indicatorValue: Int = 0,
     maxIndicatorValue: Int = 100,
@@ -201,18 +204,18 @@ fun EmbeddedElements(
 @Preview(showBackground = true)
 fun CustomComponentPreview() {
 
-        CustomComponent(
-            indicatorValue = 50 ,
-            maxIndicatorValue = 100,
-            canvasSize = 32.dp,
-            backgroundIndicatorStrokeWidth = 10f,
-            foregroundIndicatorStrokeWidth = 10f,
-            foregroundIndicatorColor = LightBlue1,
-            backgroundIndicatorColor = MediumGray,
-            bigTextFontSize = 8.sp,
-            smallTextFontSize = 5.sp,
-            bigTextSuffix = "%",
-            smallText = "80",
-        )
+    CustomComponent(
+        indicatorValue = 50,
+        maxIndicatorValue = 100,
+        canvasSize = 32.dp,
+        backgroundIndicatorStrokeWidth = 10f,
+        foregroundIndicatorStrokeWidth = 10f,
+        foregroundIndicatorColor = LightBlue1,
+        backgroundIndicatorColor = MediumGray,
+        bigTextFontSize = 8.sp,
+        smallTextFontSize = 5.sp,
+        bigTextSuffix = "%",
+        smallText = "80",
+    )
 
 }

@@ -7,14 +7,15 @@ import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.WindowManager
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material.Button
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -62,15 +63,15 @@ class MainActivity : AppCompatActivity() {
 @ExperimentalMaterialApi
 @ExperimentalAnimationApi
 @Composable
-fun SetLanguage(lang:String, mainActivity: MainActivity) {
+fun SetLanguage(lang: String, mainActivity: MainActivity) {
     val locale = Locale(lang)
-    val configuration =  LocalConfiguration.current
+    val configuration = LocalConfiguration.current
     val oldLan = LocalConfiguration.current.locales[0].language.trim()
     configuration.setLocale(locale)
     val resources = LocalContext.current.resources
-    resources.updateConfiguration(configuration,resources.displayMetrics)
-    Log.e("language",LocalConfiguration.current.locales[0].language.trim())
-    if (!oldLan.equals(lang) ) {
+    resources.updateConfiguration(configuration, resources.displayMetrics)
+    Log.e("language", LocalConfiguration.current.locales[0].language.trim())
+    if (!oldLan.equals(lang)) {
         mainActivity.startActivity(Intent(mainActivity, MainActivity::class.java))
         mainActivity.finish()
     }
@@ -80,26 +81,26 @@ fun SetLanguage(lang:String, mainActivity: MainActivity) {
 @ExperimentalAnimationApi
 @ExperimentalComposeUiApi
 @Composable
-fun TestLayout(context: Context,viewModel: SharedViewModel,mainActivity: MainActivity) {
-    Button(onClick = { viewModel.displayNotification(mainActivity)}) {
+fun TestLayout(context: Context, viewModel: SharedViewModel, mainActivity: MainActivity) {
+    Button(onClick = { viewModel.displayNotification(mainActivity) }) {
         Text(text = "Click me")
     }
 
-   /* var datePicked : String? by remember {
-        mutableStateOf(null)
-    }
+    /* var datePicked : String? by remember {
+         mutableStateOf(null)
+     }
 
-    val updatedDate = { date : Long? ->
-        datePicked = DateFormater(date)
-    }
+     val updatedDate = { date : Long? ->
+         datePicked = DateFormater(date)
+     }
 
-    Scaffold(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-    ) {
-        DatePickerview( datePicked, updatedDate )
-    }*/
+     Scaffold(
+         modifier = Modifier
+             .fillMaxSize()
+             .padding(16.dp),
+     ) {
+         DatePickerview( datePicked, updatedDate )
+     }*/
 
 /*
     Column(modifier = Modifier.fillMaxSize()) {
@@ -119,7 +120,8 @@ fun TestLayout(context: Context,viewModel: SharedViewModel,mainActivity: MainAct
 private fun checkForInternet(context: Context): Boolean {
 
     // register activity with the connectivity manager service
-    val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    val connectivityManager =
+        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
     // if the android version is equal to M
     // or greater we need to use the

@@ -10,10 +10,10 @@ import com.google.accompanist.navigation.animation.composable
 import com.tuwaiq.husam.taskstodoapp.navigation.destinations.listComposable
 import com.tuwaiq.husam.taskstodoapp.navigation.destinations.splashComposable
 import com.tuwaiq.husam.taskstodoapp.navigation.destinations.taskComposable
-import com.tuwaiq.husam.taskstodoapp.ui.screens.settings.SettingsScreen
 import com.tuwaiq.husam.taskstodoapp.ui.screens.challenges.ChallengesScreen
 import com.tuwaiq.husam.taskstodoapp.ui.screens.login.LoginScreen
 import com.tuwaiq.husam.taskstodoapp.ui.screens.register.RegisterScreen
+import com.tuwaiq.husam.taskstodoapp.ui.screens.settings.SettingsScreen
 import com.tuwaiq.husam.taskstodoapp.ui.viewmodels.SharedViewModel
 import com.tuwaiq.husam.taskstodoapp.util.Constants.LOGIN_SCREEN
 import com.tuwaiq.husam.taskstodoapp.util.Constants.REGISTER_SCREEN
@@ -40,7 +40,7 @@ fun SetupNavigation(
     ) {
         splashComposable(
 //            navigateToTaskScreen = screen.splash,
-            navigateToTaskScreen = if(sharedViewModel.rememberState.value){
+            navigateToTaskScreen = if (sharedViewModel.rememberState.value) {
                 sharedViewModel.loadUserInformation()
                 screen.splash
             } else screen.login,
@@ -87,7 +87,7 @@ fun SetupNavigation(
             LoginScreen(navController = navController, sharedViewModel = sharedViewModel)
         }
         composable(route = REGISTER_SCREEN) {
-            RegisterScreen(navController = navController,sharedViewModel = sharedViewModel)
+            RegisterScreen(navController = navController, sharedViewModel = sharedViewModel)
         }
     }
 }

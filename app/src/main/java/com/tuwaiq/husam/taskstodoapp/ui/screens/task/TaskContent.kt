@@ -1,6 +1,5 @@
 package com.tuwaiq.husam.taskstodoapp.ui.screens.task
 
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -14,7 +13,6 @@ import androidx.compose.material.icons.outlined.CalendarToday
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -22,7 +20,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tuwaiq.husam.taskstodoapp.R
-import com.tuwaiq.husam.taskstodoapp.components.*
+import com.tuwaiq.husam.taskstodoapp.components.CustomComponent
+import com.tuwaiq.husam.taskstodoapp.components.OutlineTextFieldWithErrorView
+import com.tuwaiq.husam.taskstodoapp.components.PriorityDropDown
 import com.tuwaiq.husam.taskstodoapp.data.models.Priority
 import com.tuwaiq.husam.taskstodoapp.ui.theme.*
 
@@ -31,7 +31,7 @@ fun TaskContent(
     title: String,
     onTitleChange: (String) -> Unit,
     titleIsError: Boolean = false,
-    titleErrorMsg: String = "title cannot be empty",
+    titleErrorMsg: String = stringResource(R.string.title_invalid),
     description: String,
     onDescriptionChange: (String) -> Unit,
     priority: Priority,
@@ -43,10 +43,10 @@ fun TaskContent(
     maxTask: String,
     onMaxTaskChanged: (String) -> Unit,
     taskCounter: String,
-    onTaskCounterChanged: (String) -> Unit
+    onTaskCounterChanged: (String) -> Unit,
+    showStartDatePicker: () -> Unit,
+    showEndDatePicker: () -> Unit,
 ) {
-    val context = LocalContext.current
-    val activity = context as AppCompatActivity
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -79,30 +79,15 @@ fun TaskContent(
         }
         OutlinedTextField(
             modifier = Modifier
-                .fillMaxWidth(),
-            /*.fillMaxHeight(0.3f)*/
+                .fillMaxWidth()
+                .height(DESCRIPTION_HEIGHT),
             value = description,
             onValueChange = { onDescriptionChange(it) },
             label = { Text(text = stringResource(R.string.description)) },
             textStyle = MaterialTheme.typography.body1,
-            maxLines = 3,
+            maxLines = 4,
+            colors = MaterialTheme.colors.customOutlinedTextFieldColor
         )
-        /*val dialogState = rememberMaterialDialogState()
-        MaterialDialog(
-            dialogState = dialogState,
-            buttons = {
-                positiveButton("Ok")
-                negativeButton("Cancel")
-            }
-        ) {
-            datepicker { date ->
-                // Do stuff with java.time.LocalDate object which is passed in
-            }
-        }
-
-*//* This should be called in an onClick or an Effect *//*
-        dialogState.show()*/
-
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -110,18 +95,13 @@ fun TaskContent(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(LARGE_PADDING)
         ) {
-            val updatedStartDate = { date: Long? ->
-                onStartDateChanged(DateFormater(date)!!)
-            }
-            val updatedEndDate = { date: Long? ->
-                onEndDateChanged(DateFormater(date)!!)
-            }
+
             OutlinedTextField(
                 modifier = Modifier
 //                    .fillMaxWidth(),
                     .weight(1f)
                     .clickable {
-                        showDatePicker(activity, updatedStartDate)
+                        showStartDatePicker()
                     },
                 value = startDate,
                 onValueChange = { onStartDateChanged(it) },
@@ -145,10 +125,9 @@ fun TaskContent(
 
             OutlinedTextField(
                 modifier = Modifier
-//                    .fillMaxWidth(),
                     .weight(1f)
                     .clickable {
-                        showDatePicker(activity, updatedEndDate)
+                        showEndDatePicker()
                     },
                 value = endDate,
                 onValueChange = { onEndDateChanged(it) },
@@ -188,7 +167,8 @@ fun TaskContent(
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number,
                     imeAction = ImeAction.Done
-                )
+                ),
+                colors = MaterialTheme.colors.customOutlinedTextFieldColor
             )
             OutlinedTextField(
                 modifier = Modifier
@@ -201,7 +181,8 @@ fun TaskContent(
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number,
                     imeAction = ImeAction.Done
-                )
+                ),
+                colors = MaterialTheme.colors.customOutlinedTextFieldColor
             )
         }
         Row(
@@ -249,20 +230,26 @@ fun TaskContentPreview() {
         onDescriptionChange = {},
         priority = Priority.LOW,
         onPrioritySelected = {},
-        startDate = "00/00/00",
+        startDate = "",
         onStartDateChanged = {
 
         },
-        endDate = "00/00/00",
+        endDate = "",
         onEndDateChanged = {
 
         },
-        maxTask = "10",
+        maxTask = "",
         onMaxTaskChanged = {
 
         },
-        taskCounter = "2",
+        taskCounter = "",
         onTaskCounterChanged = {
+
+        },
+        showStartDatePicker = {
+
+        },
+        showEndDatePicker = {
 
         }
     )

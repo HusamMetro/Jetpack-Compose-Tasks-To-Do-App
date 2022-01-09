@@ -2,7 +2,6 @@ package com.tuwaiq.husam.taskstodoapp.components
 
 import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
-import androidx.annotation.StyleRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -18,7 +17,6 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester.Companion.createRefs
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.android.material.datepicker.MaterialDatePicker
 import java.util.*
@@ -26,8 +24,8 @@ import java.util.*
 @ExperimentalComposeUiApi
 @Composable
 fun DatePickerview(
-    datePicked : String?,
-    updatedDate : ( date : Long?) -> Unit,
+    datePicked: String?,
+    updatedDate: (date: Long?) -> Unit,
 ) {
     val activity = LocalContext.current as AppCompatActivity
     Box(
@@ -45,19 +43,18 @@ fun DatePickerview(
 //            verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            val (lable, iconView) = createRefs()
             Text(
-                text= datePicked?:"Date Picker",
+                text = datePicked ?: "Date Picker",
                 color = MaterialTheme.colors.onSurface,
                 modifier = Modifier
 //                    .fillMaxWidth()
-                    /*.constrainAs(lable) {
-                        top.linkTo(parent.top)
-                        bottom.linkTo(parent.bottom)
-                        start.linkTo(parent.start)
-                        end.linkTo(iconView.start)
-                        width = Dimension.fillToConstraints
-                    }*/
+                /*.constrainAs(lable) {
+                    top.linkTo(parent.top)
+                    bottom.linkTo(parent.bottom)
+                    start.linkTo(parent.start)
+                    end.linkTo(iconView.start)
+                    width = Dimension.fillToConstraints
+                }*/
             )
 
             Icon(
@@ -65,11 +62,11 @@ fun DatePickerview(
                 contentDescription = null,
                 modifier = Modifier
                     .size(20.dp, 20.dp)
-                    /*.constrainAs(iconView) {
-                        end.linkTo(parent.end)
-                        top.linkTo(parent.top)
-                        bottom.linkTo(parent.bottom)
-                    }*/,
+                /*.constrainAs(iconView) {
+                    end.linkTo(parent.end)
+                    top.linkTo(parent.top)
+                    bottom.linkTo(parent.bottom)
+                }*/,
                 tint = MaterialTheme.colors.onSurface
             )
 
@@ -77,7 +74,7 @@ fun DatePickerview(
     }
 }
 
- fun showDatePicker(
+fun showDatePicker(
     activity: AppCompatActivity,
     updatedDate: (Long?) -> Unit
 ) {
@@ -87,12 +84,24 @@ fun DatePickerview(
         updatedDate(it)
     }
 }
-fun DateFormater(milliseconds : Long?) : String? {
-    milliseconds?.let{
+
+fun dateFormatter(milliseconds: Long?): String? {
+    milliseconds?.let {
         val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.US)
         val calendar: Calendar = Calendar.getInstance()
-        calendar.setTimeInMillis(it)
-        return formatter.format(calendar.getTime())
+        calendar.timeInMillis = it
+        return formatter.format(calendar.time)
+    }
+    return null
+}
+
+fun dateFormatterForMock(milliseconds: Long?): String? {
+    milliseconds?.let {
+        val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.US)
+        val calendar: Calendar = Calendar.getInstance()
+        calendar.timeInMillis = it
+        calendar.add(Calendar.DATE,7)
+        return formatter.format(calendar.time)
     }
     return null
 }

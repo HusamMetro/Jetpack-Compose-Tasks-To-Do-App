@@ -11,8 +11,8 @@ data class ToDoTask(
     val title: String,
     val description: String,
     val priority: Priority,
-    val startDate : String,
-    val endDate : String,
-    val maxTask : String,
-    val taskCounter : String,
+    val startDate: String,
+    val endDate: String,
+    val maxTask: String,
+    val taskCounter: String,
 )

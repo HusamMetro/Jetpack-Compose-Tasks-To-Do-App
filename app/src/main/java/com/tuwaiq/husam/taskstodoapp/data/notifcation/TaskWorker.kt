@@ -10,18 +10,19 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.tuwaiq.husam.taskstodoapp.MainActivity
-
-class TaskWorker(private val context: Context, workerParams: WorkerParameters) : Worker(context, workerParams){
-    @ExperimentalMaterialApi
-    @ExperimentalAnimationApi
+@ExperimentalMaterialApi
+@ExperimentalAnimationApi
+class TaskWorker(private val context: Context, workerParams: WorkerParameters) :
+    Worker(context, workerParams) {
     override fun doWork(): Result {
         val name = "To Do Application"
         val intent = Intent(context, MainActivity::class.java)
-        val pendingActivity = PendingIntent.getActivity(context, 3, intent, PendingIntent.FLAG_IMMUTABLE)
+        val pendingActivity =
+            PendingIntent.getActivity(context, 3, intent, PendingIntent.FLAG_IMMUTABLE)
 
 
         val notification = NotificationCompat
-            .Builder(context,"NOTIFICATION_CHANNEL_ID")
+            .Builder(context, "NOTIFICATION_CHANNEL_ID")
             .setTicker(name)
             .setSmallIcon(android.R.drawable.ic_menu_agenda)
             .setContentTitle(name)
@@ -31,7 +32,7 @@ class TaskWorker(private val context: Context, workerParams: WorkerParameters) :
             .build()
 
         val notificationManager = NotificationManagerCompat.from(context)
-        notificationManager.notify(0,notification)
+        notificationManager.notify(0, notification)
 
         return Result.success()
     }

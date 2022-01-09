@@ -1,28 +1,24 @@
 package com.tuwaiq.husam.taskstodoapp.ui.screens.register
 
 import android.util.Log
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Scaffold
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import com.tuwaiq.husam.taskstodoapp.MainActivity
 import com.tuwaiq.husam.taskstodoapp.R
-import com.tuwaiq.husam.taskstodoapp.data.models.User
 import com.tuwaiq.husam.taskstodoapp.ui.viewmodels.SharedViewModel
 import com.tuwaiq.husam.taskstodoapp.util.Constants
 import com.tuwaiq.husam.taskstodoapp.util.getInvalidMessage
 import com.wajahatkarim3.easyvalidation.core.view_ktx.validEmail
 import com.wajahatkarim3.easyvalidation.core.view_ktx.validator
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 
+@ExperimentalMaterialApi
+@ExperimentalAnimationApi
 @Composable
 fun RegisterScreen(navController: NavHostController, sharedViewModel: SharedViewModel) {
     val scaffoldState = rememberScaffoldState()
@@ -69,7 +65,7 @@ fun RegisterScreen(navController: NavHostController, sharedViewModel: SharedView
                         .noNumbers()
                         .noSpecialCharacters()
                         .addErrorCallback {
-                            nameIsErrorMsg = getInvalidMessage(it,context)
+                            nameIsErrorMsg = getInvalidMessage(it, context)
                         }.check()
                     name = newText
                 },
@@ -78,7 +74,7 @@ fun RegisterScreen(navController: NavHostController, sharedViewModel: SharedView
                 email = email,
                 emailOnValueChange = { newText ->
                     emailIsError = !newText.validEmail {
-                        emailIsErrorMsg = getInvalidMessage(it,context)
+                        emailIsErrorMsg = getInvalidMessage(it, context)
                     }
                     email = newText
 
@@ -94,7 +90,7 @@ fun RegisterScreen(navController: NavHostController, sharedViewModel: SharedView
                         .minLength(10)
                         .maxLength(12)
                         .addErrorCallback {
-                            phoneIsErrorMsg = getInvalidMessage(it,context)
+                            phoneIsErrorMsg = getInvalidMessage(it, context)
                         }
                         .check()
                     phone = newText
@@ -110,7 +106,7 @@ fun RegisterScreen(navController: NavHostController, sharedViewModel: SharedView
                         .minLength(6)
                         .maxLength(12)
                         .addErrorCallback {
-                            passwordIsErrorMsg = getInvalidMessage(it,context)
+                            passwordIsErrorMsg = getInvalidMessage(it, context)
                         }.check()
                     password = newText
                 },
@@ -126,36 +122,31 @@ fun RegisterScreen(navController: NavHostController, sharedViewModel: SharedView
                         }
                         else -> {
                             Log.e("else", "Else")
-                            val userName: String = name.trim { it <= ' ' }
-                            val emailTrimmed: String = email.trim { it <= ' ' }
-                            val phoneNumber: String = phone.trim { it <= ' ' }
+                            val userName: String = name.trim()
+                            val emailTrimmed: String = email.trim()
+                            val phoneNumber: String = phone.trim()
 
                             // create an instance and create a register with email and password
-                            FirebaseAuth.getInstance()
-                                .createUserWithEmailAndPassword(emailTrimmed, password)
-                                .addOnCompleteListener { task ->
-
-                                    // if the registration is successfully done
-                                    if (task.isSuccessful) {
-                                        //firebase register user
-                                       /* val firebaseUser: FirebaseUser =
-                                            task.result!!.user!! */
-                                        val user = User(userName, emailTrimmed, phoneNumber)
-                                        saveUser(user)
-                                        sharedViewModel.loadUserInformation()
-                                        navController.navigate(Constants.LIST_SCREEN) {
-                                            popUpTo(Constants.LOGIN_SCREEN) {
-                                                inclusive = true
-                                            }
+                            sharedViewModel.registerFirebase(
+                                email = email,
+                                password = password,
+                                userName = userName,
+                                emailTrimmed = emailTrimmed,
+                                phoneNumber = phoneNumber,
+                                lifecycleOwner = context as MainActivity
+                            ).observe(context) {
+                                if (it) {
+                                    navController.navigate(Constants.LIST_SCREEN) {
+                                        popUpTo(Constants.LOGIN_SCREEN) {
+                                            inclusive = true
                                         }
-                                    } else {
-                                        // if the registration is not successful then show error massage
-                                        mutableBoolean.value = false
-                                        firstTime = true
-                                        snackBoolean = !snackBoolean
-                                        Log.e("register", "${task.exception?.message}")
                                     }
+                                } else {
+                                    mutableBoolean.value = false
+                                    firstTime = true
+                                    snackBoolean = !snackBoolean
                                 }
+                            }
                         }
                     }
                 }
@@ -165,20 +156,6 @@ fun RegisterScreen(navController: NavHostController, sharedViewModel: SharedView
 
 }
 
-fun saveUser(user: User) = CoroutineScope(Dispatchers.IO).launch {
-    val userCollectionRef = Firebase.firestore.collection("users")
-    val userUid = FirebaseAuth.getInstance().currentUser!!.uid
-    try {
-        userCollectionRef.document(userUid).set(user).await()
-        withContext(Dispatchers.Main) {
-            Log.e("FireStore", "Successfully saved data")
-        }
-    } catch (e: Exception) {
-        withContext(Dispatchers.Main) {
-            Log.e("FireStore", "${e.message}")
-        }
-    }
-}
 
 /*
 @Preview

@@ -12,7 +12,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import com.tuwaiq.husam.taskstodoapp.R
 import com.tuwaiq.husam.taskstodoapp.components.BottomBar
-import com.tuwaiq.husam.taskstodoapp.data.models.Priority
+import com.tuwaiq.husam.taskstodoapp.ui.theme.cardColor
+import com.tuwaiq.husam.taskstodoapp.ui.theme.cardColorReversed
 import com.tuwaiq.husam.taskstodoapp.ui.theme.fabBackgroundColor
 import com.tuwaiq.husam.taskstodoapp.ui.viewmodels.SharedViewModel
 import com.tuwaiq.husam.taskstodoapp.util.Action
@@ -82,8 +83,18 @@ fun ListScreen(
                 onUpdate = { task, operation ->
                     sharedViewModel.updateTaskFields(task)
                     sharedViewModel.taskCounter.value =
-                        getTaskCounterInt2(sharedViewModel.taskCounter.value,sharedViewModel.maxTask.value, operation).toString()
+                        getTaskCounterInt2(
+                            sharedViewModel.taskCounter.value,
+                            sharedViewModel.maxTask.value,
+                            operation
+                        ).toString()
                     sharedViewModel.handleDatabaseAction(Action.UPDATE)
+                },
+                cardBackgroundColor = {
+                    if (sharedViewModel.langState.value == "en")
+                        MaterialTheme.colors.cardColor
+                    else
+                        MaterialTheme.colors.cardColorReversed
                 }
             )
         }, bottomBar = {
@@ -94,12 +105,13 @@ fun ListScreen(
         }
     )
 }
-fun getTaskCounterInt2(taskCounter: String, maxTask: String , operation: Int) : Int{
+
+fun getTaskCounterInt2(taskCounter: String, maxTask: String, operation: Int): Int {
     return try {
         var result = taskCounter.toInt()
-        when(operation) {
+        when (operation) {
             1 -> {
-                if (result < maxTask.toInt() )
+                if (result < maxTask.toInt())
                     result++
             }
             -1 -> {
@@ -170,15 +182,15 @@ private fun setActionLabel(action: Action, context: Context): String {
 private fun setMessage(action: Action, taskTitle: String, context: Context): String {
     return when (action) {
         Action.DELETE_ALL -> context.getString(R.string.all_tasks_deleted)
-        else -> "${getActionDisplayName(action,context)} : $taskTitle"
+        else -> "${getActionDisplayName(action, context)} : $taskTitle"
     }
 }
 
-fun getActionDisplayName(action: Action,context: Context) =
+fun getActionDisplayName(action: Action, context: Context) =
     when (action.name) {
         Action.ADD.name -> context.getString(R.string.action_add)
-        Action.UPDATE.name -> context.getString( R.string.action_update)
-        Action.DELETE.name ->context.getString(R.string.action_delete)
+        Action.UPDATE.name -> context.getString(R.string.action_update)
+        Action.DELETE.name -> context.getString(R.string.action_delete)
         Action.DELETE_ALL.name -> context.getString(R.string.action_delete_all)
         Action.UNDO.name -> context.getString(R.string.action_undo)
         else -> "NOTHING"
@@ -197,8 +209,16 @@ private fun undoDeletedTask(
 }
 
 /*
+@ExperimentalMaterialApi
+@ExperimentalAnimationApi
 @Preview
 @Composable
 fun ListScreenPreview() {
-    ListScreen(navigateToTaskScreen = {})
-}*/
+    ListScreen(
+        navigateToTaskScreen = {},
+        action = Action.NO_ACTION,
+        navController = rememberNavController(),
+        sharedViewModel = SharedViewModel(LocalContext.current.applicationContext as Application)
+    )
+}
+*/

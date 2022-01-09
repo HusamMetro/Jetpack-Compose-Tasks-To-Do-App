@@ -1,9 +1,6 @@
 package com.tuwaiq.husam.taskstodoapp.navigation.destinations
 
-import androidx.compose.animation.*
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -20,7 +17,6 @@ import com.tuwaiq.husam.taskstodoapp.ui.viewmodels.SharedViewModel
 import com.tuwaiq.husam.taskstodoapp.util.Action
 import com.tuwaiq.husam.taskstodoapp.util.Constants.LIST_ARGUMENT_KEY
 import com.tuwaiq.husam.taskstodoapp.util.Constants.LIST_SCREEN
-import com.tuwaiq.husam.taskstodoapp.util.Constants.TASK_SCREEN
 import com.tuwaiq.husam.taskstodoapp.util.toAction
 
 @ExperimentalAnimationApi

@@ -14,18 +14,17 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.tuwaiq.husam.taskstodoapp.ui.theme.LARGE_PADDING
-import com.tuwaiq.husam.taskstodoapp.ui.theme.PRIORITY_INDICATOR_SIZE
-import com.tuwaiq.husam.taskstodoapp.ui.theme.cardSecondColor
+import com.tuwaiq.husam.taskstodoapp.ui.theme.*
 
 @Composable
-fun AnimatedShimmerEffect() {
+fun AnimatedShimmerEffectGold() {
     val shimmerColors = listOf(
-        MaterialTheme.colors.cardSecondColor.copy(alpha = 0.6f),
-        MaterialTheme.colors.cardSecondColor.copy(alpha = 0.2f),
-        MaterialTheme.colors.cardSecondColor.copy(alpha = 0.6f)
+        MaterialTheme.colors.cardFirstColorGold.copy(alpha = 0.6f),
+        MaterialTheme.colors.cardFirstColorGold.copy(alpha = 0.2f),
+        MaterialTheme.colors.cardFirstColorGold.copy(alpha = 0.6f)
     )
     val transition = rememberInfiniteTransition()
     val translateAnimation = transition.animateFloat(
@@ -44,38 +43,60 @@ fun AnimatedShimmerEffect() {
         start = Offset.Zero,
         end = Offset(x = translateAnimation.value, y = translateAnimation.value)
     )
-    ShimmerGridItem(brush = brush)
+    ShimmerGridItemGold(brush = brush)
 }
 
 @Composable
-fun ShimmerGridItem(brush: Brush) {
+fun ShimmerGridItemGold(brush: Brush) {
+    val spacing = 15.dp
+    val width = LocalConfiguration.current.screenWidthDp.dp.minus(LARGEST_PADDING)
     Row(
         modifier = Modifier
-            .fillMaxWidth()
-            .height(85.dp)
+            .size(height = 220.dp, width = width/2)
             .clip(RoundedCornerShape(LARGE_PADDING))
             .background(brush = brush),
-        verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
     ) {
-        Column(modifier = Modifier.fillMaxWidth(0.9f), verticalArrangement = Arrangement.Center) {
+        Column(
+            modifier = Modifier.fillMaxWidth(0.9f).fillMaxHeight(),
+            verticalArrangement = Arrangement.Center
+        ) {
+            Spacer(modifier = Modifier.size(spacing))
             Spacer(
                 modifier = Modifier
                     .height(20.dp)
                     .clip(RoundedCornerShape(10.dp))
-                    .fillMaxWidth(0.7f)
+                    .fillMaxWidth(0.95f)
                     .background(brush)
             )
-            Spacer(modifier = Modifier.size(10.dp))
+            Spacer(modifier = Modifier.size(spacing))
+            Spacer(
+                modifier = Modifier
+                    .height(20.dp)
+                    .clip(RoundedCornerShape(spacing))
+                    .fillMaxWidth(0.90f)
+                    .background(brush)
+            )
+            Spacer(modifier = Modifier.size(spacing))
+            Spacer(
+                modifier = Modifier
+                    .height(20.dp)
+                    .clip(RoundedCornerShape(spacing))
+                    .fillMaxWidth(0.92f)
+                    .background(brush)
+            )
+            Spacer(modifier = Modifier.size(spacing))
             Spacer(
                 modifier = Modifier
                     .height(20.dp)
                     .clip(RoundedCornerShape(10.dp))
-                    .fillMaxWidth(0.9f)
+                    .fillMaxWidth(0.90f)
                     .background(brush)
             )
         }
         Column(
-            modifier = Modifier.fillMaxHeight(0.8f),
+            modifier = Modifier.fillMaxHeight(0.95f).offset((-5).dp),
             horizontalAlignment = Alignment.End,
             verticalArrangement = Arrangement.Top
         ) {
@@ -92,13 +113,13 @@ fun ShimmerGridItem(brush: Brush) {
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
 @Composable
 private fun ShimmerGridItemPreview() {
-    AnimatedShimmerEffect()
+    AnimatedShimmerEffectGold()
 }
 
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
 @Composable
 private fun ShimmerGridItemDarkPreview() {
-    ShimmerGridItem(
+    ShimmerGridItemGold(
         Brush.linearGradient(
             listOf(
                 Color.LightGray.copy(alpha = 0.6f),

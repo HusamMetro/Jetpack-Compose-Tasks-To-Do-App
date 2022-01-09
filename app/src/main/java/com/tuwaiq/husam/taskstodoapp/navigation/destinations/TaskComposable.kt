@@ -29,13 +29,13 @@ fun NavGraphBuilder.taskComposable(
             slideInHorizontally(
                 animationSpec = tween(durationMillis = 300),
                 initialOffsetX = { fullWidth -> -fullWidth }
-            )+  fadeIn(animationSpec = tween(durationMillis = 300))
+            ) + fadeIn(animationSpec = tween(durationMillis = 300))
         },
-        exitTransition = {_,_ ->
+        exitTransition = { _, _ ->
             slideOutHorizontally(
                 animationSpec = tween(durationMillis = 500),
                 targetOffsetX = { fullWidth -> -fullWidth }
-            )+  fadeOut(animationSpec = tween(durationMillis = 500))
+            ) + fadeOut(animationSpec = tween(durationMillis = 500))
         }
     ) { navBackStackEntry ->
         val taskId = navBackStackEntry.arguments!!.getInt(TASK_ARGUMENT_KEY)

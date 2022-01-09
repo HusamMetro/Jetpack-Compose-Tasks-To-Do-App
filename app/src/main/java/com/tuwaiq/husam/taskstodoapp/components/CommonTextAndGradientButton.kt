@@ -22,6 +22,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.tuwaiq.husam.taskstodoapp.ui.theme.ERROR_MESSAGE_PADDING
+import com.tuwaiq.husam.taskstodoapp.ui.theme.customOutlinedTextFieldColor
 import com.tuwaiq.husam.taskstodoapp.ui.theme.taskItemTextColor
 
 
@@ -36,9 +37,9 @@ fun CommonTextField(
     keyboardOptions: KeyboardOptions,
     keyboardActions: KeyboardActions,
     textColor: Color = MaterialTheme.colors.taskItemTextColor,
-    colors: TextFieldColors = TextFieldDefaults.outlinedTextFieldColors(
+    colors: TextFieldColors = MaterialTheme.colors.customOutlinedTextFieldColor /*TextFieldDefaults.outlinedTextFieldColors(
         textColor = textColor,
-    ),
+    )*/,
     enabled: Boolean = true,
     isError: Boolean = false,
     errorMsg: String = ""
@@ -92,9 +93,9 @@ fun CommonPasswordTextField(
     keyboardOptions: KeyboardOptions,
     keyboardActions: KeyboardActions,
     textColor: Color = MaterialTheme.colors.taskItemTextColor,
-    colors: TextFieldColors = TextFieldDefaults.outlinedTextFieldColors(
+    colors: TextFieldColors = MaterialTheme.colors.customOutlinedTextFieldColor /*TextFieldDefaults.outlinedTextFieldColors(
         textColor = textColor,
-    ),
+    )*/,
     isError: Boolean = false,
     errorMsg: String = ""
 ) {
@@ -112,7 +113,7 @@ fun CommonPasswordTextField(
                     ERROR_MESSAGE_PADDING
                 }
             )
-    ){
+    ) {
         OutlinedTextField(
             modifier = modifier,
             value = text,

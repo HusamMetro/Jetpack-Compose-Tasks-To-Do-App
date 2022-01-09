@@ -1,12 +1,9 @@
 package com.tuwaiq.husam.taskstodoapp.ui.screens.task
 
-import android.content.Intent
-import android.util.Log
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -130,7 +127,7 @@ fun CloseAction(
 fun ExistingTaskBarActions(
     selectedTask: ToDoTask,
     navigateToListScreen: (Action) -> Unit,
-onShareClicked: () -> Unit
+    onShareClicked: () -> Unit
 ) {
     var openDialog by remember { mutableStateOf(false) }
     DisplayAlertDialog(
@@ -144,9 +141,9 @@ onShareClicked: () -> Unit
         ),
         openDialog = openDialog,
         closeDialog = { openDialog = false },
-        onYesClicked = {navigateToListScreen(Action.DELETE)}
+        onYesClicked = { navigateToListScreen(Action.DELETE) }
     )
-    ShareAction(onShareClicked )
+    ShareAction(onShareClicked)
     DeleteAction(onDeleteClicked = {
         openDialog = true
     })
