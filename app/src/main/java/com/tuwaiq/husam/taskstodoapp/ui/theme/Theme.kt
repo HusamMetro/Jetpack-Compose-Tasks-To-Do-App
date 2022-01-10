@@ -5,16 +5,17 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private val DarkColorPalette = darkColors(
-    primary = Purple200,
-    primaryVariant = Purple700,
+    primary = DarkerBlue,
+    primaryVariant = MediumBlue,
     secondary = Teal200
 )
 
 private val LightColorPalette = lightColors(
-    primary = Purple500,
-    primaryVariant = Purple700,
+    primary = GreenPrimary,
+    primaryVariant = GreenPrimaryVariant,
     secondary = Teal200
 
     /* Other default colors to override
@@ -26,6 +27,7 @@ private val LightColorPalette = lightColors(
     onSurface = Color.Black,
     */
 )
+
 
 @Composable
 fun TasksToDoAppTheme(
@@ -44,4 +46,15 @@ fun TasksToDoAppTheme(
         shapes = Shapes,
         content = content
     )
+
+    val systemUiController = rememberSystemUiController()
+    if (darkTheme) {
+        systemUiController.setSystemBarsColor(
+            color = DarkColorPalette.primary
+        )
+    } else {
+        systemUiController.setSystemBarsColor(
+            color = LightColorPalette.primary
+        )
+    }
 }
