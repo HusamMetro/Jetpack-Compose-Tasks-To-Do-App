@@ -53,7 +53,7 @@ fun ListContent(
     onSwipeToDelete: (Action, ToDoTask) -> Unit,
     navigateToTaskScreens: (taskId: Int) -> Unit,
     onUpdate: (ToDoTask, Int) -> Unit,
-    cardBackgroundColor: @Composable () -> Brush
+    cardBackgroundColor: @Composable (Boolean) -> Brush
 ) {
     if (sortState is RequestState.Success) {
         when {
@@ -108,7 +108,7 @@ fun HandleListContent(
     onSwipeToDelete: (Action, ToDoTask) -> Unit,
     navigateToTaskScreens: (taskId: Int) -> Unit,
     onUpdate: (ToDoTask, Int) -> Unit,
-    cardBackgroundColor: @Composable () -> Brush
+    cardBackgroundColor: @Composable (Boolean) -> Brush
 ) {
     if (tasks.isEmpty()) {
         EmptyContent()
@@ -132,7 +132,7 @@ fun DisplayTask(
     onSwipeToDelete: (Action, ToDoTask) -> Unit,
     navigateToTaskScreens: (taskId: Int) -> Unit,
     onUpdate: (ToDoTask, Int) -> Unit,
-    cardBackgroundColor: @Composable () -> Brush
+    cardBackgroundColor: @Composable (Boolean) -> Brush
 ) {
     var itemAppeared by remember { mutableStateOf(false) }
     LazyColumn(
@@ -177,8 +177,6 @@ fun DisplayTask(
                 else
                     0f
             )
-            // move it to Above the LazyColumn to fix bug animation
-//            var itemAppeared by remember { mutableStateOf(false) }
             LaunchedEffect(key1 = true) {
                 itemAppeared = true
             }
@@ -261,7 +259,7 @@ fun GreenBackground(degrees: Float) {
 fun TaskItem(
     toDoTask: ToDoTask,
     onUpdate: (ToDoTask, Int) -> Unit,
-    cardBackgroundColor: @Composable () -> Brush
+    cardBackgroundColor: @Composable (Boolean) -> Brush
 ) {
     var expandState by remember { mutableStateOf(false) }
     Surface(
@@ -273,13 +271,11 @@ fun TaskItem(
             expandState = !expandState
         }
     ) {
-//        val rotationState by animateFloatAsState(targetValue = if (expandState) 180f else 0f)
         Card(
             shape = RoundedCornerShape(10.dp),
             modifier = Modifier
-//                .clip(shape = RoundedCornerShape(10.dp))
                 .background(
-                    cardBackgroundColor()
+                    cardBackgroundColor(toDoTask.gold)
                 )
                 .animateContentSize(
                     animationSpec = tween(
@@ -311,17 +307,16 @@ fun TaskItem(
                             horizontalArrangement = Arrangement.Center
                         ) {
                             CustomComponent(
+                                canvasSize = 32.dp,
                                 indicatorValue = getTaskCounterInt(toDoTask.taskCounter),
                                 maxIndicatorValue = getMaxTaskInt(toDoTask.maxTask),
-                                canvasSize = 32.dp,
-                                backgroundIndicatorStrokeWidth = 10f,
-                                foregroundIndicatorStrokeWidth = 10f,
-                                foregroundIndicatorColor = MaterialTheme.colors.foregroundIndicatorColor,
                                 backgroundIndicatorColor = MaterialTheme.colors.backgroundIndicatorColor,
+                                backgroundIndicatorStrokeWidth = 10f,
+                                foregroundIndicatorColor = MaterialTheme.colors.foregroundIndicatorColor,
+                                foregroundIndicatorStrokeWidth = 10f,
                                 bigTextFontSize = 10.sp,
-                                smallTextFontSize = 0.sp,
-                                bigTextSuffix = "",
                                 smallText = "",
+                                smallTextFontSize = 0.sp,
                             )
                             Text(
                                 modifier = Modifier
@@ -403,8 +398,6 @@ fun CardExpanded(
             modifier = Modifier.fillMaxWidth(),
             color = MaterialTheme.colors.taskItemTextColor,
             style = MaterialTheme.typography.subtitle1,
-//        maxLines = 2,
-//        overflow = TextOverflow.Ellipsis
         )
     }
     Column(
@@ -414,11 +407,6 @@ fun CardExpanded(
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.spacedBy(MEDIUM_PADDING)
     ) {
-        /* Divider(
-             Modifier
-                 .fillMaxWidth()
-                 .padding(vertical = LARGE_PADDING, horizontal = SMALL_PADDING)
-         )*/
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
@@ -461,13 +449,9 @@ fun CardExpanded(
                 }
             }
         }
-//            Divider(Modifier.padding(vertical = LARGE_PADDING, horizontal = SMALL_PADDING))
-
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-//                .padding(top = MEDIUM_PADDING)
-            ,
+                .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
@@ -479,17 +463,16 @@ fun CardExpanded(
                 Icon(imageVector = Icons.Filled.Remove, contentDescription = "")
             }
             CustomComponent(
+                canvasSize = 48.dp,
                 indicatorValue = getTaskCounterInt(toDoTask.taskCounter),
                 maxIndicatorValue = getMaxTaskInt(toDoTask.maxTask),
-                canvasSize = 48.dp,
-                backgroundIndicatorStrokeWidth = 12f,
-                foregroundIndicatorStrokeWidth = 12f,
-                foregroundIndicatorColor = MaterialTheme.colors.foregroundIndicatorColor,
                 backgroundIndicatorColor = MaterialTheme.colors.backgroundIndicatorColor,
+                backgroundIndicatorStrokeWidth = 12f,
+                foregroundIndicatorColor = MaterialTheme.colors.foregroundIndicatorColor,
+                foregroundIndicatorStrokeWidth = 12f,
                 bigTextFontSize = 15.sp,
-                smallTextFontSize = 0.sp,
-                bigTextSuffix = "",
                 smallText = "",
+                smallTextFontSize = 0.sp,
             )
             IconButton(
                 modifier = Modifier.padding(horizontal = SMALL_PADDING),
@@ -538,23 +521,9 @@ private fun TaskItemPreview() {
                 "20",
                 "10"
             ),
-            onUpdate = { _, _ -> },
-            cardBackgroundColor = {
-                MaterialTheme.colors.cardColor
-            }
-        )
+            onUpdate = { _, _ -> }
+        ) {
+            MaterialTheme.colors.cardColor
+        }
     }
 }
-/*
-
-@Composable
-@Preview
-private fun RedBackgroundPreview() {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(80.dp)
-    ) {
-        RedBackground(0f)
-    }
-}*/

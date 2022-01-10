@@ -9,6 +9,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import com.tuwaiq.husam.taskstodoapp.data.models.Priority
 import com.tuwaiq.husam.taskstodoapp.ui.theme.LARGE_PADDING
@@ -25,7 +26,7 @@ fun PriorityItem(priority: Priority) {
         }
         Text(
             modifier = Modifier.padding(start = LARGE_PADDING),
-            text = getDisplayName(priority),
+            text = getDisplayName(priority, context = LocalContext.current),
             style = Typography.subtitle2,
             color = MaterialTheme.colors.onSurface
         )

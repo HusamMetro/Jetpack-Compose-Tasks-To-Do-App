@@ -58,9 +58,6 @@ fun SettingsScreen(
 
 
     Scaffold(
-        /*topBar = {
-            SettingsAppBar()
-        },*/
         scaffoldState = scaffoldState,
         bottomBar = {
             BottomBar(navController = navController)
@@ -136,9 +133,6 @@ fun SettingsScreen(
                 signOutOnClicked = {
                     sharedViewModel.signOutFirebase()
                     navController.navigate(Constants.LOGIN_SCREEN) {
-                        /*popUpTo(SETTINGS_SCREEN){
-                        inclusive = true
-                    } */
                         popUpTo(Constants.LIST_SCREEN) {
                             inclusive = true
                         }
@@ -158,10 +152,3 @@ fun SettingsScreen(
         },
     )
 }
-
-/*
-@Composable
-@Preview
-private fun SettingsScreenPreview() {
-    SettingsScreen(sharedViewModel =  SharedViewModel(context = Application()))
-}*/

@@ -30,9 +30,9 @@ fun EmptyContent() {
     ) {
         Icon(
             modifier = Modifier.size(EMPTY_ICON_SIZE),
-            painter = painterResource(id = R.drawable.ic_sad_face),
+            painter = painterResource(id = R.drawable.ic_outline_sticky_note_2_24),
             contentDescription = stringResource(
-                R.string.sad_face_icon
+                R.string.outlined_note
             ),
             tint = MediumGray
         )

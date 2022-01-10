@@ -23,7 +23,6 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.tuwaiq.husam.taskstodoapp.ui.theme.ERROR_MESSAGE_PADDING
 import com.tuwaiq.husam.taskstodoapp.ui.theme.customOutlinedTextFieldColor
-import com.tuwaiq.husam.taskstodoapp.ui.theme.taskItemTextColor
 
 
 @Composable
@@ -36,10 +35,7 @@ fun CommonTextField(
     icon: ImageVector,
     keyboardOptions: KeyboardOptions,
     keyboardActions: KeyboardActions,
-    textColor: Color = MaterialTheme.colors.taskItemTextColor,
-    colors: TextFieldColors = MaterialTheme.colors.customOutlinedTextFieldColor /*TextFieldDefaults.outlinedTextFieldColors(
-        textColor = textColor,
-    )*/,
+    colors: TextFieldColors = MaterialTheme.colors.customOutlinedTextFieldColor,
     enabled: Boolean = true,
     isError: Boolean = false,
     errorMsg: String = ""
@@ -92,10 +88,7 @@ fun CommonPasswordTextField(
     icon: ImageVector,
     keyboardOptions: KeyboardOptions,
     keyboardActions: KeyboardActions,
-    textColor: Color = MaterialTheme.colors.taskItemTextColor,
-    colors: TextFieldColors = MaterialTheme.colors.customOutlinedTextFieldColor /*TextFieldDefaults.outlinedTextFieldColors(
-        textColor = textColor,
-    )*/,
+    colors: TextFieldColors = MaterialTheme.colors.customOutlinedTextFieldColor,
     isError: Boolean = false,
     errorMsg: String = ""
 ) {
@@ -169,7 +162,6 @@ fun GradientButton(
             modifier = Modifier
                 .background(gradient)
                 .padding(horizontal = 50.dp, vertical = 10.dp)
-//                .fillMaxWidth(0.20f)
                 .animateContentSize(
                     animationSpec = tween(
                         durationMillis = 300,

@@ -15,7 +15,7 @@ import com.tuwaiq.husam.taskstodoapp.MainActivity
 class TaskWorker(private val context: Context, workerParams: WorkerParameters) :
     Worker(context, workerParams) {
     override fun doWork(): Result {
-        val name = "To Do Application"
+        val name = "To Do App"
         val intent = Intent(context, MainActivity::class.java)
         val pendingActivity =
             PendingIntent.getActivity(context, 3, intent, PendingIntent.FLAG_IMMUTABLE)
@@ -24,9 +24,9 @@ class TaskWorker(private val context: Context, workerParams: WorkerParameters) :
         val notification = NotificationCompat
             .Builder(context, "NOTIFICATION_CHANNEL_ID")
             .setTicker(name)
-            .setSmallIcon(android.R.drawable.ic_menu_agenda)
+            .setSmallIcon(android.R.drawable.stat_notify_more)
             .setContentTitle(name)
-            .setContentText("Please do your tasks .. ")
+            .setContentText("Check Out the Gold Challenges")
             .setContentIntent(pendingActivity) // new
             .setAutoCancel(true)
             .build()

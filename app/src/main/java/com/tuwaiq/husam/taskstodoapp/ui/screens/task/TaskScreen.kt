@@ -2,7 +2,6 @@ package com.tuwaiq.husam.taskstodoapp.ui.screens.task
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.appcompat.app.AppCompatActivity
@@ -12,6 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import com.tuwaiq.husam.taskstodoapp.R
 import com.tuwaiq.husam.taskstodoapp.components.dateFormatter
+import com.tuwaiq.husam.taskstodoapp.components.getDisplayName
 import com.tuwaiq.husam.taskstodoapp.components.showDatePicker
 import com.tuwaiq.husam.taskstodoapp.data.models.Priority
 import com.tuwaiq.husam.taskstodoapp.data.models.ToDoTask
@@ -34,7 +34,7 @@ fun TaskScreen(
     val taskCounter: String by sharedViewModel.taskCounter
     val context = LocalContext.current
     val activity = context as AppCompatActivity
-//    BackHandler(onBackPressed = { navigateToListScreen(Action.NO_ACTION) })
+
     BackHandler {
         navigateToListScreen(Action.NO_ACTION)
     }
@@ -56,12 +56,20 @@ fun TaskScreen(
                     }
                 },
                 onShareClicked = {
-                    Log.e("Shared", "Shared Clicked")
                     val sendIntent = Intent().apply {
                         action = Intent.ACTION_SEND
                         putExtra(
                             Intent.EXTRA_TEXT,
-                            "Title : ${title}\nDescription: $description"
+                            getSharedTaskText(
+                                title = title,
+                                description = description,
+                                priority = priority,
+                                startDate = startDate,
+                                endDate = endDate,
+                                maxTask = maxTask,
+                                taskCounter = taskCounter,
+                                context = context
+                            )
                         )
                         type = "text/plain"
                     }
@@ -75,7 +83,6 @@ fun TaskScreen(
                 onTitleChange = {
                     sharedViewModel.titleIsError.value = it.isEmpty()
                     sharedViewModel.updateTitle(it)
-//                    sharedViewModel.title.value = it
                 },
                 titleIsError = titleIsError,
                 description = description,
@@ -117,6 +124,37 @@ fun TaskScreen(
     )
 }
 
+fun getSharedTaskText(
+    title: String,
+    description: String,
+    priority: Priority,
+    startDate: String,
+    endDate: String,
+    maxTask: String,
+    taskCounter: String,
+    context: AppCompatActivity
+): String {
+    var text = "${context.getString(R.string.title)} : $title"
+    if (description.isNotEmpty()) {
+        text += "\n${context.getString(R.string.description)} : $description"
+    }
+    text += "\n${context.getString(R.string.priority)} : ${
+        getDisplayName(
+            priority,
+            context = context
+        )
+    }"
+    if (startDate.isNotEmpty()) {
+        text += "\n${context.getString(R.string.start_date)} : $startDate"
+    }
+    if (endDate.isNotEmpty()) {
+        text += "\n${context.getString(R.string.end_date)} : $endDate"
+    }
+    text += "\n${context.getString(R.string.max_task)} : $maxTask"
+    text += "\n${context.getString(R.string.task_counter)} : $taskCounter"
+    return text
+}
+
 fun removeSpecial(input: String): String {
     Regex("[^A-Za-z0-9]+$").also {
         return it.replace(input, "")
@@ -130,25 +168,3 @@ fun displayToast(context: Context) {
         Toast.LENGTH_SHORT
     ).show()
 }
-/*
-@Composable
-fun BackHandler(
-    backDispatcher: OnBackPressedDispatcher? =
-        LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher,
-    onBackPressed: () -> Unit
-) {
-    val currentOnBackPressed by rememberUpdatedState(newValue = onBackPressed)
-    val backCallBack = remember {
-        object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                currentOnBackPressed()
-            }
-        }
-    }
-    DisposableEffect(key1 = backDispatcher) {
-        backDispatcher?.addCallback(backCallBack)
-        onDispose {
-            backCallBack.remove()
-        }
-    }
-}*/

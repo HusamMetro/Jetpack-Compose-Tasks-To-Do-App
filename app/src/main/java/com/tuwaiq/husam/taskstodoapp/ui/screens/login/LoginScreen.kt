@@ -68,9 +68,6 @@ fun LoginScreen(navController: NavHostController, sharedViewModel: SharedViewMod
 
     Scaffold(
         scaffoldState = scaffoldState,
-        /*topBar = {
-            LoginAppBar()
-        },*/
         content = {
             LoginContent(
                 registerOnClicked = {
@@ -110,7 +107,6 @@ fun LoginScreen(navController: NavHostController, sharedViewModel: SharedViewMod
                 signInOnClicked = { mutableBoolean ->
                     when {
                         emailIsError || passwordIsError || email.isEmpty() || password.isEmpty() -> {
-//                                    emailTextInputSignup.helperText = "*"
                             mutableBoolean.value = false
                         }
                         else -> {
@@ -182,9 +178,7 @@ fun LoginScreen(navController: NavHostController, sharedViewModel: SharedViewMod
                         Button(
                             onClick = {
                                 when {
-                                    emailIsError || email.isEmpty() -> {
-//                                    emailTextInputSignup.helperText = "*"
-                                    }
+                                    emailIsError || email.isEmpty() -> {}
                                     else -> {
                                         openDialog = false
                                         sharedViewModel.forgotPasswordFirebase(
@@ -227,10 +221,3 @@ fun LoginScreen(navController: NavHostController, sharedViewModel: SharedViewMod
         },
     )
 }
-
-/*
-@Preview
-@Composable
-private fun LoginScreenPreview() {
-    LoginScreen(rememberNavController())
-}*/

@@ -52,14 +52,16 @@ fun ShimmerGridItemGold(brush: Brush) {
     val width = LocalConfiguration.current.screenWidthDp.dp.minus(LARGEST_PADDING)
     Row(
         modifier = Modifier
-            .size(height = 220.dp, width = width/2)
+            .size(height = GOLD_MOCK_CARD_HEIGHT, width = width / 2)
             .clip(RoundedCornerShape(LARGE_PADDING))
             .background(brush = brush),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth(0.9f).fillMaxHeight(),
+            modifier = Modifier
+                .fillMaxWidth(0.9f)
+                .fillMaxHeight(),
             verticalArrangement = Arrangement.Center
         ) {
             Spacer(modifier = Modifier.size(spacing))
@@ -96,7 +98,9 @@ fun ShimmerGridItemGold(brush: Brush) {
             )
         }
         Column(
-            modifier = Modifier.fillMaxHeight(0.95f).offset((-5).dp),
+            modifier = Modifier
+                .fillMaxHeight(0.95f)
+                .offset((-5).dp),
             horizontalAlignment = Alignment.End,
             verticalArrangement = Arrangement.Top
         ) {

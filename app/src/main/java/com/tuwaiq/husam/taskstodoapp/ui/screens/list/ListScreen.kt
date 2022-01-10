@@ -12,9 +12,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import com.tuwaiq.husam.taskstodoapp.R
 import com.tuwaiq.husam.taskstodoapp.components.BottomBar
-import com.tuwaiq.husam.taskstodoapp.ui.theme.cardColor
-import com.tuwaiq.husam.taskstodoapp.ui.theme.cardColorReversed
-import com.tuwaiq.husam.taskstodoapp.ui.theme.fabBackgroundColor
+import com.tuwaiq.husam.taskstodoapp.ui.theme.*
 import com.tuwaiq.husam.taskstodoapp.ui.viewmodels.SharedViewModel
 import com.tuwaiq.husam.taskstodoapp.util.Action
 import com.tuwaiq.husam.taskstodoapp.util.SearchAppBarState
@@ -45,7 +43,7 @@ fun ListScreen(
     val searchTextState: String by sharedViewModel.searchTextState
     val scaffoldState = rememberScaffoldState()
     val context = LocalContext.current
-//    sharedViewModel.handleDatabaseAction(action = action)
+
     DisplaySnackBar(
         scaffoldState = scaffoldState,
         onComplete = { sharedViewModel.action.value = it },
@@ -90,11 +88,21 @@ fun ListScreen(
                         ).toString()
                     sharedViewModel.handleDatabaseAction(Action.UPDATE)
                 },
-                cardBackgroundColor = {
-                    if (sharedViewModel.langState.value == "en")
-                        MaterialTheme.colors.cardColor
-                    else
-                        MaterialTheme.colors.cardColorReversed
+                cardBackgroundColor = { gold ->
+                    when (gold) {
+                        true -> {
+                            if (sharedViewModel.langState.value == "en")
+                                MaterialTheme.colors.cardColorGold
+                            else
+                                MaterialTheme.colors.cardColorGoldReversed
+                        }
+                        false -> {
+                            if (sharedViewModel.langState.value == "en")
+                                MaterialTheme.colors.cardColor
+                            else
+                                MaterialTheme.colors.cardColorReversed
+                        }
+                    }
                 }
             )
         }, bottomBar = {
@@ -207,18 +215,3 @@ private fun undoDeletedTask(
         onUndoClicked(Action.UNDO)
     }
 }
-
-/*
-@ExperimentalMaterialApi
-@ExperimentalAnimationApi
-@Preview
-@Composable
-fun ListScreenPreview() {
-    ListScreen(
-        navigateToTaskScreen = {},
-        action = Action.NO_ACTION,
-        navController = rememberNavController(),
-        sharedViewModel = SharedViewModel(LocalContext.current.applicationContext as Application)
-    )
-}
-*/

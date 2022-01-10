@@ -1,5 +1,6 @@
 package com.tuwaiq.husam.taskstodoapp.components
 
+import android.content.Context
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -15,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -61,7 +63,7 @@ fun PriorityDropDown(
         }
         Text(
             modifier = Modifier.weight(8f),
-            text = getDisplayName(priority = priority),
+            text = getDisplayName(priority = priority, context = LocalContext.current),
             style = MaterialTheme.typography.subtitle2
         )
         IconButton(
@@ -95,13 +97,12 @@ fun PriorityDropDown(
     }
 }
 
-@Composable
-fun getDisplayName(priority: Priority) =
+fun getDisplayName(priority: Priority, context: Context) =
     when (priority.name) {
-        Priority.HIGH.name -> stringResource(id = R.string.high_priority)
-        Priority.MEDIUM.name -> stringResource(id = R.string.medium_priority)
-        Priority.LOW.name -> stringResource(id = R.string.low_priority)
-        Priority.NONE.name -> stringResource(id = R.string.none_priority)
+        Priority.HIGH.name -> context.getString(R.string.high_priority)
+        Priority.MEDIUM.name -> context.getString(R.string.medium_priority)
+        Priority.LOW.name -> context.getString(R.string.low_priority)
+        Priority.NONE.name -> context.getString(R.string.none_priority)
         else -> "NOTHING"
     }
 

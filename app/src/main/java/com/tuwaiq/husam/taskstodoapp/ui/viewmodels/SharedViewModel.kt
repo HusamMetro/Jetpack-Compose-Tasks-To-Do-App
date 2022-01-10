@@ -75,15 +75,6 @@ class SharedViewModel(context: Application) : AndroidViewModel(context) {
             dataStoreRepository.persistLangState(lang = lang)
         }
     }
-    /*fun getMockTasks(): MutableLiveData<List<MockToDoTask>> {
-        val tasks = MutableLiveData<List<MockToDoTask>>()
-        viewModelScope.launch(Dispatchers.IO) {
-            val list = mockRepo.fetchTasks()
-            Log.e("mockTasks", "Called")
-            tasks.postValue(list)
-        }
-        return tasks
-    }*/
 
     private val _mockTasks = mutableStateListOf<MockToDoTask>()
     var errorMessage: String by mutableStateOf("")
@@ -111,38 +102,13 @@ class SharedViewModel(context: Application) : AndroidViewModel(context) {
         errorMessageGold = ""
         viewModelScope.launch {
             try {
-               _goldMockTasks.clear()
+                _goldMockTasks.clear()
                 _goldMockTasks.addAll(mockRepo.fetchGoldTasks())
             } catch (e: Throwable) {
                 errorMessageGold = e.message.toString()
             }
         }
     }
-
-    /* private fun getMockTasks() {
-         _mockTasks.value = RequestState.Loading
-         try {
-             viewModelScope.launch {
-                 mockRepo.getMockTasks.collect {
-                     _mockTasks.value = RequestState.Success(it)
-                 }
-             }
-         } catch (e: Throwable) {
-             _mockTasks.value = RequestState.Error(e)
-         }
-     }*/
-
-
-    /*  fun getMockTasks() : MutableLiveData<RequestState<List<MockToDoTask>>> {
-          val tasks = MutableLiveData<RequestState<List<MockToDoTask>>>()
-          viewModelScope.launch(Dispatchers.IO) {
-              val list = mockRepo.fetchTasks()
-              Log.e("mockTasks","Called")
-              tasks.postValue(RequestState.Success(list))
-          }
-          return tasks
-     }
- */
 
     val action: MutableState<Action> = mutableStateOf(Action.NO_ACTION)
     val id: MutableState<Int> = mutableStateOf(0)
@@ -154,6 +120,7 @@ class SharedViewModel(context: Application) : AndroidViewModel(context) {
     val maxTask: MutableState<String> = mutableStateOf("")
     val taskCounter: MutableState<String> = mutableStateOf("")
     val priority: MutableState<Priority> = mutableStateOf(Priority.LOW)
+    val gold: MutableState<Boolean> = mutableStateOf(false)
 
     val searchAppBarState: MutableState<SearchAppBarState> =
         mutableStateOf(SearchAppBarState.CLOSED)
@@ -181,7 +148,6 @@ class SharedViewModel(context: Application) : AndroidViewModel(context) {
     }
 
     init {
-//        readRememberState()
         getAllTasks()
         readSortState()
     }
@@ -247,7 +213,7 @@ class SharedViewModel(context: Application) : AndroidViewModel(context) {
         }
     }
 
-    fun persistRememberState(remember: Boolean) {
+    private fun persistRememberState(remember: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
             dataStoreRepository.persistRememberState(remember = remember)
         }
@@ -306,8 +272,8 @@ class SharedViewModel(context: Application) : AndroidViewModel(context) {
                 startDate = startDate.value,
                 endDate = endDate.value,
                 maxTask = maxTask.value,
-                taskCounter = taskCounter.value
-
+                taskCounter = taskCounter.value,
+                gold = gold.value
             )
             repository.addTask(toDoTask = toDoTask)
         }
@@ -325,7 +291,8 @@ class SharedViewModel(context: Application) : AndroidViewModel(context) {
                 startDate = startDate.value,
                 endDate = endDate.value,
                 maxTask = maxTask.value,
-                taskCounter = taskCounter.value
+                taskCounter = taskCounter.value,
+                gold = gold.value
             )
             repository.updateTask(toDoTask = toDoTask)
         }
@@ -341,7 +308,8 @@ class SharedViewModel(context: Application) : AndroidViewModel(context) {
                 startDate = startDate.value,
                 endDate = endDate.value,
                 maxTask = maxTask.value,
-                taskCounter = taskCounter.value
+                taskCounter = taskCounter.value,
+                gold = gold.value
             )
             repository.deleteTask(toDoTask = toDoTask)
         }
@@ -388,6 +356,7 @@ class SharedViewModel(context: Application) : AndroidViewModel(context) {
             endDate.value = selectedTask.endDate
             maxTask.value = selectedTask.maxTask
             taskCounter.value = selectedTask.taskCounter
+            gold.value = selectedTask.gold
         } else {
             id.value = 0
             title.value = ""
@@ -398,6 +367,7 @@ class SharedViewModel(context: Application) : AndroidViewModel(context) {
             endDate.value = ""
             maxTask.value = ""
             taskCounter.value = ""
+            gold.value = false
         }
     }
 
@@ -408,7 +378,6 @@ class SharedViewModel(context: Application) : AndroidViewModel(context) {
     }
 
     fun validateFields(): Boolean {
-//        return title.value.isNotEmpty() && description.value.isNotEmpty()
         return title.value.isNotEmpty()
     }
 

@@ -1,9 +1,7 @@
 package com.tuwaiq.husam.taskstodoapp.navigation
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.*
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.tuwaiq.husam.taskstodoapp.util.Constants.CHALLENGES_SCREEN
 import com.tuwaiq.husam.taskstodoapp.util.Constants.LIST_SCREEN
@@ -23,7 +21,7 @@ sealed class BottomBarScreen(
     object Challenges : BottomBarScreen(
         CHALLENGES_SCREEN,
         " ToDoApplication.getToDoContext().getString(R.string.challenges_bottom_bar)",
-        icon = Icons.Filled.Star
+        icon = Icons.Filled.Api
     )
 
     object Settings : BottomBarScreen(
