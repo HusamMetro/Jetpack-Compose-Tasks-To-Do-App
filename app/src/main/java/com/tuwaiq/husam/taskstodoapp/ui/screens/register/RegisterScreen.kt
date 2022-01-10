@@ -125,8 +125,6 @@ fun RegisterScreen(navController: NavHostController, sharedViewModel: SharedView
                             val userName: String = name.trim()
                             val emailTrimmed: String = email.trim()
                             val phoneNumber: String = phone.trim()
-
-                            // create an instance and create a register with email and password
                             sharedViewModel.registerFirebase(
                                 email = email,
                                 password = password,
@@ -155,11 +153,3 @@ fun RegisterScreen(navController: NavHostController, sharedViewModel: SharedView
     )
 
 }
-
-
-/*
-@Preview
-@Composable
-private fun RegisterScreenPreview() {
-    RegisterScreen(rememberNavController())
-}*/

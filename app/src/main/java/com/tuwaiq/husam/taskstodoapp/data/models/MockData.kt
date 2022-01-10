@@ -11,4 +11,5 @@ data class MockToDoTask(
     val taskCounter: String = "0",
     val titleAR: String = "",
     val descriptionAR: String = "",
+    val gold : Boolean = false
 )

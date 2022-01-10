@@ -7,7 +7,6 @@ import androidx.compose.animation.core.animateSizeAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
@@ -45,7 +44,6 @@ fun SplashScreen(
     )
     val colorState by animateColorAsState(
         targetValue = if (startAnimation) MaterialTheme.colors.primary else DarkGray,
-//        targetValue = if (startAnimation) Purple700 else DarkGray,
         animationSpec = tween(
             durationMillis = 2000, delayMillis = 1000
         )
@@ -111,15 +109,7 @@ fun Splash(
 }
 
 @Composable
-fun getLogo(): Int {
-    return if (isSystemInDarkTheme()) {
-        R.drawable.ic_logo_dark
-    } else {
-//        R.drawable.ic_logo_light
-        R.drawable.ic_logo_dark
-    }
-
-}
+fun getLogo(): Int = R.drawable.ic_logo_dark
 
 @Composable
 @Preview

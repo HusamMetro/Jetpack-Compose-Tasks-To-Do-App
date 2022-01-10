@@ -62,7 +62,7 @@ fun ChallengesContent(
                         text = stringResource(R.string.gold_challenges),
                         modifier = Modifier
                             .fillMaxWidth(),
-                        color = marahGold,
+                        color = GoldM,
                         style = MaterialTheme.typography.h5,
                         fontFamily = FontFamily.Serif
                     )
@@ -79,7 +79,6 @@ fun ChallengesContent(
                     item { }
                     items(
                         items = goldMockTasks,
-                        // There is a bug here if clicked fast the Key will repeat ... Fix Later
                         key = { task ->
                             task.id
                         }
@@ -89,7 +88,10 @@ fun ChallengesContent(
                             lang = lang,
                             onAdd = onAdd,
                             modifier = Modifier
-                                .size(height = 220.dp, width = 200.dp)
+                                .size(
+                                    height = GOLD_MOCK_CARD_HEIGHT,
+                                    width = GOLD_MOCK_CARD_WIDTH
+                                )
                         )
                     }
                     item { }
@@ -106,13 +108,14 @@ fun ChallengesContent(
                         modifier = Modifier
                             .fillMaxWidth(),
                         style = MaterialTheme.typography.h5,
+                        fontFamily = FontFamily.Serif
+
                     )
                 }
 
             }
             items(
                 items = mockTasks,
-                // There is a bug here if clicked fast the Key will repeat ... Fix Later
                 key = { task ->
                     task.id
                 }
@@ -126,9 +129,7 @@ fun ChallengesContent(
                         .padding(horizontal = MEDIUM_PADDING)
                 )
             }
-            item {
-//                Spacer(modifier = Modifier.padding(2.dp))
-            }
+            item {}
         } catch (e: Throwable) {
             Log.e("lazyColumn", e.message.toString())
         }
@@ -159,7 +160,6 @@ fun MockTaskItem(
         Card(
             shape = RoundedCornerShape(10.dp),
             modifier = Modifier
-//                .clip(shape = RoundedCornerShape(10.dp))
                 .background(
                     if (lang == "en") MaterialTheme.colors.cardColor
                     else MaterialTheme.colors.cardColorReversed
@@ -193,17 +193,16 @@ fun MockTaskItem(
                             horizontalArrangement = Arrangement.Center
                         ) {
                             CustomComponent(
+                                canvasSize = 32.dp,
                                 indicatorValue = getTaskCounterInt(mockToDoTask.taskCounter),
                                 maxIndicatorValue = getMaxTaskInt(mockToDoTask.maxTask),
-                                canvasSize = 32.dp,
-                                backgroundIndicatorStrokeWidth = 10f,
-                                foregroundIndicatorStrokeWidth = 10f,
-                                foregroundIndicatorColor = MaterialTheme.colors.foregroundIndicatorColor,
                                 backgroundIndicatorColor = MaterialTheme.colors.backgroundIndicatorColor,
+                                backgroundIndicatorStrokeWidth = 10f,
+                                foregroundIndicatorColor = MaterialTheme.colors.foregroundIndicatorColor,
+                                foregroundIndicatorStrokeWidth = 10f,
                                 bigTextFontSize = 10.sp,
-                                smallTextFontSize = 0.sp,
-                                bigTextSuffix = "",
                                 smallText = "",
+                                smallTextFontSize = 0.sp,
                             )
                             Text(
                                 modifier = Modifier
@@ -232,7 +231,6 @@ fun MockTaskItem(
                             }
                         }
                     }
-//                    if (toDoTask.description.isNotEmpty()) {
                     Text(
                         text = getDescriptionLang(mockToDoTask, lang = lang),
                         modifier = Modifier.fillMaxWidth(),
@@ -280,7 +278,7 @@ fun GoldMockTaskItem(
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Column(modifier = Modifier.fillMaxWidth()) {
-                    Row() {
+                    Row {
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -303,9 +301,11 @@ fun GoldMockTaskItem(
                     )
                     Text(
                         text = getDescriptionLang(mockToDoTask, lang),
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth().height(130.dp),
                         color = MaterialTheme.colors.taskItemTextColor,
                         style = MaterialTheme.typography.subtitle1,
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 7
                     )
                 }
                 Column(
@@ -379,8 +379,6 @@ fun MockCardExpanded(
         modifier = Modifier.fillMaxWidth(),
         color = MaterialTheme.colors.taskItemTextColor,
         style = MaterialTheme.typography.subtitle1,
-//        maxLines = 2,
-//        overflow = TextOverflow.Ellipsis
     )
     Column(
         modifier = Modifier
@@ -389,47 +387,6 @@ fun MockCardExpanded(
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.spacedBy(MEDIUM_PADDING)
     ) {
-        /*
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            Row(
-                Modifier.padding(vertical = LARGE_PADDING),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(MEDIUM_PADDING)
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.CalendarToday,
-                    contentDescription = ""
-                )
-                Text(
-                    text = mockToDoTask.startDate,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    color = MaterialTheme.colors.taskItemTextColor
-                )
-            }
-            Row(
-                Modifier.padding(vertical = LARGE_PADDING),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(MEDIUM_PADDING)
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.CalendarToday,
-                    contentDescription = "",
-                )
-                Text(
-                    text = mockToDoTask.endDate,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    color = MaterialTheme.colors.taskItemTextColor
-                )
-            }
-
-        }
-        */
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -438,20 +395,18 @@ fun MockCardExpanded(
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             CustomComponent(
+                canvasSize = 45.dp,
                 indicatorValue = getTaskCounterInt(mockToDoTask.taskCounter),
                 maxIndicatorValue = getMaxTaskInt(mockToDoTask.maxTask),
-                canvasSize = 45.dp,
-                backgroundIndicatorStrokeWidth = 10f,
-                foregroundIndicatorStrokeWidth = 10f,
-                foregroundIndicatorColor = MaterialTheme.colors.foregroundIndicatorColor,
                 backgroundIndicatorColor = MaterialTheme.colors.backgroundIndicatorColor,
+                backgroundIndicatorStrokeWidth = 10f,
+                foregroundIndicatorColor = MaterialTheme.colors.foregroundIndicatorColor,
+                foregroundIndicatorStrokeWidth = 10f,
                 bigTextFontSize = 15.sp,
-                smallTextFontSize = 0.sp,
-                bigTextSuffix = "",
                 smallText = "",
+                smallTextFontSize = 0.sp,
             )
             Row(
-//                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -475,7 +430,7 @@ fun MockCardExpanded(
 private fun ChallengesContentPreview() {
     MockTaskItem(
         MockToDoTask(
-            title = "Mock Task",
+            title = "Normal Mock Task",
             description = "This is a description of the Mock Task , Say hello Description",
             startDate = "02/05/22",
             endDate = "30/05/22",
@@ -496,7 +451,7 @@ private fun ChallengesContentPreview() {
 private fun GoldChallengesContentPreview() {
     GoldMockTaskItem(
         MockToDoTask(
-            title = "Mock Task",
+            title = "Gold Mock Task",
             description = "This is a description of the Mock Task , Say hello Description",
             startDate = "02/05/22",
             endDate = "30/05/22",

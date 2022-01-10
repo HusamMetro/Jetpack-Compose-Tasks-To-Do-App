@@ -28,30 +28,11 @@ fun NavGraphBuilder.listComposable(
 ) {
     composable(
         route = LIST_SCREEN,
-        arguments = listOf(navArgument(LIST_ARGUMENT_KEY) {
-            type = NavType.StringType
-        }),
-        /*exitTransition = { _,_ ->
-            fadeOut(animationSpec = tween(durationMillis = 300))},
-        enterTransition = { _,_ ->
-            fadeIn(animationSpec = tween(durationMillis = 300))
-        },*/
-        /*exitTransition = { initial, target ->
-            if (target.destination.navigatorName == TASK_SCREEN ) {
-                slideOutHorizontally(
-                    targetOffsetX = { 300 },
-                    animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing),
-                ) + fadeOut(animationSpec = tween(durationMillis = 300))
-            }else{
-                fadeOut(animationSpec = tween(durationMillis = 300))
+        arguments = listOf(
+            navArgument(LIST_ARGUMENT_KEY) {
+                type = NavType.StringType
             }
-        },
-        popEnterTransition = { _, _ ->
-            slideInHorizontally(
-                initialOffsetX = { -it },
-                animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing),
-            )*//*+fadeIn(animationSpec = tween(durationMillis = 300))*//*
-        }*/
+        ),
     ) { navBackStackEntry ->
         val action = navBackStackEntry.arguments?.getString(LIST_ARGUMENT_KEY).toAction()
 

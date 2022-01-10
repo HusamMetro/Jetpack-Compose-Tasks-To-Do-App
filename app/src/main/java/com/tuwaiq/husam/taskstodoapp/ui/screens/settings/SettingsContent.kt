@@ -8,28 +8,22 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.tuwaiq.husam.taskstodoapp.R
@@ -74,14 +68,6 @@ fun SettingsContent(
             repeatMode = RepeatMode.Reverse
         )
     )
-    /* var passwordValue by rememberSaveable { mutableStateOf("") }
-     var confirmPasswordValue by rememberSaveable { mutableStateOf("") }
- */
-    // Retrieve UserDate
-    /*val userCollectionRef = Firebase.firestore.collection("users")
-    val db = FirebaseFirestore.getInstance()
-    val userUID = FirebaseAuth.getInstance().currentUser?.uid
-    val docRef = db.collection("users").document("$userUID")*/
 
     LaunchedEffect(key1 = true) {
         onLaunchedEffect()
@@ -176,7 +162,6 @@ fun SettingsContent(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth(SETTINGS_MAX_WIDTH_FRACTION),
-//                        .padding(8.dp)
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Spacer(modifier = Modifier.weight(1f))
@@ -424,288 +409,6 @@ fun SettingsContent(
     }
 }
 
-/*
-
-@Composable
-fun ScreenTestingCards(
-    name: String,
-    email: String,
-    phone: String,
-    switchT: Boolean,
-    onCheckedChange: (Boolean) -> Unit,
-    language: Languages,
-    onLanguageSelected: (Languages) -> Unit
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(
-//                top = MEDIUM_PADDING,
-                bottom = TOP_APP_BAR_HEIGHT,
-//                start = MEDIUM_PADDING,
-//                end = MEDIUM_PADDING
-            )
-            .background(MaterialTheme.colors.background.copy(0.5f)),
-        verticalArrangement = Arrangement.SpaceBetween,
-
-        ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(0.3f)
-                .background(MaterialTheme.colors.primary)
-                .padding(vertical = 20.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Image(
-                modifier = Modifier,
-                painter = painterResource(id = R.drawable.ic_logo_dark),
-                contentDescription = stringResource(id = R.string.application_logo)
-            )
-        }
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(LARGE_PADDING)
-                .clip(RoundedCornerShape(MEDIUM_PADDING)),
-            elevation = 5.dp,
-//                backgroundColor = MaterialTheme.colors.cardSecondColor
-//                backgroundColor = MaterialTheme.colors.primary
-        ) {
-            Column(modifier = Modifier.padding(LARGE_PADDING)) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(MEDIUM_PADDING),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Person,
-                        contentDescription = stringResource(id = R.string.name),
-                    )
-                    Text(
-                        text = name,
-                    )
-                }
-                Spacer(modifier = Modifier.padding(vertical = MEDIUM_PADDING))
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(MEDIUM_PADDING),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Email,
-                        contentDescription = stringResource(id = R.string.email_address),
-                    )
-                    Text(
-                        text = email,
-                    )
-                }
-                Spacer(modifier = Modifier.padding(vertical = MEDIUM_PADDING))
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(MEDIUM_PADDING),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Phone,
-                        contentDescription = stringResource(id = R.string.name),
-                    )
-                    Text(
-                        text = phone,
-                    )
-                }
-            }
-        }
-
-
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(LARGE_PADDING)
-                .clip(RoundedCornerShape(LARGE_PADDING)),
-            elevation = 5.dp,
-            backgroundColor = MaterialTheme.colors.cardSecondColor
-        ) {
-            Column(
-                Modifier.padding(LARGE_PADDING),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.DarkMode,
-                        contentDescription = "",
-                        tint = MaterialTheme.colors.taskItemTextColor
-                    )
-                    Spacer(modifier = Modifier.padding(horizontal = 10.dp))
-                    Text(
-                        text = "Dark Mode",
-                        color = MaterialTheme.colors.taskItemTextColor
-                    )
-                    Spacer(modifier = Modifier.padding(horizontal = 10.dp))
-                    Switch(
-                        checked = switchT,
-                        onCheckedChange = onCheckedChange,
-                        colors = SwitchDefaults.colors()
-                    )
-                }
-                Spacer(
-                    modifier = Modifier.height(MEDIUM_PADDING),
-                )
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center,
-                    modifier = Modifier.padding(
-                        horizontal = LARGEST_PADDING,
-                        vertical = MEDIUM_PADDING
-                    )
-                ) {
-                    LanguageDropDown(
-                        language = language,
-                        onLanguageSelected = onLanguageSelected
-                    )
-                }
-
-            }
-        }
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(LARGE_PADDING)
-                .clip(RoundedCornerShape(LARGE_PADDING)),
-            elevation = 5.dp,
-            backgroundColor = MaterialTheme.colors.cardSecondColor
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(LARGE_PADDING),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(text = "Email")
-                Text(text = "User Name")
-                Text(text = "Phone")
-            }
-        }
-    }
-}
-
-*/
-
-
-/*
-@Composable
-@Preview
-private fun SettingsContentPreview() {
-    SettingsContent(rememberNavController())
-}*/
-
-@Composable
-fun LanguageDropDown(
-    language: Languages,
-    onLanguageSelected: (Languages) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    var expanded by remember { mutableStateOf(false) }
-    val angle: Float by animateFloatAsState(
-        targetValue = if (expanded) 180f else 0f
-    )
-    var parentSize by remember { mutableStateOf(IntSize.Zero) }
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .onGloballyPositioned {
-                parentSize = it.size
-            }
-            .height(TOP_APP_BAR_HEIGHT)
-            .clip(RoundedCornerShape(4.dp))
-            .background(MaterialTheme.colors.background)
-            .clickable { expanded = true }
-            .border(
-                width = 1.dp,
-                color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.disabled),
-                shape = MaterialTheme.shapes.small
-            ),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Spacer(modifier = Modifier.padding(horizontal = MEDIUM_PADDING))
-        Text(
-            modifier = Modifier.weight(8f),
-            text = language.name,
-            style = MaterialTheme.typography.subtitle2,
-            color = MaterialTheme.colors.taskItemTextColor
-        )
-        IconButton(
-            modifier = Modifier
-                .alpha(ContentAlpha.medium)
-                .rotate(degrees = angle)
-                .weight(1.5f),
-            onClick = { expanded = true }
-        ) {
-            Icon(
-                imageVector = Icons.Filled.ArrowDropDown,
-                contentDescription = stringResource(R.string.drop_down_arrow_icon),
-                tint = MaterialTheme.colors.taskItemTextColor
-            )
-        }
-        DropdownMenu(
-            modifier = Modifier.width(with(LocalDensity.current) {
-                parentSize.width.toDp()
-            }),
-            expanded = expanded,
-            onDismissRequest = { expanded = false }
-        ) {
-            Languages.values().forEach { language ->
-                DropdownMenuItem(onClick = {
-                    expanded = false
-                    onLanguageSelected(language)
-                }) {
-                    LanguageItem(language = language)
-                }
-            }
-        }
-    }
-}
-
-
-@Composable
-fun LanguageItem(language: Languages) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            modifier = Modifier.padding(start = LARGE_PADDING),
-            text = language.name,
-            style = Typography.subtitle2,
-            color = MaterialTheme.colors.onSurface
-        )
-    }
-}
-
-/*@Composable
-@Preview
-private fun PriorityDropDownPreview() {
-    LanguageDropDown(
-        language = Languages.English,
-        onLanguageSelected = {}
-    )
-}*/
-
-/*@Composable
-@Preview
-private fun LanguageItemPreview() {
-    LanguageItem(language = Languages.English)
-}*/
 @Preview(showBackground = true)
 @Composable
 fun ScreenTestingCardsPreview() {

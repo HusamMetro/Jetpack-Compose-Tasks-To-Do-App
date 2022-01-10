@@ -39,12 +39,10 @@ fun SetupNavigation(
         startDestination = SPLASH_SCREEN
     ) {
         splashComposable(
-//            navigateToTaskScreen = screen.splash,
             navigateToTaskScreen = if (sharedViewModel.rememberState.value) {
                 sharedViewModel.loadUserInformation()
                 screen.splash
-            } else screen.login,
-            sharedViewModel = sharedViewModel
+            } else screen.login
         )
         listComposable(
             navigateToTaskScreen = screen.list,
@@ -55,22 +53,6 @@ fun SetupNavigation(
             navigateToListScreen = screen.task,
             sharedViewModel = sharedViewModel
         )
-        /* settingsComposable(
-             sharedViewModel = sharedViewModel
-         )
-         suggestedComposable(
-             sharedViewModel = sharedViewModel
-         )*/
-        /*composable(route = BottomBarScreen.Home.route) {
-            ListScreen(
-                action = Action.NO_ACTION,
-                navigateToTaskScreen = { taskId ->
-                    navController.navigate("task/$taskId")
-                },
-                navController = navController,
-                sharedViewModel = sharedViewModel
-            )
-        }*/
         composable(route = BottomBarScreen.Challenges.route) {
             ChallengesScreen(
                 sharedViewModel = sharedViewModel,

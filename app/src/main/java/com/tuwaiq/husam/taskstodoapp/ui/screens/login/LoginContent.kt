@@ -63,8 +63,6 @@ fun LoginContent(
 ) {
     val focusManager: FocusManager = LocalFocusManager.current
 
-//    val checkedRememberState by sharedViewModel.rememberState.collectAsState()
-
     val transition = rememberInfiniteTransition()
     val translateAnimation = transition.animateFloat(
         initialValue = 80f,

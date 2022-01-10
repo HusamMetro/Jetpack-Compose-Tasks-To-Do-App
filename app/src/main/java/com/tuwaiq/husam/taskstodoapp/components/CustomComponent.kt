@@ -41,10 +41,8 @@ fun CustomComponent(
     backgroundIndicatorStrokeWidth: Float = 100f,
     foregroundIndicatorColor: Color = MaterialTheme.colors.primary,
     foregroundIndicatorStrokeWidth: Float = 100f,
-//    indicatorStrokeCap: StrokeCap = StrokeCap.Round,
     bigTextFontSize: TextUnit = MaterialTheme.typography.h3.fontSize,
     bigTextColor: Color = MaterialTheme.colors.onSurface,
-    bigTextSuffix: String = "GB",
     smallText: String = "Remaining",
     smallTextFontSize: TextUnit = MaterialTheme.typography.h6.fontSize,
     smallTextColor: Color = MaterialTheme.colors.onSurface.copy(alpha = 0.3f)
@@ -93,25 +91,21 @@ fun CustomComponent(
                     componentSize = componentSize,
                     indicatorColor = backgroundIndicatorColor,
                     indicatorStrokeWidth = backgroundIndicatorStrokeWidth,
-//                    indicatorStokeCap = indicatorStrokeCap
                 )
                 foregroundIndicator(
                     sweepAngle = sweepAngle,
                     componentSize = componentSize,
                     indicatorColor = foregroundIndicatorColor,
                     indicatorStrokeWidth = foregroundIndicatorStrokeWidth,
-//                    indicatorStokeCap = indicatorStrokeCap
                 )
             },
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-//        Spacer(modifier = Modifier.padding(3.dp))
         EmbeddedElements(
             bigText = receivedValue,
             bigTextFontSize = bigTextFontSize,
             bigTextColor = animatedBigTextColor,
-            bigTextSuffix = bigTextSuffix,
             smallText = smallText,
             smallTextColor = smallTextColor,
             smallTextFontSize = smallTextFontSize
@@ -123,7 +117,6 @@ fun DrawScope.backgroundIndicator(
     componentSize: Size,
     indicatorColor: Color,
     indicatorStrokeWidth: Float,
-//    indicatorStokeCap: StrokeCap
 ) {
     drawArc(
         size = componentSize,
@@ -147,7 +140,6 @@ fun DrawScope.foregroundIndicator(
     componentSize: Size,
     indicatorColor: Color,
     indicatorStrokeWidth: Float,
-//    indicatorStokeCap: StrokeCap
 ) {
     drawArc(
         size = componentSize,
@@ -171,7 +163,6 @@ fun EmbeddedElements(
     bigText: Int,
     bigTextFontSize: TextUnit,
     bigTextColor: Color,
-    bigTextSuffix: String,
     smallText: String,
     smallTextColor: Color,
     smallTextFontSize: TextUnit
@@ -183,7 +174,6 @@ fun EmbeddedElements(
     ) {
         Text(
             modifier = Modifier.fillMaxWidth(),
-//        text = "$bigText ${bigTextSuffix.take(2)}",
             text = "$bigText",
             color = bigTextColor,
             fontSize = bigTextFontSize,
@@ -205,17 +195,16 @@ fun EmbeddedElements(
 fun CustomComponentPreview() {
 
     CustomComponent(
+        canvasSize = 32.dp,
         indicatorValue = 50,
         maxIndicatorValue = 100,
-        canvasSize = 32.dp,
-        backgroundIndicatorStrokeWidth = 10f,
-        foregroundIndicatorStrokeWidth = 10f,
-        foregroundIndicatorColor = LightBlue1,
         backgroundIndicatorColor = MediumGray,
+        backgroundIndicatorStrokeWidth = 10f,
+        foregroundIndicatorColor = LightBlue1,
+        foregroundIndicatorStrokeWidth = 10f,
         bigTextFontSize = 8.sp,
-        smallTextFontSize = 5.sp,
-        bigTextSuffix = "%",
         smallText = "80",
+        smallTextFontSize = 5.sp,
     )
 
 }

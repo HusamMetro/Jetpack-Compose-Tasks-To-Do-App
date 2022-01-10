@@ -15,7 +15,6 @@ fun ChallengesAppBar() {
     TopAppBar(
         title = {
             Text(
-                // name might change later
                 text = stringResource(R.string.challenges),
                 color = MaterialTheme.colors.topAppBarContentColor
             )

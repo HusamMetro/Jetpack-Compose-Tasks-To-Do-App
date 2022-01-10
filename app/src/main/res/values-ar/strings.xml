@@ -9,8 +9,8 @@
     <string name="search_placeholder">بحث</string>
     <string name="search_icon">ايقونة بحث</string>
     <string name="close_icon">ايقونة اغلاق</string>
-    <string name="sad_face_icon">ايقونة وجه حزين</string>
-    <string name="empty_content">لنبدأ بأضافة مهمة</string>
+    <string name="outlined_note">ايقونة مهمة</string>
+    <string name="empty_content">لنبدأ بأضافة مهمتك الأولى</string>
     <string name="add_task">اضافة مهمة</string>
     <string name="back_arrow">سهم للخلف</string>
     <string name="delete_icon">ايقونة حذف</string>
@@ -85,4 +85,5 @@
     <string name="email_forgot_password_invalid">خطأ: البريد الالكتروني غير مسجل</string>
     <string name="ad_challenge">أقبل التحدي</string>
     <string name="gold_challenges">التحديات الذهبية</string>
+    <string name="priority">الأهمية</string>
 </resources>

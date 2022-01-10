@@ -98,7 +98,6 @@ fun TaskContent(
 
             OutlinedTextField(
                 modifier = Modifier
-//                    .fillMaxWidth(),
                     .weight(1f)
                     .clickable {
                         showStartDatePicker()
@@ -203,17 +202,16 @@ fun TaskContent(
                 1
             }
             CustomComponent(
-                indicatorValue = taskCounterInt,
                 canvasSize = 100.dp,
-                backgroundIndicatorStrokeWidth = 20f,
-                foregroundIndicatorStrokeWidth = 20f,
-                foregroundIndicatorColor = MaterialTheme.colors.foregroundIndicatorColor,
-                backgroundIndicatorColor = MaterialTheme.colors.backgroundIndicatorColor2,
-                bigTextFontSize = 20.sp,
-                smallTextFontSize = 15.sp,
+                indicatorValue = taskCounterInt,
                 maxIndicatorValue = maxInt,
-                bigTextSuffix = "",
+                backgroundIndicatorColor = MaterialTheme.colors.backgroundIndicatorColor2,
+                backgroundIndicatorStrokeWidth = 20f,
+                foregroundIndicatorColor = MaterialTheme.colors.foregroundIndicatorColor,
+                foregroundIndicatorStrokeWidth = 20f,
+                bigTextFontSize = 20.sp,
                 smallText = "$maxInt",
+                smallTextFontSize = 15.sp,
             )
         }
 

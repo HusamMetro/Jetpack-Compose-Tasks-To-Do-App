@@ -1,6 +1,5 @@
 package com.tuwaiq.husam.taskstodoapp.ui.screens.challenges
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
@@ -54,20 +53,7 @@ fun ChallengesScreen(
     LaunchedEffect(key1 = Unit) {
         sharedViewModel.getMockTasks()
         sharedViewModel.getGoldMockTasks()
-        Log.e("at Launched Effect", "After")
     }
-    Log.e("at Challenges", "After")
-//    val mockTasks by sharedViewModel.getMockTasks().observeAsState()
-//    var checkMockTasks by remember { mutableStateOf(false) }
-    /* var mockTasks by remember { mutableStateOf(MutableLiveData<List<MockToDoTask>>()) }
-     if (mockTasks.value == null) {
-         mockTasks = sharedViewModel.getMockTasks()
-     }*/
-//    val mockTasks = emptyList<MockToDoTask>()
-//    val mockTasks by sharedViewModel.mockTasks.collectAsState()
-    /*LaunchedEffect(key1 = true){
-        sharedViewModel.getMockTasks()
-    }*/
 
     Scaffold(
         scaffoldState = scaffoldState,
@@ -92,7 +78,7 @@ fun ChallengesScreen(
                                     vertical = LARGE_PADDING,
                                     horizontal = SMALLEST_PADDING
                                 ),
-                            color = marahGold,
+                            color = GoldM,
                             style = MaterialTheme.typography.h5,
                             fontFamily = FontFamily.Serif
                         )
@@ -143,7 +129,8 @@ fun ChallengesScreen(
                                         startDate = startDate ?: mock.startDate,
                                         endDate = endDate ?: mock.endDate,
                                         maxTask = mock.maxTask,
-                                        taskCounter = "0"
+                                        taskCounter = "0",
+                                        gold = mock.gold
                                     )
                                 )
                                 sharedViewModel.handleDatabaseAction(Action.ADD)
@@ -157,9 +144,6 @@ fun ChallengesScreen(
             } else {
                 EmptyContentNoConnection()
             }
-            /*mockTasks?.let {
-                ChallengesContent(it, sharedViewModel)
-            }*/
         }
     )
 }
@@ -177,7 +161,7 @@ fun EmptyContentNoConnection() {
             modifier = Modifier.size(EMPTY_ICON_SIZE),
             painter = painterResource(id = R.drawable.ic_baseline_wifi_off_24),
             contentDescription = stringResource(
-                R.string.sad_face_icon
+                R.string.outlined_note
             ),
             tint = MediumGray
         )
@@ -189,22 +173,3 @@ fun EmptyContentNoConnection() {
         )
     }
 }
-
-/*@Composable
-@Preview
-fun Preview() {
-    EmptyContentNoConnection()
-}*/
-
-/*@Preview
-@Composable
-private fun ChallengesScreenPreview() {
-    Column(
-        modifier = Modifier.padding(MEDIUM_PADDING),
-        verticalArrangement = Arrangement.spacedBy(MEDIUM_PADDING)
-    ) {
-        repeat(8) {
-            AnimatedShimmerEffect()
-        }
-    }
-}*/

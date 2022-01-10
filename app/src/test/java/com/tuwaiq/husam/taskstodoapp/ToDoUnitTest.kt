@@ -1,13 +1,6 @@
 package com.tuwaiq.husam.taskstodoapp
 
-import com.google.common.truth.Truth
-import com.tuwaiq.husam.taskstodoapp.data.repositories.MockRepo
 import com.wajahatkarim3.easyvalidation.core.view_ktx.validEmail
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
@@ -19,18 +12,26 @@ import org.junit.Test
  */
 class ToDoUnitTest {
 
-    @Before
-    fun startUp(){
+    /*@Before
+    fun startUp() {
 
-    }
+    }*/
+    private val email = "valid@gmail.com"
+    private val emailNotValid = "invalid.com"
+    private val nullableEmail = ""
+
     @Test
-     fun emailInvalid() {
-        val emailNotValid = "email.com"
-        Truth.assertThat(emailNotValid.validEmail()).isFalse()
+    fun nullableEmail(){
+        assertNotNull(nullableEmail)
     }
+
+    @Test
+    fun emailInvalid() {
+        assertFalse(emailNotValid.validEmail())
+    }
+
     @Test
     fun emailValid() {
-        val email = "email@em.com"
-        Truth.assertThat(email.validEmail()).isTrue()
+        assertTrue(email.validEmail())
     }
 }
