@@ -94,7 +94,6 @@ fun SettingsScreen(
                         .nonEmpty()
                         .minLength(3)
                         .noNumbers()
-                        .noSpecialCharacters()
                         .addErrorCallback {
                             nameIsErrorMsg = getInvalidMessage(it, context)
                         }.check()
