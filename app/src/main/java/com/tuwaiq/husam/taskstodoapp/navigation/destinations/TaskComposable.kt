@@ -25,13 +25,13 @@ fun NavGraphBuilder.taskComposable(
         arguments = listOf(navArgument(TASK_ARGUMENT_KEY) {
             type = NavType.IntType
         }),
-        enterTransition = { _, _ ->
+        enterTransition = {
             slideInHorizontally(
                 animationSpec = tween(durationMillis = 300),
                 initialOffsetX = { fullWidth -> -fullWidth }
             ) + fadeIn(animationSpec = tween(durationMillis = 300))
         },
-        exitTransition = { _, _ ->
+        exitTransition = {
             slideOutHorizontally(
                 animationSpec = tween(durationMillis = 500),
                 targetOffsetX = { fullWidth -> -fullWidth }
